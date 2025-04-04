@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'أنشئ حسابك للوصول لخدمات صحتك معنا',
+                    'أنشئ حسابك للوصول لخدمات  صحتي',
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 16,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/login_screen.dart';
+import 'screens/user_selection_screen.dart'; // استيراد شاشة اختيار المستخدم
 // ignore: depend_on_referenced_packages
 import 'package:google_fonts/google_fonts.dart';
 
@@ -24,18 +25,19 @@ class MyApp extends StatelessWidget {
       title: 'طبيبي',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFF1E88E5), // أزرق فاتح
+        primaryColor: const Color(0xFF006272),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1E88E5),
-          primary: const Color(0xFF1E88E5),
-          secondary: const Color(0xFF4CAF50), // أخضر طبي
-          tertiary: const Color(0xFFE3F2FD), // أزرق فاتح جداً للخلفية
+          seedColor: const Color(0xFF006272),
+          primary: const Color(0xFF006272),
+          secondary: const Color(0xFF4CAF50),
+          tertiary: const Color(0xFFE3F2FD),
+          // ignore: deprecated_member_use
           background: Colors.white,
         ),
         textTheme: GoogleFonts.tajawalTextTheme(Theme.of(context).textTheme),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1E88E5),
+            backgroundColor: const Color(0xFF006272),
             foregroundColor: Colors.white,
             elevation: 2,
             shape: RoundedRectangleBorder(
@@ -67,15 +69,15 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
-          foregroundColor: Color(0xFF1E88E5),
+          foregroundColor: Color(0xFF006272),
           elevation: 0,
           centerTitle: true,
           titleTextStyle: TextStyle(
-            color: Color(0xFF1E88E5),
+            color: Color(0xFF006272),
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
-          iconTheme: IconThemeData(color: Color(0xFF1E88E5)),
+          iconTheme: IconThemeData(color: Color(0xFF006272)), // اللون الجديد
         ),
         cardTheme: CardTheme(
           elevation: 2,
@@ -85,7 +87,7 @@ class MyApp extends StatelessWidget {
           shadowColor: Colors.black.withOpacity(0.1),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedItemColor: Color(0xFF1E88E5),
+          selectedItemColor: Color(0xFF006272), // اللون الجديد
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
@@ -93,7 +95,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: const SplashScreen(), // إعادة شاشة البداية كالشاشة الرئيسية
     );
   }
 }
@@ -105,19 +107,35 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
-    _navigateToLogin();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+    _navigateToUserSelection();
   }
 
-  _navigateToLogin() async {
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  _navigateToUserSelection() async {
     await Future.delayed(const Duration(seconds: 3));
     if (mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(builder: (context) => const UserSelectionScreen()),
       );
     }
   }
@@ -130,51 +148,54 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [const Color(0xFF1E88E5), const Color(0xFF1976D2)],
+            colors: [const Color(0xFF006272), const Color(0xFF004D4D)],
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                    ),
-                  ],
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.medical_services_rounded,
+                    size: 80,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-                child: Icon(
-                  Icons.medical_services_rounded,
-                  size: 80,
-                  color: Theme.of(context).primaryColor,
+                const SizedBox(height: 24),
+                Text(
+                  ' صحتي',
+                  style: GoogleFonts.tajawal(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'صحتك معنا',
-                style: GoogleFonts.tajawal(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                const SizedBox(height: 8),
+                Text(
+                  'رعاية طبية في متناول يديك',
+                  style: GoogleFonts.tajawal(fontSize: 18, color: Colors.white),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'رعاية طبية في متناول يديك',
-                style: GoogleFonts.tajawal(fontSize: 18, color: Colors.white),
-              ),
-              const SizedBox(height: 50),
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ],
+                const SizedBox(height: 50),
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // اسم التطبيق
                     Text(
-                      'صحتك معنا',
+                      'صحتي ',
                       style: GoogleFonts.tajawal(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -261,8 +261,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             _socialButton(
-                              icon: Icons.g_mobiledata,
-                              color: const Color.fromARGB(255, 149, 149, 149),
+                              icon:
+                                  'assets/imges/google (2).png', // Use Google logo image
+                              color: const Color.fromARGB(255, 241, 241, 241), // Background color for the button
                               onTap: () {},
                             ),
                             const SizedBox(width: 16),
@@ -331,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
         width: 60,
         height: 60,
         decoration: BoxDecoration(
-          color: icon is IconData ? color : Colors.white,
+          color: color, // Apply the background color here
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300, width: 1),
           boxShadow: [
@@ -346,7 +347,15 @@ class _LoginScreenState extends State<LoginScreen> {
           child:
               icon is IconData
                   ? Icon(icon, size: 30, color: Colors.white)
-                  : Image.asset(icon, width: 30, height: 30),
+                  : Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Light background for the logo
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.asset(icon, width: 30, height: 30),
+                  ),
         ),
       ),
     );
