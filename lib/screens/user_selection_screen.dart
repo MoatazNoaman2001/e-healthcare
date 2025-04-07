@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart'; // شاشة تسجيل الدخول للمريض
-import 'doctor_login_screen.dart'; // شاشة تسجيل الدخول للطبيب
+import 'patient/login_screen.dart'; // شاشة تسجيل الدخول للمريض
+import 'doctor/doctor_login_screen.dart'; // شاشة تسجيل الدخول للطبيب
 
 class UserSelectionScreen extends StatelessWidget {
   const UserSelectionScreen({super.key});

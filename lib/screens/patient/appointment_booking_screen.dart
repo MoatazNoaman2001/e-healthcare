@@ -1,4 +1,4 @@
-import 'package:doctorapp/screens/appointment_confirmation_screen.dart';
+import 'package:doctorapp/screens/patient/appointment_confirmation_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentBookingScreen extends StatefulWidget {

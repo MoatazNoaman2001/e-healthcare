@@ -1,4 +1,4 @@
-import 'package:doctorapp/screens/search_screen.dart';
+import 'package:doctorapp/screens/patient/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'appointments_screen.dart';
 import 'profile_screen.dart';

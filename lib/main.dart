@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/login_screen.dart';
+import 'screens/patient/login_screen.dart';
 import 'screens/user_selection_screen.dart'; // استيراد شاشة اختيار المستخدم
 // ignore: depend_on_referenced_packages
 import 'package:google_fonts/google_fonts.dart';

@@ -1,4 +1,4 @@
-import 'package:doctorapp/screens/forgot_password_screen.dart';
+import 'package:doctorapp/screens/patient/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'register_screen.dart';

@@ -1,4 +1,4 @@
-import 'package:doctorapp/screens/appointment_booking_screen.dart';
+import 'package:doctorapp/screens/patient/appointment_booking_screen.dart';
 import 'package:flutter/material.dart';
 
 class DoctorProfileScreen extends StatelessWidget {
