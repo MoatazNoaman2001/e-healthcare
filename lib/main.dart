@@ -1,7 +1,12 @@
+import 'package:doctorapp/screens/doctor/doctor_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/patient/login_screen.dart';
 import 'screens/user_selection_screen.dart'; // استيراد شاشة اختيار المستخدم
+import 'screens/doctor/doctor_profile_screen.dart'; // Import the DoctorProfileScreen
+ // Import the PatientListScreen
+import 'screens/doctor/appointment_details_screen.dart'; // Import the AppointmentDetailsScreen
+ // Import the PatientsScreen
 // ignore: depend_on_referenced_packages
 import 'package:google_fonts/google_fonts.dart';
 
@@ -96,6 +101,19 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SplashScreen(), // إعادة شاشة البداية كالشاشة الرئيسية
+      routes: {
+        '/doctor_home_screen': (context) => const HomeScreen(),
+        '/doctor_profile_screen': (context) => const DoctorProfileScreen(),
+       // Add this route
+        '/appointment_details_screen':
+            (context) => AppointmentDetailsScreen(
+              patientName: 'محمد أحمد',
+              appointmentTime: '10:00 AM',
+              appointmentType: 'استشارة',
+            ), // Add this route
+        // Ensure this route exists
+        // ...existing routes...
+      },
     );
   }
 }

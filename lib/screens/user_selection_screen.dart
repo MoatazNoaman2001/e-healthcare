@@ -1,6 +1,7 @@
+import 'package:doctorapp/screens/doctor/doctor_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'patient/login_screen.dart'; // شاشة تسجيل الدخول للمريض
-import 'doctor/doctor_login_screen.dart'; // شاشة تسجيل الدخول للطبيب
+import 'doctor/doctor_dashboard_screen.dart'; // شاشة تسجيل الدخول للطبيب
 
 class UserSelectionScreen extends StatelessWidget {
   const UserSelectionScreen({super.key});
@@ -63,7 +64,7 @@ class UserSelectionScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DoctorLoginScreen(),
+                    builder: (context) => const HomeScreen(),
                   ),
                 );
               },
