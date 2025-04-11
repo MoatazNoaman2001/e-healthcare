@@ -110,9 +110,8 @@ class MyApp extends StatelessWidget {
               patientName: 'محمد أحمد',
               appointmentTime: '10:00 AM',
               appointmentType: 'استشارة',
-            ), // Add this route
-        // Ensure this route exists
-        // ...existing routes...
+            ),
+        '/HomeScreen': (context) => const HomeScreen(),
       },
     );
   }

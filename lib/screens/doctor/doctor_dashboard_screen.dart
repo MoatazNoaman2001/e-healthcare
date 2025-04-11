@@ -14,9 +14,22 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'الصفحة الرئيسية',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
         ),
         backgroundColor: Colors.teal.shade700,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DoctorProfileScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -118,28 +131,6 @@ class HomeScreen extends StatelessWidget {
                   },
                   icon: const Icon(Icons.calendar_today),
                   label: const Text('التقويم'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal.shade700,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DoctorProfileScreen(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.person),
-                  label: const Text('الملف الشخصي'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal.shade700,
                     padding: const EdgeInsets.symmetric(
