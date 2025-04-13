@@ -1,0 +1,40 @@
+import 'dart:io';
+
+void main() {
+  final Map<String, List<String>> structure = {
+    'lib/features/appointments/data': [],
+    'lib/features/appointments/domain': [],
+    'lib/features/appointments/presentation/bloc': [
+      'appointment_booking_bloc.dart',
+      'appointment_booking_event.dart',
+      'appointment_booking_state.dart',
+    ],
+    'lib/features/appointments/presentation/screens': [
+      'appointment_booking_screen.dart',
+    ],
+  };
+
+  for (final entry in structure.entries) {
+    final dirPath = entry.key;
+    final files = entry.value;
+
+    // Create directory if it doesn't exist
+    final directory = Directory(dirPath);
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+      print('📁 Created directory: $dirPath');
+    }
+
+    // Create files if they don't exist
+    for (final file in files) {
+      final filePath = '$dirPath/$file';
+      final dartFile = File(filePath);
+      if (!dartFile.existsSync()) {
+        dartFile.writeAsStringSync('// TODO: Implement $file\n');
+        print('📄 Created file: $filePath');
+      }
+    }
+  }
+
+  print('\n✅ appointments feature structure created successfully.');
+}
