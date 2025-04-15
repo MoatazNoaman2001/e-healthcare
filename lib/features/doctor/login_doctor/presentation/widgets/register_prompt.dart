@@ -1,3 +1,4 @@
+import 'package:doctorapp/features/doctor/registerdoctor/presentation/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 

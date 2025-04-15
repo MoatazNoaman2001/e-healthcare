@@ -57,13 +57,12 @@ class _LoginScreenDoctorState extends State<LoginScreenDoctor> {
                     const SizedBox(height: 10),
                     RememberAndForgotRow(
                       remember: _rememberMe,
-                      onChanged: (val) => setState(() => _rememberMe = val),
+                      onChanged: (val) => setState(() => _rememberMe = val!),
+
+                      ///كان ايرور هنا
                     ),
                     const SizedBox(height: 30),
-                    LoginButton(
-                      isLoading: _isLoading,
-                      onPressed: _login,
-                    ),
+                    LoginButton(isLoading: _isLoading, onPressed: _login),
                   ],
                 ),
               ),

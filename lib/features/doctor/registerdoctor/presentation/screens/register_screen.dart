@@ -1,5 +1,6 @@
+import 'package:doctorapp/features/doctor/login_doctor/presentation/screens/login_screen_doctor.dart';
 import 'package:flutter/material.dart';
-import '../../login_doctor/presentation/screens/login_screen_doctor.dart';
+
 import '../widgets/register_title.dart';
 import '../widgets/name_field.dart';
 import '../widgets/email_field.dart';

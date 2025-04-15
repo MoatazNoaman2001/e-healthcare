@@ -1,3 +1,4 @@
+import 'package:doctorapp/features/doctor/appointments/presentation/screens/appointment_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/appointment_card.dart';

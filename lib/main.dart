@@ -1,21 +1,22 @@
 import 'dart:io';
 
+import 'package:doctorapp/features/doctor/homedoctor/presentation/screens/home_screen.dart';
+import 'package:doctorapp/features/patient/doctors/presentation/screens/doctor_profile_screen.dart';
 import 'package:doctorapp/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:doctorapp/features/user_selection/presentation/screens/user_selection_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
- // Import the DoctorProfileScreen
- // Import the PatientListScreen
- // Import the AppointmentDetailsScreen
- // Import the PatientsScreen
+// Import the DoctorProfileScreen
+// Import the PatientListScreen
+// Import the AppointmentDetailsScreen
+// Import the PatientsScreen
 // ignore: depend_on_referenced_packages
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-
-   final Map<String, List<String>> structure = {
+  final Map<String, List<String>> structure = {
     'lib/features/appointments/data': [],
     'lib/features/appointments/domain': [],
     'lib/features/appointments/presentation/bloc': [
@@ -28,29 +29,6 @@ void main() {
     ],
   };
 
-  for (final entry in structure.entries) {
-    final dirPath = entry.key;
-    final files = entry.value;
-
-    // Create directory if it doesn't exist
-    final directory = Directory(dirPath);
-    if (!directory.existsSync()) {
-      directory.createSync(recursive: true);
-      print('📁 Created directory: $dirPath');
-    }
-
-    // Create files if they don't exist
-    for (final file in files) {
-      final filePath = '$dirPath/$file';
-      final dartFile = File(filePath);
-      if (!dartFile.existsSync()) {
-        dartFile.writeAsStringSync('// TODO: Implement $file\n');
-        print('📄 Created file: $filePath');
-      }
-    }
-  }
-
-
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -58,13 +36,15 @@ void main() {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
-  runApp(MultiBlocProvider(
-  providers: [
-    BlocProvider(create: (_) => SplashBloc()),
-    // Other blocs...
-  ],
-  child: MyApp(),
-));
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => SplashBloc()),
+        // Other blocs...
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -146,19 +126,25 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const SplashScreen(), // إعادة شاشة البداية كالشاشة الرئيسية
-      // routes: {
-      //   '/doctor_home_screen': (context) => const HomeScreen(),
-      //   '/doctor_profile_screen': (context) => const DoctorProfileScreen(),
-      //  // Add this route
-      //   '/appointment_details_screen':
-      //       (context) => AppointmentDetailsScreen(
-      //         patientName: 'محمد أحمد',
-      //         appointmentTime: '10:00 AM',
-      //         appointmentType: 'استشارة',
-      //       ),
-      //   '/HomeScreen': (context) => const HomeScreen(),
-      // },
+      home: const SplashScreen(),
+      routes: {
+        // '/doctor_home_screen': (context) => const HomeScreen(),
+        '/doctor_profile_screen':
+            (context) => const DoctorProfileScreen(
+              doctorName: 'نورا',
+              rating: 5,
+              specialty: 'gbgg',
+              experience: '',
+            ),
+
+        //  '/appointment_details_screen':
+        //    (context) => AppointmentDetailsScreen(
+        //      patientName: 'محمد أحمد',
+        //       appointmentTime: '10:00 AM',
+        //       appointmentType: 'استشارة',
+        //     ),
+        '/HomeScreen': (context) => const HomeScreen(),
+      },
     );
   }
 }
