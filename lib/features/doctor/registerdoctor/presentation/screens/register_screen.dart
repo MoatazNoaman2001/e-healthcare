@@ -1,5 +1,6 @@
-import 'package:doctorapp/features/doctor/login_doctor/presentation/screens/login_screen_doctor.dart';
+import 'package:doctorapp/features/doctor/registerdoctor/data/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:doctorapp/features/doctor/login_doctor/presentation/screens/login_screen_doctor.dart';
 
 import '../widgets/register_title.dart';
 import '../widgets/name_field.dart';
@@ -31,20 +32,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      await Future.delayed(const Duration(seconds: 2));
-      setState(() => _isLoading = false);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('تم إنشاء الحساب بنجاح'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      try {
+        final names = _nameController.text.trim().split(' ');
+        final firstName = names.isNotEmpty ? names.first : '';
+        final lastName = names.length > 1 ? names.sublist(1).join(' ') : '';
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreenDoctor()),
-      );
+        await AuthRepository().registerUser(
+          firstName: firstName,
+          lastName: lastName,
+          email: _emailController.text.trim(),
+          phone: _phoneController.text.trim(),
+          password: _passwordController.text,
+          userType: 'doctor',
+        );
+
+        setState(() => _isLoading = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم إنشاء الحساب بنجاح'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreenDoctor()),
+        );
+      } catch (e) {
+        setState(() => _isLoading = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('فشل التسجيل: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -75,20 +100,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 PasswordField(
                   controller: _passwordController,
                   showPassword: _showPassword,
-                  onToggle: () => setState(() => _showPassword = !_showPassword),
+                  onToggle:
+                      () => setState(() => _showPassword = !_showPassword),
                 ),
                 const SizedBox(height: 20),
                 ConfirmPasswordField(
                   controller: _confirmPasswordController,
                   passwordController: _passwordController,
                   showPassword: _showConfirmPassword,
-                  onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
+                  onToggle:
+                      () => setState(
+                        () => _showConfirmPassword = !_showConfirmPassword,
+                      ),
                 ),
                 const SizedBox(height: 30),
-                RegisterButton(
-                  isLoading: _isLoading,
-                  onPressed: _register,
-                ),
+                RegisterButton(isLoading: _isLoading, onPressed: _register),
                 const SizedBox(height: 20),
                 const LoginPrompt(),
               ],

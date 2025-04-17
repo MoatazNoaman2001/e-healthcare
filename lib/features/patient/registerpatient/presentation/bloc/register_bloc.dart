@@ -1,69 +1,44 @@
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:equatable/equatable.dart';
-
-// part 'register_event.dart';
-// part 'register_state.dart';
-
-// class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-//   RegisterBloc() : super(const RegisterState()) {
-//     on<NameChanged>((event, emit) {
-//       emit(state.copyWith(name: event.name));
-//     });
-
-//     on<EmailChanged>((event, emit) {
-//       emit(state.copyWith(email: event.email));
-//     });
-
-//     on<PhoneChanged>((event, emit) {
-//       emit(state.copyWith(phone: event.phone));
-//     });
-
-//     on<PasswordChanged>((event, emit) {
-//       emit(state.copyWith(password: event.password));
-//     });
-
-//     on<ConfirmPasswordChanged>((event, emit) {
-//       emit(state.copyWith(confirmPassword: event.confirmPassword));
-//     });
-
-//     on<ToggleAcceptTerms>((event, emit) {
-//       emit(state.copyWith(acceptTerms: !state.acceptTerms));
-//     });
-
-//     on<TogglePasswordVisibility>((event, emit) {
-//       emit(state.copyWith(obscurePassword: !state.obscurePassword));
-//     });
-
-//     on<ToggleConfirmPasswordVisibility>((event, emit) {
-//       emit(state.copyWith(obscureConfirmPassword: !state.obscureConfirmPassword));
-//     });
-
-//     on<SubmitForm>((event, emit) {
-//       emit(state.copyWith(isSubmitted: true));
-//     });
-//   }
-// }
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/auth_repository.dart';
 import 'register_event.dart';
 import 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc() : super(RegisterState()) {
+  final AuthRepository authRepository;
+
+  RegisterBloc({required this.authRepository}) : super(RegisterState()) {
+    on<FirstNameChanged>((event, emit) => emit(state.copyWith(firstName: event.firstName)));
+    on<LastNameChanged>((event, emit) => emit(state.copyWith(lastName: event.lastName)));
     on<NameChanged>((event, emit) => emit(state.copyWith(name: event.name)));
     on<EmailChanged>((event, emit) => emit(state.copyWith(email: event.email)));
     on<PhoneChanged>((event, emit) => emit(state.copyWith(phone: event.phone)));
     on<PasswordChanged>((event, emit) => emit(state.copyWith(password: event.password)));
     on<ConfirmPasswordChanged>((event, emit) => emit(state.copyWith(confirmPassword: event.confirmPassword)));
+    on<DateOfBirthChanged>((event, emit) => emit(state.copyWith(dateOfBirth: event.dateOfBirth)));
     on<AcceptTermsChanged>((event, emit) => emit(state.copyWith(acceptTerms: event.accept)));
+
     on<RegisterSubmitted>((event, emit) async {
       if (!state.isValid) {
-        emit(state.copyWith(error: 'يرجى إدخال جميع البيانات بشكل صحيح'));
+        emit(state.copyWith(error: 'يرجى ملء جميع الحقول بشكل صحيح'));
         return;
       }
+
       emit(state.copyWith(isLoading: true, error: null));
-      await Future.delayed(const Duration(seconds: 2)); // محاكاة التسجيل
-      emit(state.copyWith(isLoading: false, isSuccess: true));
+
+      try {
+        await authRepository.registerPatient(
+          firstName: state.firstName,
+          lastName: state.lastName,
+          email: state.email,
+          phone: state.phone,
+          password: state.password,
+          dateOfBirth: state.dateOfBirth,
+        );
+
+        emit(state.copyWith(isLoading: false, isSuccess: true));
+      } catch (e) {
+        emit(state.copyWith(isLoading: false, error: e.toString()));
+      }
     });
   }
 }

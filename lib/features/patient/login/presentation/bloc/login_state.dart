@@ -4,9 +4,9 @@ class LoginState {
   final bool isLoading;
   final bool isSuccess;
   final String? error;
+  final String? token;
 
-  bool get isValid =>
-      email.contains('@') && password.length >= 6;
+  bool get isValid => email.contains('@') && password.length >= 6;
 
   LoginState({
     this.email = '',
@@ -14,6 +14,7 @@ class LoginState {
     this.isLoading = false,
     this.isSuccess = false,
     this.error,
+    this.token,
   });
 
   LoginState copyWith({
@@ -22,6 +23,7 @@ class LoginState {
     bool? isLoading,
     bool? isSuccess,
     String? error,
+    String? token,
   }) {
     return LoginState(
       email: email ?? this.email,
@@ -29,6 +31,7 @@ class LoginState {
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
       error: error,
+      token: token ?? this.token,
     );
   }
 }

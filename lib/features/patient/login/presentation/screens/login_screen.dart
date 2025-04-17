@@ -1,13 +1,13 @@
-
 import 'package:doctorapp/features/forgot/presentation/screens/forgot_password_screen.dart';
 import 'package:doctorapp/features/patient/home/presentation/screens/home_page.dart';
+import 'package:doctorapp/features/patient/login/data/auth_repository.dart';
 import 'package:doctorapp/features/patient/registerpatient/presentation/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/login_bloc.dart';
 import '../bloc/login_event.dart';
 import '../bloc/login_state.dart';
-
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => LoginBloc(),
+      create: (_) => LoginBloc(authRepository: AuthRepository()),
       child: _LoginView(),
     );
   }
@@ -37,8 +37,16 @@ class _LoginViewState extends State<_LoginView> {
       child: Scaffold(
         body: SafeArea(
           child: BlocConsumer<LoginBloc, LoginState>(
-            listener: (context, state) {
-              if (state.isSuccess) {
+            listener: (context, state) async {
+              if (state.isSuccess && state.token != null) {
+                // حفظ التوكن
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString('auth_token', state.token!);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('تم تسجيل الدخول بنجاح')),
+                );
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const HomePage()),
@@ -115,9 +123,7 @@ class _LoginViewState extends State<_LoginView> {
                         width: double.infinity,
                         height: 55,
                         child: ElevatedButton(
-                          onPressed: () {
-                            bloc.add(LoginSubmitted());
-                          },
+                          onPressed: state.isLoading ? null : () => bloc.add(LoginSubmitted()),
                           child: state.isLoading
                               ? const CircularProgressIndicator(color: Colors.white)
                               : const Text('تسجيل الدخول', style: TextStyle(fontSize: 18)),

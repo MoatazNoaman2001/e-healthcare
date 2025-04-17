@@ -1,3 +1,4 @@
+import 'package:doctorapp/features/doctor/registerdoctor/data/auth_repository.dart';
 import 'package:flutter/material.dart';
 import '../widgets/login_title.dart';
 import '../widgets/email_field.dart';
@@ -21,14 +22,33 @@ class _LoginScreenDoctorState extends State<LoginScreenDoctor> {
   bool _obscurePassword = true;
   bool _isLoading = false;
 
-  void _login() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      await Future.delayed(const Duration(seconds: 2));
+void _login() async {
+  if (_formKey.currentState!.validate()) {
+    setState(() => _isLoading = true);
+
+    try {
+      final token = await AuthRepository().login(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      print('✅ تم تسجيل الدخول. التوكن: $token');
+
+      // بعد تسجيل الدخول بنجاح
       setState(() => _isLoading = false);
       Navigator.pushReplacementNamed(context, '/HomeScreen');
+    } catch (e) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
