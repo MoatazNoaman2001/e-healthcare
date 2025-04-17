@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/login_bloc.dart';
-import '../bloc/login_event.dart';
-import '../bloc/login_state.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -16,12 +14,14 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => LoginBloc(authRepository: AuthRepository()),
-      child: _LoginView(),
+      child: const _LoginView(),
     );
   }
 }
 
 class _LoginView extends StatefulWidget {
+  const _LoginView();
+
   @override
   State<_LoginView> createState() => _LoginViewState();
 }
@@ -29,6 +29,15 @@ class _LoginView extends StatefulWidget {
 class _LoginViewState extends State<_LoginView> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +48,16 @@ class _LoginViewState extends State<_LoginView> {
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) async {
               if (state.isSuccess && state.token != null) {
-                // حفظ التوكن
+                // حفظ التوكن ومعلومات المستخدم
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setString('auth_token', state.token!);
+
+                // يمكن أيضاً حفظ معلومات المستخدم إذا كنت بحاجة إليها
+                if (state.user != null) {
+                  await prefs.setInt('user_id', state.user!.id);
+                  await prefs.setString('user_email', state.user!.email);
+                  await prefs.setString('user_type', state.user!.userType);
+                }
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('تم تسجيل الدخول بنجاح')),
@@ -53,7 +69,10 @@ class _LoginViewState extends State<_LoginView> {
                 );
               } else if (state.error != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.error!)),
+                  SnackBar(
+                    content: Text(state.error!),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
             },
@@ -66,7 +85,7 @@ class _LoginViewState extends State<_LoginView> {
                   child: Column(
                     children: [
                       const SizedBox(height: 50),
-                      Icon(Icons.medical_services_rounded, size: 70),
+                      const Icon(Icons.medical_services_rounded, size: 70),
                       const SizedBox(height: 16),
                       const Text('صحتي', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
@@ -79,11 +98,22 @@ class _LoginViewState extends State<_LoginView> {
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
+                        controller: _emailController,
                         onChanged: (value) => bloc.add(LoginEmailChanged(value)),
                         keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'الرجاء إدخال البريد الإلكتروني';
+                          }
+                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                            return 'الرجاء إدخال بريد إلكتروني صحيح';
+                          }
+                          return null;
+                        },
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.email),
                           hintText: 'أدخل بريدك الإلكتروني',
+                          border: OutlineInputBorder(),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -93,8 +123,18 @@ class _LoginViewState extends State<_LoginView> {
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
+                        controller: _passwordController,
                         onChanged: (value) => bloc.add(LoginPasswordChanged(value)),
                         obscureText: _obscurePassword,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'الرجاء إدخال كلمة المرور';
+                          }
+                          if (value.length < 6) {
+                            return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
@@ -106,6 +146,7 @@ class _LoginViewState extends State<_LoginView> {
                             },
                           ),
                           hintText: 'أدخل كلمة المرور',
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                       Align(
@@ -123,7 +164,17 @@ class _LoginViewState extends State<_LoginView> {
                         width: double.infinity,
                         height: 55,
                         child: ElevatedButton(
-                          onPressed: state.isLoading ? null : () => bloc.add(LoginSubmitted()),
+                          onPressed: state.isLoading
+                              ? null
+                              : () {
+                            if (_formKey.currentState!.validate()) {
+                              bloc.add(LoginSubmitted());
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
                           child: state.isLoading
                               ? const CircularProgressIndicator(color: Colors.white)
                               : const Text('تسجيل الدخول', style: TextStyle(fontSize: 18)),
@@ -133,7 +184,10 @@ class _LoginViewState extends State<_LoginView> {
                       const SizedBox(height: 16),
                       const Text('أو التسجيل باستخدام'),
                       const SizedBox(height: 10),
-                      Image.asset('assets/imges/google (2).png', width: 50),
+                      InkWell(
+                        onTap: () => bloc.add(LoginWithGoogle()),
+                        child: Image.asset('assets/imges/google (2).png', width: 50),
+                      ),
 
                       const SizedBox(height: 16),
                       Row(

@@ -1,7 +1,6 @@
 import 'package:doctorapp/features/doctor/registerdoctor/presentation/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
-
 class RegisterPrompt extends StatelessWidget {
   const RegisterPrompt({super.key});
 
@@ -18,13 +17,7 @@ class RegisterPrompt extends StatelessWidget {
               MaterialPageRoute(builder: (_) => const RegisterScreen()),
             );
           },
-          child: Text(
-            'سجل الآن',
-            style: TextStyle(
-              color: Colors.teal.shade700,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: const Text('إنشاء حساب'),
         ),
       ],
     );

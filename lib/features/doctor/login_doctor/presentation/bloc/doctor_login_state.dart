@@ -1,21 +1,22 @@
-part of 'login_bloc.dart';
+part of 'doctor_login_bloc.dart';
 
-class LoginState {
+@immutable
+class DoctorLoginState {
   final String email;
   final String password;
+  final bool rememberMe;
   final bool isLoading;
   final bool isSuccess;
   final String? token;
-  final UserModel? user;
   final String? error;
 
-  LoginState({
+  DoctorLoginState({
     this.email = '',
     this.password = '',
+    this.rememberMe = false,
     this.isLoading = false,
     this.isSuccess = false,
     this.token,
-    this.user,
     this.error,
   });
 
@@ -28,22 +29,22 @@ class LoginState {
 
   bool get canSubmit => isValidEmail && isValidPassword && !isLoading;
 
-  LoginState copyWith({
+  DoctorLoginState copyWith({
     String? email,
     String? password,
+    bool? rememberMe,
     bool? isLoading,
     bool? isSuccess,
     String? token,
-    UserModel? user,
     String? error,
   }) {
-    return LoginState(
+    return DoctorLoginState(
       email: email ?? this.email,
       password: password ?? this.password,
+      rememberMe: rememberMe ?? this.rememberMe,
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
       token: token ?? this.token,
-      user: user ?? this.user,
       error: error ?? this.error,
     );
   }

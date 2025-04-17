@@ -1,42 +1,80 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:doctorapp/core/network/api_client.dart';
+
+import 'models/auth_response.dart';
 
 class AuthRepository {
-  final String baseUrl = 'http://128.140.39.237/api/v1';
-  final _secureStorage = const FlutterSecureStorage(); 
+  final ApiClient _apiClient;
 
-  Future<String> login({
+  AuthRepository({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
+
+  Future<Either<String, AuthResponseModel>> login({
     required String email,
     required String password,
   }) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/users/login/'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
+    try {
+      final response = await _apiClient.post(
+        '/users/login/',
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
 
-    print('📥 Status Code: ${response.statusCode}');
-    print('📥 Response Body: ${response.body}');
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final authResponse = AuthResponseModel.fromJson(response.data);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final token = data['token'];
+        // التحقق من أن المستخدم من نوع مريض
+        if (authResponse.user.userType != 'doctor') {
+            return left('عذراً، هذا الحساب ليس مخصصاً لاطباء');
+        }
 
-      await _secureStorage.write(key: 'auth_token', value: token);
-
-      return token;
-    } else {
-      throw Exception('فشل تسجيل الدخول: ${response.body}');
+        return right(authResponse);
+      } else {
+        final errorMessage = _handleErrorResponse(response);
+        return left(errorMessage);
+      }
+    } catch (e) {
+      return left('حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى');
     }
   }
 
-  Future<String?> getToken() async {
-    return await _secureStorage.read(key: 'auth_token');
-  }
+  String _handleErrorResponse(Response response) {
+    if (response.statusCode == 400) {
+      if (response.data != null && response.data is Map) {
+        if (response.data.containsKey('non_field_errors')) {
+          final errors = response.data['non_field_errors'];
+          if (errors is List && errors.isNotEmpty) {
+            return errors.first;
+          }
+        }
 
-  
-  Future<void> deleteToken() async {
-    await _secureStorage.delete(key: 'auth_token');
+        if (response.data.containsKey('email')) {
+          final errors = response.data['email'];
+          if (errors is List && errors.isNotEmpty) {
+            return errors.first;
+          }
+        }
+
+        if (response.data.containsKey('password')) {
+          final errors = response.data['password'];
+          if (errors is List && errors.isNotEmpty) {
+            return errors.first;
+          }
+        }
+      }
+      return 'بيانات غير صحيحة، يرجى التحقق من البريد الإلكتروني وكلمة المرور';
+    } else if (response.statusCode == 401) {
+      return 'بيانات الدخول غير صحيحة';
+    } else if (response.statusCode == 403) {
+      return 'غير مصرح لك بالدخول';
+    } else if (response.statusCode == 404) {
+      return 'الخدمة غير متوفرة';
+    } else if (response.statusCode == 500) {
+      return 'حدث خطأ في الخادم، يرجى المحاولة لاحقاً';
+    }
+
+    return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى';
   }
 }

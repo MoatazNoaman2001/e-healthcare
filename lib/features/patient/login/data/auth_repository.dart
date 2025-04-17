@@ -1,36 +1,80 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:doctorapp/core/network/api_client.dart';
+
+import 'models/auth_response.dart';
 
 class AuthRepository {
-  final String baseUrl = 'http://128.140.39.237/api/v1';
+  final ApiClient _apiClient;
 
-Future<String> login({
-  required String email,
-  required String password,
-}) async {
-  final response = await http.post(
-    Uri.parse('$baseUrl/users/login/'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({'email': email, 'password': password}),
-  );
+  AuthRepository({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
 
-  print('📥 Status Code: ${response.statusCode}');
-  print('📥 Response Body: ${response.body}');
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    return data['token'] ?? 'no_token_found'; // حسب شكل الاستجابة
-  } else {
+  Future<Either<String, AuthResponseModel>> login({
+    required String email,
+    required String password,
+  }) async {
     try {
-      final error = jsonDecode(response.body);
-      if (error is Map && error.containsKey('detail')) {
-        throw Exception('فشل تسجيل الدخول: ${error['detail']}');
+      final response = await _apiClient.post(
+        '/users/login/',
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final authResponse = AuthResponseModel.fromJson(response.data);
+
+        // التحقق من أن المستخدم من نوع مريض
+        if (authResponse.user.userType != 'patient') {
+          return left('عذراً، هذا الحساب ليس مخصصاً للمرضى');
+        }
+
+        return right(authResponse);
       } else {
-        throw Exception('فشل تسجيل الدخول: ${response.body}');
+        final errorMessage = _handleErrorResponse(response);
+        return left(errorMessage);
       }
     } catch (e) {
-      throw Exception('فشل تسجيل الدخول: ${response.body}');
+      return left('حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى');
     }
   }
-}
+
+  String _handleErrorResponse(Response response) {
+    if (response.statusCode == 400) {
+      if (response.data != null && response.data is Map) {
+        if (response.data.containsKey('non_field_errors')) {
+          final errors = response.data['non_field_errors'];
+          if (errors is List && errors.isNotEmpty) {
+            return errors.first;
+          }
+        }
+
+        if (response.data.containsKey('email')) {
+          final errors = response.data['email'];
+          if (errors is List && errors.isNotEmpty) {
+            return errors.first;
+          }
+        }
+
+        if (response.data.containsKey('password')) {
+          final errors = response.data['password'];
+          if (errors is List && errors.isNotEmpty) {
+            return errors.first;
+          }
+        }
+      }
+      return 'بيانات غير صحيحة، يرجى التحقق من البريد الإلكتروني وكلمة المرور';
+    } else if (response.statusCode == 401) {
+      return 'بيانات الدخول غير صحيحة';
+    } else if (response.statusCode == 403) {
+      return 'غير مصرح لك بالدخول';
+    } else if (response.statusCode == 404) {
+      return 'الخدمة غير متوفرة';
+    } else if (response.statusCode == 500) {
+      return 'حدث خطأ في الخادم، يرجى المحاولة لاحقاً';
+    }
+
+    return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى';
+  }
 }

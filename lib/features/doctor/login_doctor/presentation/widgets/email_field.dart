@@ -2,29 +2,34 @@ import 'package:flutter/material.dart';
 
 class EmailField extends StatelessWidget {
   final TextEditingController controller;
+  final ValueChanged<String>? onChanged;
 
-  const EmailField({super.key, required this.controller});
+  const EmailField({
+    super.key,
+    required this.controller,
+    this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: TextFormField(
-        controller: controller,
-        textAlign: TextAlign.right,
-        decoration: InputDecoration(
-          labelText: 'البريد الإلكتروني',
-          floatingLabelAlignment: FloatingLabelAlignment.start,
-          prefixIcon: const Icon(Icons.email),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        keyboardType: TextInputType.emailAddress,
-        validator: (value) {
-          if (value == null || value.isEmpty) return 'الرجاء إدخال البريد الإلكتروني';
-          if (!value.contains('@')) return 'بريد إلكتروني غير صالح';
-          return null;
-        },
+    return TextFormField(
+      controller: controller,
+      keyboardType: TextInputType.emailAddress,
+      decoration: const InputDecoration(
+        labelText: 'البريد الإلكتروني',
+        prefixIcon: Icon(Icons.email),
+        border: OutlineInputBorder(),
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'الرجاء إدخال البريد الإلكتروني';
+        }
+        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+          return 'الرجاء إدخال بريد إلكتروني صحيح';
+        }
+        return null;
+      },
+      onChanged: onChanged,
     );
   }
 }

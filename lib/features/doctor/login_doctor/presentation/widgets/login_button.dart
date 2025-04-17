@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+
 class LoginButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onPressed;
@@ -18,8 +20,8 @@ class LoginButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal.shade700,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
         ),
         child: isLoading
             ? const CircularProgressIndicator(color: Colors.white)

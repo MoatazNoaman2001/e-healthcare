@@ -1,6 +1,8 @@
 import 'package:doctorapp/features/forgot/presentation/screens/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+
 class RememberAndForgotRow extends StatelessWidget {
   final bool remember;
   final ValueChanged<bool?> onChanged;
@@ -18,21 +20,18 @@ class RememberAndForgotRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            Checkbox(value: remember, onChanged: onChanged),
+            Checkbox(
+              value: remember,
+              onChanged: onChanged,
+            ),
             const Text('تذكرني'),
           ],
         ),
         TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
-            );
+            Navigator.pushNamed(context, '/ForgotPassword');
           },
-          child: Text(
-            'نسيت كلمة المرور؟',
-            style: TextStyle(color: Colors.teal.shade700),
-          ),
+          child: const Text('نسيت كلمة المرور؟'),
         ),
       ],
     );
