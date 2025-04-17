@@ -126,7 +126,7 @@ class _LoginScreenDoctorViewState extends State<_LoginScreenDoctorView> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const RegisterPrompt(),
+                  // const RegisterPrompt(),
                 ],
               ),
             );
