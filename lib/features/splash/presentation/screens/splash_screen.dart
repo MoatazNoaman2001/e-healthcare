@@ -1,6 +1,5 @@
-// splash_screen.dart
-
-
+import 'package:doctorapp/core/auth/auth_service.dart';
+import 'package:doctorapp/features/patient/home/presentation/screens/home_page.dart';
 import 'package:doctorapp/features/user_selection/presentation/screens/user_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../bloc/splash_bloc.dart';
 import '../bloc/splash_event.dart';
 import '../bloc/splash_state.dart';
+import 'package:doctorapp/core/di/dependancy_injection.dart' as di;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,18 +26,27 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _initializeAnimation();
-
-    /// Dispatch splash start
     context.read<SplashBloc>().add(StartSplash());
   }
 
-  void _initializeAnimation() {
+  void _initializeAnimation() async {
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     );
     _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
+
+    var service = di.sl<AuthService>();
+    if(service.token != null){
+      if (service.currentUserType == 'patient') {
+        Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+        );
+      }else{
+
+      }
+    }
   }
 
   @override

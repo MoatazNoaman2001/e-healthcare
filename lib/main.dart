@@ -14,8 +14,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Import the PatientsScreen
 // ignore: depend_on_referenced_packages
 import 'package:google_fonts/google_fonts.dart';
+import 'core/di/dependancy_injection.dart' as di;
+import 'features/patient/home/presentation/bloc/home_bloc.dart';
 
-void main() {
+
+Future<void> main() async{
   final Map<String, List<String>> structure = {
     'lib/features/appointments/data': [],
     'lib/features/appointments/domain': [],
@@ -29,7 +32,9 @@ void main() {
     ],
   };
 
+
   WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -40,6 +45,7 @@ void main() {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SplashBloc()),
+        BlocProvider(create: (context) => di.sl<HomeBloc>(),)
         // Other blocs...
       ],
       child: MyApp(),

@@ -1,10 +1,10 @@
-// lib/features/home/presentation/screens/home_page.dart
-
 import 'package:doctorapp/features/patient/appointments/profile/presentation/screens/profile_screen.dart';
 import 'package:doctorapp/features/patient/doctor_search/presentation/screens/search_screen.dart';
 import 'package:doctorapp/features/patient/login/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import '../../../../../core/auth/auth_service.dart';
 import 'home_content_screen.dart';
+import 'package:doctorapp/core/di/dependancy_injection.dart' as di;
 import '../../../appointments/presentation/screens/appointments_screen.dart';
 
 
@@ -94,14 +94,20 @@ class _HomePageState extends State<HomePage> {
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('إلغاء')),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
-            },
+            onPressed: () => logout,
             child: const Text('تأكيد'),
           ),
         ],
       ),
     );
   }
+  Future<void> logout(BuildContext context) async {
+    final authService = di.sl<AuthService>();
+    await authService.logout();
+
+    Navigator.pop(context);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+
+  }
+
 }

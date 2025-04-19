@@ -1,17 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../../../../core/auth/auth_service.dart';
+import '../../../../../core/di/dependancy_injection.dart' as di;
 import '../../data/auth_repository.dart';
 
 part 'doctor_login_event.dart';
 part 'doctor_login_state.dart';
 
-
 class DoctorLoginBloc extends Bloc<DoctorLoginEvent, DoctorLoginState> {
   final AuthRepository authRepository;
+  late final AuthService _authService;
 
   DoctorLoginBloc({required this.authRepository}) : super(DoctorLoginState()) {
+    _authService = di.sl<AuthService>();
+
     on<DoctorLoginEmailChanged>(_onEmailChanged);
     on<DoctorLoginPasswordChanged>(_onPasswordChanged);
     on<DoctorLoginRememberMeChanged>(_onRememberMeChanged);
@@ -56,25 +58,35 @@ class DoctorLoginBloc extends Bloc<DoctorLoginEvent, DoctorLoginState> {
     ));
 
     try {
-      final token = await authRepository.login(
+      final result = await authRepository.login(
         email: state.email,
         password: state.password,
       );
 
-      token.fold((l) => emit(DoctorLoginState(error: l)), (authModel) async{
-        if (state.rememberMe) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('doctor_auth_token', authModel.token);
-        }
+      result.fold(
+            (error) => emit(DoctorLoginState(error: error)),
+            (authResponse) async {
+          // Use AuthService to handle login and token management
+          await _authService.login(
+            token: authResponse.token,
+            user: authResponse.user,
+            doctorId: authResponse.user.userType == 'doctor' ? authResponse.user.id : null,
+          );
 
-        emit(state.copyWith(
-          isLoading: false,
-          isSuccess: true,
-          token: authModel.token,
-          error: null,
-        ));
+          // Only save token separately if remember me is checked
+          // (though the AuthService is already saving it)
+          if (state.rememberMe) {
+            // Remember Me logic can be added here if needed
+          }
 
-      },);
+          emit(state.copyWith(
+            isLoading: false,
+            isSuccess: true,
+            token: authResponse.token,
+            error: null,
+          ));
+        },
+      );
     } catch (e) {
       emit(state.copyWith(
         isLoading: false,
