@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:doctorapp/core/auth/auth_service.dart';
 import 'package:doctorapp/features/patient/home/presentation/screens/home_page.dart';
 import 'package:doctorapp/features/user_selection/presentation/screens/user_selection_screen.dart';
@@ -38,6 +40,8 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     var service = di.sl<AuthService>();
+    log('token: ${service.token!}');
+    log('currentUser: ${service.currentUserType}');
     if(service.token != null){
       if (service.currentUserType == 'patient') {
         Navigator.pushReplacement(context,

@@ -22,10 +22,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<FetchClinicsEvent>(_onFetchClinics);
   }
 
-  Future<void> _onFetchDoctors(
-      FetchDoctorsEvent event,
-      Emitter<HomeState> emit,
-      ) async {
+  Future<void> _onFetchDoctors(FetchDoctorsEvent event,
+      Emitter<HomeState> emit,) async {
     emit(state.copyWith(isDoctorsLoading: true, doctorsError: null));
 
     final result = await repository.getDoctors(search: event.searchQuery);

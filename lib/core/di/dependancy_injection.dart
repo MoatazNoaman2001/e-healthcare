@@ -4,6 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/patient/doctor_search/data/datasources/doctor_remote_data_source.dart';
+import '../../features/patient/doctor_search/data/repo/doctor_repo_impl.dart';
+import '../../features/patient/doctor_search/domain/repo/doctor_repo.dart';
+import '../../features/patient/doctor_search/presentation/bloc/search_doctor_bloc.dart';
 import '../../features/patient/home/data/datasource/home_remote_data_source.dart';
 import '../../features/patient/home/data/repo/home_repo_impl.dart';
 import '../../features/patient/home/domain/repo/home_repo.dart';
@@ -41,7 +45,7 @@ Future<void> init() async {
       final token = authService.token;
       log("token: ${token}");
       if (token != null && token.isNotEmpty) {
-        options.headers['Authorization'] = 'Bearer $token';
+        options.headers['Authorization'] = 'Token $token';
       }
       return handler.next(options);
     },
@@ -66,14 +70,21 @@ Future<void> init() async {
   sl.registerLazySingleton<HomeRemoteDataSource>(
         () => HomeRemoteDataSourceImpl(dio: sl()),
   );
+  sl.registerLazySingleton<DoctorRemoteDataSource>(
+        () => DoctorRemoteDataSourceImpl(dio: sl()),
+  );
 
   // Repositories
   sl.registerLazySingleton<HomeRepository>(
         () => HomeRepositoryImpl(remoteDataSource: sl()),
   );
+  sl.registerLazySingleton<DoctorRepository>(
+        () => DoctorRepositoryImpl(remoteDataSource: sl()),
+  );
 
   // Blocs
   sl.registerFactory(() => HomeBloc(repository: sl()));
+  sl.registerFactory(() => DoctorSearchBloc(repository: sl()));
 }
 
 // Define event classes if not already defined

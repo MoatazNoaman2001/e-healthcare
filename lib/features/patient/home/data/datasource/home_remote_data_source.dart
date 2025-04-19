@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:doctorapp/core/di/dependancy_injection.dart' as di;
+import '../../../../../core/auth/auth_service.dart';
 import '../../domain/models/doctor.dart';
 import '../../domain/models/specialization.dart';
 import '../../domain/models/appointment.dart';
@@ -23,8 +25,12 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       final response = await dio.get(
         '/doctors/',
         queryParameters: search != null ? {'search': search} : null,
+        options: Options(
+          headers: {
+            'X-CSRFTOKEN': 'zbKQsbqX8PCzAuWkbYegM0iOiRRvBjD7Mkz9VOqLMBCSmdiX3cQKzyDuhT6uwpNs',
+          }
+        )
       );
-
       final List<dynamic> doctorsJson = response.data['results'];
       return doctorsJson.map((json) => Doctor.fromJson(json)).toList();
     } on DioException catch (e) {
@@ -38,11 +44,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       final response = await dio.get(
         '/specializations/',
         queryParameters: search != null ? {'search': search} : null,
-        options: Options(
-          headers: {
-            "token": ""
-          }
-        )
       );
 
       final List<dynamic> specializationsJson = response.data['results'];
