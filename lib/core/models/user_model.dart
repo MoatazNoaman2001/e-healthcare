@@ -1,3 +1,4 @@
+// lib/features/auth/data/models/user_model.dart
 class UserModel {
   final int id;
   final String email;
@@ -41,6 +42,58 @@ class UserModel {
       phoneVerified: json['phone_verified'],
       dateJoined: json['date_joined'],
       lastLogin: json['last_login'],
+    );
+  }
+
+  // Converting the UserModel to a JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'first_name': firstName,
+      'last_name': lastName,
+      'phone_number': phoneNumber,
+      'user_type': userType,
+      'profile_status': profileStatus,
+      'profile_image': profileImage,
+      'email_verified': emailVerified,
+      'phone_verified': phoneVerified,
+      'date_joined': dateJoined,
+      'last_login': lastLogin,
+    };
+  }
+
+  // Helper methods to get the full name
+  String get fullName => '$firstName $lastName';
+
+  // Create a copy with some fields updated
+  UserModel copyWith({
+    int? id,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? userType,
+    String? profileStatus,
+    String? profileImage,
+    bool? emailVerified,
+    bool? phoneVerified,
+    String? dateJoined,
+    String? lastLogin,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      userType: userType ?? this.userType,
+      profileStatus: profileStatus ?? this.profileStatus,
+      profileImage: profileImage ?? this.profileImage,
+      emailVerified: emailVerified ?? this.emailVerified,
+      phoneVerified: phoneVerified ?? this.phoneVerified,
+      dateJoined: dateJoined ?? this.dateJoined,
+      lastLogin: lastLogin ?? this.lastLogin,
     );
   }
 }

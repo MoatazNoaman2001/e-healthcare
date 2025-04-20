@@ -2,14 +2,20 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../core/models/user_model.dart';
+import '../../../../../core/auth/auth_service.dart';
+import '../../../../../core/di/dependancy_injection.dart' as di;
 import '../../data/auth_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
+
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthRepository authRepository;
+  late final AuthService _authService;
 
   LoginBloc({required this.authRepository}) : super(LoginState()) {
+    _authService = di.sl<AuthService>();
+
     on<LoginEmailChanged>(_onEmailChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
@@ -53,19 +59,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       password: state.password,
     );
 
-    result.fold(
-          (error) => emit(state.copyWith(
+    result.fold((error) => emit(state.copyWith(
         isLoading: false,
         error: error,
         isSuccess: false,
-      )),
-          (authResponse) => emit(state.copyWith(
-        isLoading: false,
-        isSuccess: true,
-        token: authResponse.token,
-        user: authResponse.user,
-        error: null,
-      )),
+      )), (authResponse) async {
+        emit(state.copyWith(
+          isLoading: false,
+          isSuccess: true,
+          token: authResponse.token,
+          user: authResponse.user,
+          error: null,
+        ));
+      },
     );
   }
 
