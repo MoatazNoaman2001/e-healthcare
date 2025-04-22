@@ -1,8 +1,8 @@
-import 'package:doctorapp/features/patient/appointments/profile/presentation/screens/profile_screen.dart';
 import 'package:doctorapp/features/patient/doctor_search/presentation/screens/search_screen.dart';
 import 'package:doctorapp/features/patient/login/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/auth/auth_service.dart';
+import '../../../profile/presentation/screens/profile_screen.dart';
 import 'home_content_screen.dart';
 import 'package:doctorapp/core/di/dependancy_injection.dart' as di;
 import '../../../appointments/presentation/screens/appointments_screen.dart';
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = const [
     HomeContentScreen(),
-    SearchScreen(),
+    SearchDoctorsScreen(),
     AppointmentsScreen(),
     ProfileScreen(),
   ];
@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
+          leading: null,
           title: Text(_getTitle(), style: const TextStyle(fontWeight: FontWeight.bold)),
           actions: [
             if (_selectedIndex == 0) ...[
@@ -94,7 +95,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('إلغاء')),
           TextButton(
-            onPressed: () => logout,
+            onPressed: () => logout(context),
             child: const Text('تأكيد'),
           ),
         ],

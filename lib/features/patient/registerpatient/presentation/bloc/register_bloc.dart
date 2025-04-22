@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/auth_repository.dart';
 import 'register_event.dart';
 import 'register_state.dart';
-
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final AuthRepository authRepository;
 
@@ -15,6 +14,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<PasswordChanged>((event, emit) => emit(state.copyWith(password: event.password)));
     on<ConfirmPasswordChanged>((event, emit) => emit(state.copyWith(confirmPassword: event.confirmPassword)));
     on<DateOfBirthChanged>((event, emit) => emit(state.copyWith(dateOfBirth: event.dateOfBirth)));
+    on<GenderChanged>((event, emit) => emit(state.copyWith(gender: event.gender)));
+    on<BloodTypeChanged>((event, emit) => emit(state.copyWith(bloodType: event.bloodType)));
     on<AcceptTermsChanged>((event, emit) => emit(state.copyWith(acceptTerms: event.accept)));
 
     on<RegisterSubmitted>((event, emit) async {
@@ -33,6 +34,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           phone: state.phone,
           password: state.password,
           dateOfBirth: state.dateOfBirth,
+          gender: state.gender,
+          bloodType: state.bloodType,
         );
 
         emit(state.copyWith(isLoading: false, isSuccess: true));

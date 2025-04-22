@@ -7,6 +7,8 @@ class RegisterState {
   final String password;
   final String confirmPassword;
   final String dateOfBirth;
+  final String gender;
+  final String bloodType;
   final bool acceptTerms;
   final bool isLoading;
   final bool isSuccess;
@@ -21,6 +23,8 @@ class RegisterState {
     this.password = '',
     this.confirmPassword = '',
     this.dateOfBirth = '',
+    this.gender = 'male',
+    this.bloodType = 'A+',
     this.acceptTerms = false,
     this.isLoading = false,
     this.isSuccess = false,
@@ -36,6 +40,8 @@ class RegisterState {
     String? password,
     String? confirmPassword,
     String? dateOfBirth,
+    String? gender,
+    String? bloodType,
     bool? acceptTerms,
     bool? isLoading,
     bool? isSuccess,
@@ -50,6 +56,8 @@ class RegisterState {
       password: password ?? this.password,
       confirmPassword: confirmPassword ?? this.confirmPassword,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      gender: gender ?? this.gender,
+      bloodType: bloodType ?? this.bloodType,
       acceptTerms: acceptTerms ?? this.acceptTerms,
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
@@ -59,11 +67,13 @@ class RegisterState {
 
   bool get isValid =>
       firstName.isNotEmpty &&
-      lastName.isNotEmpty &&
-      email.contains('@') &&
-      phone.length >= 11 &&
-      password.length >= 6 &&
-      confirmPassword == password &&
-      dateOfBirth.isNotEmpty &&
-      acceptTerms;
+          lastName.isNotEmpty &&
+          email.contains('@') &&
+          phone.length >= 11 &&
+          password.length >= 6 &&
+          confirmPassword == password &&
+          dateOfBirth.isNotEmpty &&
+          gender.isNotEmpty &&
+          bloodType.isNotEmpty &&
+          acceptTerms;
 }

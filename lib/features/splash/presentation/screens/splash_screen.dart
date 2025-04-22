@@ -28,29 +28,54 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _initializeAnimation();
+
+    // Start the splash animation and check auth after delay
     context.read<SplashBloc>().add(StartSplash());
   }
 
-  void _initializeAnimation() async {
+  void _initializeAnimation() {
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     );
     _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
+  }
 
-    var service = di.sl<AuthService>();
-    log('token: ${service.token!}');
-    log('currentUser: ${service.currentUserType}');
-    if(service.token != null){
-      if (service.currentUserType == 'patient') {
-        Navigator.pushReplacement(context,
+  void _checkAuthAndNavigate() {
+    var authService = di.sl<AuthService>();
+    log('token: ${authService.token}');
+    log('currentUser: ${authService.currentUserType}');
+    log('user loggedIn: ${authService.isLoggedIn}');
+
+    // Check if user is authenticated
+    if (authService.token != null && authService.isLoggedIn) {
+      // Navigate based on user type
+      if (authService.currentUserType == 'patient') {
+        Navigator.pushReplacement(
+          context,
           MaterialPageRoute(builder: (_) => const HomePage()),
         );
-      }else{
-
-
+      } else if (authService.currentUserType == 'doctor') {
+        // Navigate to doctor's home page
+        // TODO: Replace with your doctor home page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const DoctorHomePage()),
+        );
+      } else {
+        // Fallback for unknown user type or if user type is not set
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const UserSelectionScreen()),
+        );
       }
+    } else {
+      // User is not authenticated, navigate to user selection screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const UserSelectionScreen()),
+      );
     }
   }
 
@@ -65,10 +90,8 @@ class _SplashScreenState extends State<SplashScreen>
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state is SplashFinished) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const UserSelectionScreen()),
-          );
+          log("state is SplashFinished");
+          _checkAuthAndNavigate();
         }
       },
       child: Scaffold(
@@ -145,6 +168,23 @@ class _SplashScreenState extends State<SplashScreen>
     return Text(
       'رعاية طبية في متناول يديك',
       style: GoogleFonts.tajawal(fontSize: 18, color: Colors.white),
+    );
+  }
+}
+
+// TODO: Create this screen or replace with your actual doctor home page
+class DoctorHomePage extends StatelessWidget {
+  const DoctorHomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Doctor Dashboard'),
+      ),
+      body: const Center(
+        child: Text('Doctor Home Page'),
+      ),
     );
   }
 }

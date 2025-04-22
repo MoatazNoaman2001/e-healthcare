@@ -1,5 +1,4 @@
 abstract class RegisterEvent {}
-
 class FirstNameChanged extends RegisterEvent {
   final String firstName;
   FirstNameChanged(this.firstName);
@@ -38,6 +37,16 @@ class ConfirmPasswordChanged extends RegisterEvent {
 class DateOfBirthChanged extends RegisterEvent {
   final String dateOfBirth;
   DateOfBirthChanged(this.dateOfBirth);
+}
+
+class GenderChanged extends RegisterEvent {
+  final String gender;
+  GenderChanged(this.gender);
+}
+
+class BloodTypeChanged extends RegisterEvent {
+  final String bloodType;
+  BloodTypeChanged(this.bloodType);
 }
 
 class AcceptTermsChanged extends RegisterEvent {

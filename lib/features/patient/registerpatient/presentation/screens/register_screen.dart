@@ -32,6 +32,9 @@ class _RegisterFormState extends State<RegisterForm> {
   late TextEditingController _dateController;
   String? _selectedDate;
 
+  // List of blood types for dropdown
+  final List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
   @override
   void initState() {
     super.initState();
@@ -95,9 +98,9 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         validator:
                             (val) =>
-                                val == null || val.isEmpty
-                                    ? 'يرجى إدخال الاسم الأول'
-                                    : null,
+                        val == null || val.isEmpty
+                            ? 'يرجى إدخال الاسم الأول'
+                            : null,
                       ),
                       const SizedBox(height: 16),
 
@@ -112,9 +115,9 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         validator:
                             (val) =>
-                                val == null || val.isEmpty
-                                    ? 'يرجى إدخال الاسم الأخير'
-                                    : null,
+                        val == null || val.isEmpty
+                            ? 'يرجى إدخال الاسم الأخير'
+                            : null,
                       ),
                       const SizedBox(height: 16),
 
@@ -154,11 +157,62 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         validator:
                             (_) =>
-                                _selectedDate == null
-                                    ? 'يرجى اختيار تاريخ الميلاد'
-                                    : null,
+                        _selectedDate == null
+                            ? 'يرجى اختيار تاريخ الميلاد'
+                            : null,
                       ),
+                      const SizedBox(height: 16),
 
+                      // الجنس
+                      const Text('الجنس'),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        value: state.gender,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          border: OutlineInputBorder(),
+                        ),
+                        items: [
+                          DropdownMenuItem(value: 'male', child: Text('ذكر')),
+                          DropdownMenuItem(value: 'female', child: Text('أنثى')),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            bloc.add(GenderChanged(value));
+                          }
+                        },
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'يرجى اختيار الجنس'
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+
+                      // فصيلة الدم
+                      const Text('فصيلة الدم'),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        value: state.bloodType,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.bloodtype),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          border: OutlineInputBorder(),
+                        ),
+                        items: _bloodTypes.map((String bloodType) {
+                          return DropdownMenuItem<String>(
+                            value: bloodType,
+                            child: Text(bloodType),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            bloc.add(BloodTypeChanged(value));
+                          }
+                        },
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'يرجى اختيار فصيلة الدم'
+                            : null,
+                      ),
                       const SizedBox(height: 16),
 
                       // البريد الإلكتروني
@@ -226,9 +280,9 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         validator:
                             (val) =>
-                                val != null && val.length < 6
-                                    ? 'يجب 6 أحرف على الأقل'
-                                    : null,
+                        val != null && val.length < 6
+                            ? 'يجب 6 أحرف على الأقل'
+                            : null,
                       ),
                       const SizedBox(height: 16),
 
@@ -251,16 +305,16 @@ class _RegisterFormState extends State<RegisterForm> {
                             onPressed: () {
                               setState(() {
                                 _obscureConfirmPassword =
-                                    !_obscureConfirmPassword;
+                                !_obscureConfirmPassword;
                               });
                             },
                           ),
                         ),
                         validator:
                             (val) =>
-                                val != state.password
-                                    ? 'كلمة المرور غير متطابقة'
-                                    : null,
+                        val != state.password
+                            ? 'كلمة المرور غير متطابقة'
+                            : null,
                       ),
                       const SizedBox(height: 24),
 
@@ -271,7 +325,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             value: state.acceptTerms,
                             onChanged:
                                 (val) =>
-                                    bloc.add(AcceptTermsChanged(val ?? false)),
+                                bloc.add(AcceptTermsChanged(val ?? false)),
                           ),
                           Expanded(
                             child: Text.rich(
@@ -307,31 +361,31 @@ class _RegisterFormState extends State<RegisterForm> {
                         height: 55,
                         child: ElevatedButton(
                           onPressed:
-                              state.acceptTerms
-                                  ? () {
-                                    if (_formKey.currentState!.validate()) {
-                                      bloc.add(RegisterSubmitted());
-                                    }
-                                  }
-                                  : null,
+                          state.acceptTerms
+                              ? () {
+                            if (_formKey.currentState!.validate()) {
+                              bloc.add(RegisterSubmitted());
+                            }
+                          }
+                              : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                state.acceptTerms
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.grey.shade300,
+                            state.acceptTerms
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey.shade300,
                           ),
                           child:
-                              state.isLoading
-                                  ? const CircularProgressIndicator(
-                                    color: Colors.white,
-                                  )
-                                  : const Text(
-                                    'إنشاء حساب',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                          state.isLoading
+                              ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                              : const Text(
+                            'إنشاء حساب',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),

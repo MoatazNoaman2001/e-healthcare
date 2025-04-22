@@ -11,23 +11,23 @@ class AuthRepository {
     required String phone,
     required String password,
     required String dateOfBirth,
+    String gender = 'male', // Default value, should be configurable
+    String bloodType = 'A+', // Default value, should be configurable
   }) async {
     final data = {
+      'email': email,
+      'password': password,
       'first_name': firstName,
       'last_name': lastName,
-      'email': email,
-      'phone_number': phone,            // لازم تكون phone_number مش phone
-      'password': password,
-      'confirm_password': password,     // ضروري في الـ API
       'date_of_birth': dateOfBirth,
-      'user_type': 'patient',           // Enum موجود في Swagger
-      'agreed_to_terms': true,          // حقل مطلوب
+      'gender': gender,
+      'blood_type': bloodType,
     };
 
     print('🔵 Sending data: ${jsonEncode(data)}');
 
     final response = await http.post(
-      Uri.parse('$baseUrl/users/'),     // ❗ المسار الصحيح من Swagger
+      Uri.parse('$baseUrl/patients/register/'), // New API endpoint
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(data),
     );
