@@ -1,3 +1,4 @@
+import '../../../registerpatient/domain/models/patient_profile.dart';
 import '../../domain/entities/user_entity.dart';
 
 abstract class ProfileState {}
@@ -7,7 +8,7 @@ class ProfileInitial extends ProfileState {}
 class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
-  final UserEntity user;
+  final UserProfile user;
 
   ProfileLoaded(this.user);
 }

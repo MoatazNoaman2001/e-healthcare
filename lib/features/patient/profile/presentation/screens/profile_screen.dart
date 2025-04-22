@@ -1,6 +1,7 @@
 import 'package:doctorapp/features/patient/login/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../core/di/dependancy_injection.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
@@ -12,7 +13,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ProfileBloc()..add(LoadUserProfile()),
+      create: (context) => sl<ProfileBloc>()..add(LoadUserProfile()),
       child: Scaffold(
         body: Directionality(
           textDirection: TextDirection.rtl,
@@ -81,7 +82,21 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 );
               } else if (state is ProfileError) {
-                return Center(child: Text(state.message));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(state.message),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<ProfileBloc>().add(LoadUserProfile());
+                        },
+                        child: const Text('إعادة المحاولة'),
+                      ),
+                    ],
+                  ),
+                );
               } else {
                 return const Center(child: Text('حدث خطأ غير متوقع'));
               }
@@ -168,11 +183,14 @@ class ProfileScreen extends StatelessWidget {
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('إلغاء')),
           TextButton(
             onPressed: () {
+              // Add logout event to the bloc
+              context.read<ProfileBloc>().add(LogoutUser());
+
               Navigator.pop(context);
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (route) => false,
+                    (route) => false,
               );
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),

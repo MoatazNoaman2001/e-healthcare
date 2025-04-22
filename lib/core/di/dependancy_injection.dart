@@ -14,6 +14,9 @@ import '../../features/patient/home/domain/repo/home_repo.dart';
 import '../../features/patient/home/presentation/bloc/home_bloc.dart';
 import 'package:event_bus/event_bus.dart';
 
+import '../../features/patient/profile/presentation/bloc/profile_bloc.dart';
+import '../../features/patient/registerpatient/data/repo/profile_repo_impl.dart';
+import '../../features/patient/registerpatient/domain/repo/profile_repo.dart';
 import '../auth/auth_service.dart';
 
 final sl = GetIt.instance;
@@ -81,10 +84,15 @@ Future<void> init() async {
   sl.registerLazySingleton<DoctorRepository>(
         () => DoctorRepositoryImpl(remoteDataSource: sl()),
   );
+  sl.registerLazySingleton<ProfileRepository>(
+        () => ProfileRepositoryImpl(sl()),
+  );
+
 
   // Blocs
   sl.registerFactory(() => HomeBloc(repository: sl()));
   sl.registerFactory(() => DoctorSearchBloc(repository: sl()));
+  sl.registerFactory(() => ProfileBloc(profileRepository: sl()));
 }
 
 // Define event classes if not already defined
