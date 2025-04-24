@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RegisterTitle extends StatelessWidget {
   const RegisterTitle({super.key});
@@ -6,7 +7,7 @@ class RegisterTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'إنشاء حساب طبيب جديد',
+      'register_title'.tr(),
       style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,

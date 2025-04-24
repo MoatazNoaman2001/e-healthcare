@@ -1,6 +1,6 @@
 import 'package:doctorapp/features/doctor/appointments/presentation/screens/appointment_details_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/appointment_card.dart';
 
 class TodaysScheduleScreen extends StatelessWidget {
@@ -31,7 +31,10 @@ class TodaysScheduleScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('جدول اليوم', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: Text(
+          'todays_schedule'.tr(),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.teal.shade700,
       ),
       body: ListView.builder(

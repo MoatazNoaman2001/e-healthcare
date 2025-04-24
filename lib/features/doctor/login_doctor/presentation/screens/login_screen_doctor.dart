@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 import '../../data/auth_repository.dart';
 import '../bloc/doctor_login_bloc.dart';
 import '../widgets/login_title.dart';
@@ -48,22 +50,18 @@ class _LoginScreenDoctorViewState extends State<_LoginScreenDoctorView> {
         body: BlocConsumer<DoctorLoginBloc, DoctorLoginState>(
           listener: (context, state) {
             if (state.isSuccess && state.token != null) {
-              // عرض رسالة نجاح
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('تم تسجيل الدخول بنجاح'),
+                SnackBar(
+                  content: Text('login_success'.tr()),
                   backgroundColor: Colors.green,
                 ),
               );
 
-              // الانتقال إلى الصفحة الرئيسية
               Navigator.pushReplacementNamed(context, '/HomeScreen');
-
             } else if (state.error != null) {
-              // عرض رسالة الخطأ
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.error!),
+                  content: Text(state.error ?? 'login_error'.tr()),
                   backgroundColor: Colors.red,
                 ),
               );

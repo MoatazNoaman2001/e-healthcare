@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginButton extends StatelessWidget {
   final bool isLoading;
@@ -25,7 +24,10 @@ class LoginButton extends StatelessWidget {
         ),
         child: isLoading
             ? const CircularProgressIndicator(color: Colors.white)
-            : const Text('تسجيل الدخول', style: TextStyle(fontSize: 18)),
+            : Text(
+                'login'.tr(),
+                style: const TextStyle(fontSize: 18),
+              ),
       ),
     );
   }

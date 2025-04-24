@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PasswordField extends StatelessWidget {
   final TextEditingController controller;
@@ -14,14 +15,12 @@ class PasswordField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: TextFormField(
+    return  TextFormField(
         controller: controller,
         textAlign: TextAlign.right,
         obscureText: !showPassword,
         decoration: InputDecoration(
-          labelText: 'كلمة المرور',
+          labelText: 'password'.tr(),
           prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
             icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
@@ -30,11 +29,11 @@ class PasswordField extends StatelessWidget {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         validator: (value) {
-          if (value == null || value.isEmpty) return 'الرجاء إدخال كلمة المرور';
-          if (value.length < 6) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+          if (value == null || value.isEmpty) return 'enter_password'.tr();
+          if (value.length < 6) return 'password_too_short'.tr();
           return null;
         },
-      ),
+      
     );
   }
 }

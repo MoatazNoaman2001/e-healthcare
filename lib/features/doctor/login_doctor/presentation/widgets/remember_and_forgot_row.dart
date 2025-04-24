@@ -1,7 +1,5 @@
-import 'package:doctorapp/features/forgot/presentation/screens/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RememberAndForgotRow extends StatelessWidget {
   final bool remember;
@@ -24,14 +22,14 @@ class RememberAndForgotRow extends StatelessWidget {
               value: remember,
               onChanged: onChanged,
             ),
-            const Text('تذكرني'),
+            Text('remember_me'.tr()),
           ],
         ),
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, '/ForgotPassword');
           },
-          child: const Text('نسيت كلمة المرور؟'),
+          child: Text('forgot_password'.tr()),
         ),
       ],
     );

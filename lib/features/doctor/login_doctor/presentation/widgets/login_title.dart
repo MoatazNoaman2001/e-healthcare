@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginTitle extends StatelessWidget {
   const LoginTitle({super.key});
@@ -12,14 +11,14 @@ class LoginTitle extends StatelessWidget {
         const Icon(Icons.medical_services_rounded, size: 80, color: Colors.blue),
         const SizedBox(height: 16),
         Text(
-          'مرحباً بك',
+          'welcome'.tr(),
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          'تسجيل الدخول كطبيب',
+          'doctor_login'.tr(),
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ],

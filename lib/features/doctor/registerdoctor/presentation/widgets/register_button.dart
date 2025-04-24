@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RegisterButton extends StatelessWidget {
   final bool isLoading;
@@ -23,7 +24,10 @@ class RegisterButton extends StatelessWidget {
         ),
         child: isLoading
             ? const CircularProgressIndicator(color: Colors.white)
-            : const Text('تسجيل الحساب', style: TextStyle(fontSize: 18)),
+            : Text(
+                'register_account'.tr(),
+                style: const TextStyle(fontSize: 18),
+              ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ConfirmPasswordField extends StatelessWidget {
   final TextEditingController controller;
@@ -16,14 +17,12 @@ class ConfirmPasswordField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: TextFormField(
+    return  TextFormField(
         controller: controller,
         textAlign: TextAlign.right,
         obscureText: !showPassword,
         decoration: InputDecoration(
-          labelText: 'تأكيد كلمة المرور',
+          labelText: 'confirm_password'.tr(),
           prefixIcon: const Icon(Icons.lock_outline),
           suffixIcon: IconButton(
             icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
@@ -32,11 +31,11 @@ class ConfirmPasswordField extends StatelessWidget {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         validator: (value) {
-          if (value == null || value.isEmpty) return 'الرجاء تأكيد كلمة المرور';
-          if (value != passwordController.text) return 'كلمة المرور غير متطابقة';
+          if (value == null || value.isEmpty) return 'please_confirm_password'.tr();
+          if (value != passwordController.text) return 'passwords_not_match'.tr();
           return null;
         },
-      ),
+   
     );
   }
 }

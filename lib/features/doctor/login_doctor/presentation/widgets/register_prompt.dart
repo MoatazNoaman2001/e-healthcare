@@ -1,5 +1,6 @@
 import 'package:doctorapp/features/doctor/registerdoctor/presentation/screens/register_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RegisterPrompt extends StatelessWidget {
   const RegisterPrompt({super.key});
@@ -9,7 +10,7 @@ class RegisterPrompt extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('ليس لديك حساب؟'),
+        Text('no_account'.tr()),
         TextButton(
           onPressed: () {
             Navigator.push(
@@ -17,7 +18,7 @@ class RegisterPrompt extends StatelessWidget {
               MaterialPageRoute(builder: (_) => const RegisterScreen()),
             );
           },
-          child: const Text('إنشاء حساب'),
+          child: Text('create_account'.tr()),
         ),
       ],
     );

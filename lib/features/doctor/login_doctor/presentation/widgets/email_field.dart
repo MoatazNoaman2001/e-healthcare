@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class EmailField extends StatelessWidget {
   final TextEditingController controller;
@@ -15,17 +16,17 @@ class EmailField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.emailAddress,
-      decoration: const InputDecoration(
-        labelText: 'البريد الإلكتروني',
-        prefixIcon: Icon(Icons.email),
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: 'email'.tr(),
+        prefixIcon: const Icon(Icons.email),
+        border: const OutlineInputBorder(),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'الرجاء إدخال البريد الإلكتروني';
+          return 'enter_email'.tr();
         }
         if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-          return 'الرجاء إدخال بريد إلكتروني صحيح';
+          return 'invalid_email'.tr();
         }
         return null;
       },

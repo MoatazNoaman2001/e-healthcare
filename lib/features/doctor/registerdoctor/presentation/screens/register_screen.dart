@@ -1,5 +1,7 @@
 import 'package:doctorapp/features/doctor/registerdoctor/data/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 import 'package:doctorapp/features/doctor/login_doctor/presentation/screens/login_screen_doctor.dart';
 
 import '../widgets/register_title.dart';
@@ -50,8 +52,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() => _isLoading = false);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم إنشاء الحساب بنجاح'),
+          SnackBar(
+            content: Text('register_success'.tr()),
             backgroundColor: Colors.green,
           ),
         );
@@ -65,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('فشل التسجيل: ${e.toString()}'),
+            content: Text('${'register_failed'.tr()}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -78,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('تسجيل حساب جديد'),
+          title: Text('register_title'.tr()),
           centerTitle: true,
           backgroundColor: Colors.teal.shade700,
         ),
@@ -100,18 +102,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 PasswordField(
                   controller: _passwordController,
                   showPassword: _showPassword,
-                  onToggle:
-                      () => setState(() => _showPassword = !_showPassword),
+                  onToggle: () => setState(() => _showPassword = !_showPassword),
                 ),
                 const SizedBox(height: 20),
                 ConfirmPasswordField(
                   controller: _confirmPasswordController,
                   passwordController: _passwordController,
                   showPassword: _showConfirmPassword,
-                  onToggle:
-                      () => setState(
-                        () => _showConfirmPassword = !_showConfirmPassword,
-                      ),
+                  onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
                 ),
                 const SizedBox(height: 30),
                 RegisterButton(isLoading: _isLoading, onPressed: _register),

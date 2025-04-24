@@ -1,5 +1,6 @@
 import 'package:doctorapp/features/doctor/login_doctor/presentation/screens/login_screen_doctor.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginPrompt extends StatelessWidget {
   const LoginPrompt({super.key});
@@ -9,7 +10,7 @@ class LoginPrompt extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('لديك حساب بالفعل؟'),
+        Text('have_account'.tr()),
         TextButton(
           onPressed: () {
             Navigator.pushReplacement(
@@ -18,7 +19,7 @@ class LoginPrompt extends StatelessWidget {
             );
           },
           child: Text(
-            ' سجل الدخول',
+            'login_now'.tr(),
             style: TextStyle(
               color: Colors.teal.shade700,
               fontWeight: FontWeight.bold,

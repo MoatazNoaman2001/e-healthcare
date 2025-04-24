@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AppointmentCard extends StatelessWidget {
   final String patientName;
@@ -26,17 +27,17 @@ class AppointmentCard extends StatelessWidget {
       case 'waiting':
         statusIcon = Icons.hourglass_empty;
         statusColor = Colors.orange;
-        statusText = 'منتظر';
+        statusText = 'status_waiting'.tr();
         break;
       case 'in progress':
         statusIcon = Icons.play_circle_fill;
         statusColor = Colors.blue;
-        statusText = 'قيد التنفيذ';
+        statusText = 'status_in_progress'.tr();
         break;
       default:
         statusIcon = Icons.check_circle;
         statusColor = Colors.green;
-        statusText = 'مكتمل';
+        statusText = 'status_completed'.tr();
     }
 
     return Card(
@@ -53,8 +54,8 @@ class AppointmentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            Text('الوقت: $time', style: const TextStyle(fontSize: 14)),
-            Text('النوع: $type', style: const TextStyle(fontSize: 14)),
+            Text('${'time'.tr()}: $time', style: const TextStyle(fontSize: 14)),
+            Text('${'type'.tr()}: $type', style: const TextStyle(fontSize: 14)),
           ],
         ),
         trailing: Column(

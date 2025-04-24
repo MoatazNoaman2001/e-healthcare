@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class NameField extends StatelessWidget {
   final TextEditingController controller;
@@ -6,19 +7,17 @@ class NameField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: TextFormField(
+    return  TextFormField(
         controller: controller,
         textAlign: TextAlign.right,
         decoration: InputDecoration(
-          labelText: 'الاسم بالكامل',
+          labelText: 'full_name'.tr(),
           prefixIcon: const Icon(Icons.person),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         validator: (value) =>
-            value == null || value.isEmpty ? 'الرجاء إدخال الاسم' : null,
-      ),
+            value == null || value.isEmpty ? 'enter_name'.tr() : null,
+      
     );
   }
 }
