@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class EditProfileImagePicker extends StatelessWidget {
   const EditProfileImagePicker({super.key});
@@ -7,13 +8,13 @@ class EditProfileImagePicker extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('تغيير صورة الملف الشخصي'),
+        title: Text('change_profile_image'.tr()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.camera),
-              title: const Text('التقاط صورة'),
+              title: Text('take_photo'.tr()),
               onTap: () {
                 Navigator.pop(context);
                 // كود الكاميرا
@@ -21,7 +22,7 @@ class EditProfileImagePicker extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('اختيار من المعرض'),
+              title: Text('choose_from_gallery'.tr()),
               onTap: () {
                 Navigator.pop(context);
                 // كود المعرض

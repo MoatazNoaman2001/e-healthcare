@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../calendar/presentation/screens/calendar_screen.dart';
 import '../../../doctor_profile/presentation/screens/doctor_profile_screen.dart';
 import '../../../schedule/presentation/screens/todays_schedule_screen.dart';
@@ -15,9 +16,9 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'الصفحة الرئيسية',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+        title: Text(
+          'home'.tr(),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
         ),
         backgroundColor: Colors.teal.shade700,
         actions: [

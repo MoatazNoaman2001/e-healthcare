@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class EditProfileButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -16,9 +17,9 @@ class EditProfileButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        child: const Text(
-          'تعديل الملف الشخصي',
-          style: TextStyle(fontSize: 16),
+        child: Text(
+          'edit_profile'.tr(),
+          style: const TextStyle(fontSize: 16),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomeActionsRow extends StatelessWidget {
   final VoidCallback onScheduleTap;
@@ -18,7 +19,7 @@ class HomeActionsRow extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: onScheduleTap,
           icon: const Icon(Icons.schedule),
-          label: const Text('جدول اليوم'),
+          label: Text('todays_schedule'.tr()),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.teal.shade700,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -28,7 +29,7 @@ class HomeActionsRow extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: onCalendarTap,
           icon: const Icon(Icons.calendar_today),
-          label: const Text('التقويم'),
+          label: Text('calendar'.tr()),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.teal.shade700,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DoctorInfoHeader extends StatelessWidget {
   const DoctorInfoHeader({super.key});
@@ -16,22 +17,22 @@ class DoctorInfoHeader extends StatelessWidget {
             backgroundColor: Colors.teal,
           ),
           const SizedBox(height: 16),
-          const Text(
-            'د. أحمد محمد',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal),
+          Text(
+            'doctor_name'.tr(),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'أخصائي أمراض باطنية',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+          Text(
+            'specialist'.tr(),
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const [
-              _InfoItem(icon: Icons.star, value: '4.9', label: 'التقييم'),
-              _InfoItem(icon: Icons.medical_services, value: '10', label: 'سنوات الخبرة'),
-              _InfoItem(icon: Icons.people, value: '1200+', label: 'مرضى'),
+              _InfoItem(icon: Icons.star, value: '4.9', labelKey: 'rating'),
+              _InfoItem(icon: Icons.medical_services, value: '10', labelKey: 'experience_years'),
+              _InfoItem(icon: Icons.people, value: '1200+', labelKey: 'patients'),
             ],
           ),
         ],
@@ -58,9 +59,9 @@ class DoctorInfoHeader extends StatelessWidget {
 class _InfoItem extends StatelessWidget {
   final IconData icon;
   final String value;
-  final String label;
+  final String labelKey;
 
-  const _InfoItem({required this.icon, required this.value, required this.label});
+  const _InfoItem({required this.icon, required this.value, required this.labelKey});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,7 @@ class _InfoItem extends StatelessWidget {
         Icon(icon, color: Colors.teal, size: 28),
         const SizedBox(height: 4),
         Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(labelKey.tr(), style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomeHeader extends StatelessWidget {
   final DateTime date;
@@ -8,7 +9,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'تاريخ اليوم: ${date.day}/${date.month}/${date.year}',
+      '${'today_date'.tr()}: ${date.day}/${date.month}/${date.year}',
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
         fontWeight: FontWeight.bold,
         color: Colors.teal.shade700,

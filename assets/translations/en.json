@@ -82,17 +82,15 @@
   "experience": "Experience",
   "available_appointments": "Available Appointments:",
   "book_appointment": "Book Appointment",
-  "search_hint": "Search for a doctor, specialty, or condition...",
+  
   "error_occurred": "An error occurred:",
-  "retry": "Retry",
+ 
   "no_doctors_found": "No doctors found",
   "try_another_filter": "Try changing the search terms or removing filters",
   
   "next_appointment": "Next Appointment",
   "book_now": "Book Now",
-  "search_hint": "Search for a doctor, specialty, or condition...",
-  "book_appointment": "Book Appointment",
-  "doctor": "Doctor",
+  
   "specialty": "Specialty",
   "select_date": "Select Date",
   "choose_date": "Choose a date:",
@@ -106,8 +104,7 @@
   "success_title": "Success!",
   "success_message": "Your appointment has been booked successfully.",
   "details": "Details:",
-  "doctor": "Doctor",
-  "specialty": "Specialty",
+
   "date": "Date",
   "time": "Time",
   "reason": "Reason",
@@ -128,13 +125,51 @@
   "reschedule_appointment": "Reschedule",
   "completed_msg": "Appointment completed",
   "rescheduled_msg": "Appointment rescheduled",
-  "patient": "Patient",
-  "time": "Time",
+ 
   "type": "Type",
   "appointment_notes_hint": "Enter appointment notes here...",
   "calendar": "Calendar",
   "add_unavailable_time": "Add Unavailable Time",
   "reschedule": "Reschedule Appointment",
-  "no_events": "No events for this day"
+  "no_events": "No events for this day",
+  
+  "contact_info": "Contact Information",
+  "working_hours": "Working hours: 9 AM - 5 PM",
+  "location": "Cairo, Egypt",
+  "doctor_name": "Dr. Ahmed Mohamed",
+  "specialist": "Internal Medicine Specialist",
+  "rating": "Rating",
+  "experience_years": "Years of Experience",
+  "patients": "Patients",
+  "qualifications_title": "Specialty & Qualifications",
+  "degree_1": "PhD in Internal Medicine",
+  "degree_1_sub": "Cairo University - 2015",
+  "degree_2": "Royal College Fellowship",
+  "degree_2_sub": "London - 2018",
+  "degree_3": "Gastroenterology Board",
+  "degree_3_sub": "USA - 2020",
+  "full_name": "Full Name",
+  "specialty": "Specialty",
+  "phone": "Phone Number",
+  "email": "Email Address",
+  "address": "Address",
+  "working_hours": "Working Hours",
+  "save_changes": "Save Changes",
+  "enter_name": "Please enter your name",
+  "invalid_email": "Invalid email",
+  "profile_saved": "Changes saved successfully",
+  "change_profile_image": "Change Profile Image",
+  "take_photo": "Take Photo",
+  "choose_from_gallery": "Choose from Gallery",
+   "home": "Home",
+   "todays_schedule": "Today's Schedule",
+  "calendar": "Calendar",
+  "appointments_today": "Appointments Today",
+  "waiting_patients": "Waiting Patients",
+  "next_appointment": "Next Appointment",
+  "today_date": "Today's Date"
+
+
+  
 
 }

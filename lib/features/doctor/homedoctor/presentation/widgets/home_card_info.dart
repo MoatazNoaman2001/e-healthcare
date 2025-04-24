@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomeCardInfo extends StatelessWidget {
   const HomeCardInfo({super.key});
@@ -8,19 +9,19 @@ class HomeCardInfo extends StatelessWidget {
     return Column(
       children: [
         _buildCard(
-          title: 'عدد المواعيد اليوم',
+          title: 'appointments_today'.tr(),
           value: '5', // Replace with dynamic
           color: Colors.teal,
         ),
         const SizedBox(height: 16),
         _buildCard(
-          title: 'عدد المرضى المنتظرين',
+          title: 'waiting_patients'.tr(),
           value: '3', // Replace with dynamic
           color: Colors.orange,
         ),
         const SizedBox(height: 16),
         _buildCard(
-          title: 'الموعد القادم',
+          title: 'next_appointment'.tr(),
           subtitle: '10:30 AM - محمد أحمد', // Replace with dynamic
           isSubtitle: true,
         ),

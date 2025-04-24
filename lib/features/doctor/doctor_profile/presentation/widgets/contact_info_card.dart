@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ContactInfoCard extends StatelessWidget {
   const ContactInfoCard({super.key});
@@ -6,12 +7,12 @@ class ContactInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _buildSectionCard(
-      title: 'معلومات الاتصال',
-      children: const [
-        _InfoRow(icon: Icons.phone, text: '0123456789'),
-        _InfoRow(icon: Icons.email, text: 'doctor@example.com'),
-        _InfoRow(icon: Icons.location_on, text: 'القاهرة، مصر'),
-        _InfoRow(icon: Icons.access_time, text: 'ساعات العمل: 9 ص - 5 م'),
+      title: 'contact_info'.tr(),
+      children: [
+        const _InfoRow(icon: Icons.phone, text: '0123456789'),
+        const _InfoRow(icon: Icons.email, text: 'doctor@example.com'),
+        _InfoRow(icon: Icons.location_on, text: 'location'.tr()),
+        _InfoRow(icon: Icons.access_time, text: 'working_hours'.tr()),
       ],
     );
   }

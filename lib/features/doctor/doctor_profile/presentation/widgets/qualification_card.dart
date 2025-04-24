@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class QualificationCard extends StatelessWidget {
   const QualificationCard({super.key});
@@ -6,11 +7,11 @@ class QualificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _buildSectionCard(
-      title: 'التخصص والمؤهلات',
+      title: 'qualifications_title'.tr(),
       children: const [
-        _QualificationItem(title: 'دكتوراه في الطب الباطني', subtitle: 'جامعة القاهرة - 2015'),
-        _QualificationItem(title: 'زمالة الكلية الملكية', subtitle: 'لندن - 2018'),
-        _QualificationItem(title: 'بورد أمراض الجهاز الهضمي', subtitle: 'أمريكا - 2020'),
+        _QualificationItem(titleKey: 'degree_1', subtitleKey: 'degree_1_sub'),
+        _QualificationItem(titleKey: 'degree_2', subtitleKey: 'degree_2_sub'),
+        _QualificationItem(titleKey: 'degree_3', subtitleKey: 'degree_3_sub'),
       ],
     );
   }
@@ -46,18 +47,18 @@ class QualificationCard extends StatelessWidget {
 }
 
 class _QualificationItem extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String titleKey;
+  final String subtitleKey;
 
-  const _QualificationItem({required this.title, required this.subtitle});
+  const _QualificationItem({required this.titleKey, required this.subtitleKey});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: const Icon(Icons.medical_information, color: Colors.teal),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
+      title: Text(titleKey.tr(), style: const TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Text(subtitleKey.tr(), style: const TextStyle(color: Colors.grey)),
     );
   }
 }

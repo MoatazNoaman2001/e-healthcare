@@ -1,10 +1,10 @@
 import 'package:doctorapp/features/doctor/edit_profile/presentation/screens/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/doctor_info_header.dart';
 import '../widgets/contact_info_card.dart';
 import '../widgets/qualification_card.dart';
 import '../widgets/edit_profile_button.dart';
-
 
 class DoctorProfileScreen extends StatelessWidget {
   const DoctorProfileScreen({super.key});
@@ -13,7 +13,7 @@ class DoctorProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('الملف الشخصي'),
+        title: Text('profile'.tr()),
         centerTitle: true,
         backgroundColor: Colors.teal.shade700,
       ),
