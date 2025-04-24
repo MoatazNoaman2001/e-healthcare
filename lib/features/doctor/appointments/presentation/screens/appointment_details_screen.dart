@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/appointment_info_section.dart';
 import '../widgets/appointment_action_buttons.dart';
 
@@ -18,7 +19,7 @@ class AppointmentDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('تفاصيل الموعد'),
+        title: Text('appointment_details'.tr()),
         backgroundColor: Colors.teal.shade700,
       ),
       body: Padding(
@@ -31,11 +32,11 @@ class AppointmentDetailsScreen extends StatelessWidget {
               appointmentType: appointmentType,
             ),
             const SizedBox(height: 16),
-            const Align(
+            Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'ملاحظات الموعد:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                'appointment_notes'.tr(),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 8),

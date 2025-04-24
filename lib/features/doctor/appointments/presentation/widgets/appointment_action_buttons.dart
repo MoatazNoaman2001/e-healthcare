@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AppointmentActionButtons extends StatelessWidget {
   const AppointmentActionButtons({super.key});
@@ -11,11 +12,11 @@ class AppointmentActionButtons extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('تم إكمال الموعد')),
+                SnackBar(content: Text('completed_msg'.tr())),
               );
             },
             icon: const Icon(Icons.check_circle),
-            label: const Text('إكمال الموعد'),
+            label: Text('complete_appointment'.tr()),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -27,11 +28,11 @@ class AppointmentActionButtons extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('إعادة جدولة الموعد')),
+                SnackBar(content: Text('rescheduled_msg'.tr())),
               );
             },
             icon: const Icon(Icons.edit_calendar),
-            label: const Text('إعادة الجدولة'),
+            label: Text('reschedule_appointment'.tr()),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
               padding: const EdgeInsets.symmetric(vertical: 12),

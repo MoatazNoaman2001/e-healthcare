@@ -116,5 +116,25 @@
   "tab_upcoming": "Upcoming",
   "tab_completed": "Completed",
   "tab_cancelled": "Cancelled",
-  "no_appointments": "No appointments"
+  "no_appointments": "No appointments",
+  "forgot_password_title": "Forgot Password",
+  "forgot_password_instruction": "Enter your email to reset your password",
+  "email_hint": "Enter your email",
+  "send_reset": "Reset Password",
+  "reset_link_sent": "Reset link has been sent",
+  "appointment_details": "Appointment Details",
+  "appointment_notes": "Appointment Notes:",
+  "complete_appointment": "Complete Appointment",
+  "reschedule_appointment": "Reschedule",
+  "completed_msg": "Appointment completed",
+  "rescheduled_msg": "Appointment rescheduled",
+  "patient": "Patient",
+  "time": "Time",
+  "type": "Type",
+  "appointment_notes_hint": "Enter appointment notes here...",
+  "calendar": "Calendar",
+  "add_unavailable_time": "Add Unavailable Time",
+  "reschedule": "Reschedule Appointment",
+  "no_events": "No events for this day"
+
 }

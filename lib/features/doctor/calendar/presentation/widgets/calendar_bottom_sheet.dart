@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CalendarBottomSheet extends StatelessWidget {
   const CalendarBottomSheet({super.key});
@@ -12,17 +13,15 @@ class CalendarBottomSheet extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.add, color: Colors.teal),
-            title: const Text('إضافة وقت غير متاح'),
+            title: Text('add_unavailable_time'.tr()),
             onTap: () {
-              // إضافة وقت غير متاح
               Navigator.pop(context);
             },
           ),
           ListTile(
             leading: const Icon(Icons.edit_calendar, color: Colors.teal),
-            title: const Text('إعادة جدولة موعد'),
+            title: Text('reschedule'.tr()),
             onTap: () {
-              // إعادة جدولة
               Navigator.pop(context);
             },
           ),

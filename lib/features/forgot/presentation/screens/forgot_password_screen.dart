@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../bloc/forgot_password_bloc.dart';
 import '../bloc/forgot_password_event.dart';
 import '../bloc/forgot_password_state.dart';
@@ -13,17 +14,16 @@ class ForgotPasswordScreen extends StatelessWidget {
 
     return BlocProvider(
       create: (_) => ForgotPasswordBloc(),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
+    
         child: Scaffold(
-          appBar: AppBar(title: const Text('استرجاع كلمة المرور')),
+          appBar: AppBar(title: Text('forgot_password_title'.tr())),
           body: Padding(
             padding: const EdgeInsets.all(24.0),
             child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
               listener: (context, state) {
                 if (state is ForgotPasswordSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('تم إرسال رابط استرجاع كلمة المرور')),
+                    SnackBar(content: Text('reset_link_sent'.tr())),
                   );
                 } else if (state is ForgotPasswordError) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -35,17 +35,17 @@ class ForgotPasswordScreen extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'أدخل بريدك الإلكتروني لاسترجاع كلمة المرور',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    Text(
+                      'forgot_password_instruction'.tr(),
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        hintText: 'أدخل بريدك الإلكتروني',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      decoration: InputDecoration(
+                        hintText: 'email_hint'.tr(),
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -65,9 +65,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                         ),
                         child: state is ForgotPasswordLoading
                             ? const CircularProgressIndicator(color: Colors.white)
-                            : const Text(
-                                'استرجاع كلمة المرور',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            : Text(
+                                'send_reset'.tr(),
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                       ),
                     ),
@@ -77,7 +77,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }

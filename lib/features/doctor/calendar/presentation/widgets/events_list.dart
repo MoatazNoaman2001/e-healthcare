@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class EventsList extends StatelessWidget {
   final DateTime? selectedDay;
@@ -15,10 +16,10 @@ class EventsList extends StatelessWidget {
     final selectedEvents = selectedDay != null ? events[selectedDay] : null;
 
     if (selectedEvents == null || selectedEvents.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          'لا توجد مواعيد لهذا اليوم',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+          'no_events'.tr(),
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
         ),
       );
     }

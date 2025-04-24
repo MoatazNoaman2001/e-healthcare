@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../widgets/calendar_view.dart';
 import '../widgets/events_list.dart';
 import '../widgets/calendar_bottom_sheet.dart';
@@ -13,6 +14,7 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+
   final Map<DateTime, List<String>> _events = {
     DateTime.now(): ['استشارة - 10:00 AM', 'متابعة - 2:00 PM'],
     DateTime.now().add(const Duration(days: 1)): ['حالة طارئة - 1:00 PM'],
@@ -22,7 +24,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('التقويم'),
+        title: Text('calendar'.tr()),
         backgroundColor: Colors.teal.shade700,
       ),
       body: Column(

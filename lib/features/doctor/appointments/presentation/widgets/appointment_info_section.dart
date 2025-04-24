@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AppointmentInfoSection extends StatelessWidget {
   final String patientName;
@@ -18,17 +19,17 @@ class AppointmentInfoSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'المريض: $patientName',
+          '${'patient'.tr()}: $patientName',
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
-          'الوقت: $appointmentTime',
+          '${'time'.tr()}: $appointmentTime',
           style: const TextStyle(fontSize: 16, color: Colors.grey),
         ),
         const SizedBox(height: 8),
         Text(
-          'النوع: $appointmentType',
+          '${'type'.tr()}: $appointmentType',
           style: const TextStyle(fontSize: 16, color: Colors.grey),
         ),
       ],
@@ -44,7 +45,7 @@ class AppointmentNotesInput extends StatelessWidget {
     return TextField(
       maxLines: 5,
       decoration: InputDecoration(
-        hintText: 'أدخل ملاحظات الموعد هنا...',
+        hintText: 'appointment_notes_hint'.tr(),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
