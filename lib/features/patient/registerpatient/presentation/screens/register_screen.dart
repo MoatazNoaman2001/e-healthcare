@@ -32,7 +32,16 @@ class _RegisterFormState extends State<RegisterForm> {
   late TextEditingController _dateController;
   String? _selectedDate;
 
-  final List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+  final List<String> _bloodTypes = [
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'AB+',
+    'AB-',
+    'O+',
+    'O-'
+  ];
 
   @override
   void initState() {
@@ -46,22 +55,33 @@ class _RegisterFormState extends State<RegisterForm> {
     super.dispose();
   }
 
+  InputDecoration _inputDecoration(String hint, IconData icon) {
+    return InputDecoration(
+      hintText: hint,
+      prefixIcon: Icon(icon, color: const Color(0xFF006272)),
+      filled: true,
+      fillColor: const Color.fromARGB(255, 255, 255, 255),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        appBar: AppBar(
-          title: Text('register_title'.tr()),
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromARGB(255, 214, 249, 247), Colors.white],
           ),
         ),
-        body: SafeArea(
+        child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.all(24),
             child: BlocConsumer<RegisterBloc, RegisterState>(
               listener: (context, state) {
                 if (state.isSuccess) {
@@ -81,181 +101,88 @@ class _RegisterFormState extends State<RegisterForm> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      const SizedBox(height: 16),
-                      Text('first_name'.tr()),
-                      const SizedBox(height: 8),
-                      TextFormField(
+                      const SizedBox(height: 20),
+                      const Icon(Icons.medical_services_rounded,
+                          size: 60, color: Color(0xFF006272)),
+                      const SizedBox(height: 10),
+                      Text('register_title'.tr(),
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF006272),
+                          )),
+                      const SizedBox(height: 30),
+                      _buildTextField(
+                        label: 'first_name'.tr(),
+                        hint: 'enter_first_name'.tr(),
+                        icon: Icons.person,
+                        validatorMsg: 'first_name_required'.tr(),
                         onChanged: (val) => bloc.add(FirstNameChanged(val)),
-                        decoration: InputDecoration(
-                          hintText: 'enter_first_name'.tr(),
-                          prefixIcon: const Icon(Icons.person),
-                        ),
-                        validator: (val) =>
-                            val == null || val.isEmpty ? 'first_name_required'.tr() : null,
                       ),
-                      const SizedBox(height: 16),
-                      Text('last_name'.tr()),
-                      const SizedBox(height: 8),
-                      TextFormField(
+                      _buildTextField(
+                        label: 'last_name'.tr(),
+                        hint: 'enter_last_name'.tr(),
+                        icon: Icons.person_outline,
+                        validatorMsg: 'last_name_required'.tr(),
                         onChanged: (val) => bloc.add(LastNameChanged(val)),
-                        decoration: InputDecoration(
-                          hintText: 'enter_last_name'.tr(),
-                          prefixIcon: const Icon(Icons.person_outline),
-                        ),
-                        validator: (val) =>
-                            val == null || val.isEmpty ? 'last_name_required'.tr() : null,
                       ),
-                      const SizedBox(height: 16),
-                      Text('birthdate'.tr()),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        readOnly: true,
-                        controller: _dateController,
-                        onTap: () async {
-                          final pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime(2000, 1, 1),
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now(),
-                            helpText: 'select_birthdate'.tr(),
-                          );
-                          if (pickedDate != null) {
-                            final formatted =
-                                "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-                            setState(() {
-                              _selectedDate = formatted;
-                              _dateController.text = formatted;
-                            });
-                            bloc.add(DateOfBirthChanged(formatted));
-                          }
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'select_birthdate'.tr(),
-                          prefixIcon: const Icon(Icons.cake_outlined),
-                        ),
-                        validator: (_) =>
-                            _selectedDate == null ? 'birthdate_required'.tr() : null,
-                      ),
-                      const SizedBox(height: 16),
-                      Text('gender'.tr()),
-                      const SizedBox(height: 8),
-                      DropdownButtonFormField<String>(
+                      _buildDatePickerField(context, bloc),
+                      _buildDropdown(
+                        label: 'gender'.tr(),
                         value: state.gender,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(),
-                        ),
-                        items: [
-                          DropdownMenuItem(value: 'male', child: Text('male'.tr())),
-                          DropdownMenuItem(value: 'female', child: Text('female'.tr())),
-                        ],
-                        onChanged: (value) {
-                          if (value != null) bloc.add(GenderChanged(value));
-                        },
-                        validator: (value) =>
-                            value == null || value.isEmpty ? 'gender_required'.tr() : null,
+                        items: ['male', 'female'],
+                        itemLabels: ['male'.tr(), 'female'.tr()],
+                        icon: Icons.person,
+                        onChanged: (val) => bloc.add(GenderChanged(val!)),
+                        validator: 'gender_required'.tr(),
                       ),
-                      const SizedBox(height: 16),
-                      Text('blood_type'.tr()),
-                      const SizedBox(height: 8),
-                      DropdownButtonFormField<String>(
+                      _buildDropdown(
+                        label: 'blood_type'.tr(),
                         value: state.bloodType,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.bloodtype),
-                          border: OutlineInputBorder(),
-                        ),
-                        items: _bloodTypes.map((String bloodType) {
-                          return DropdownMenuItem<String>(
-                            value: bloodType,
-                            child: Text(bloodType),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) bloc.add(BloodTypeChanged(value));
-                        },
-                        validator: (value) =>
-                            value == null || value.isEmpty ? 'blood_required'.tr() : null,
+                        items: _bloodTypes,
+                        itemLabels: _bloodTypes,
+                        icon: Icons.bloodtype,
+                        onChanged: (val) => bloc.add(BloodTypeChanged(val!)),
+                        validator: 'blood_required'.tr(),
                       ),
-                      const SizedBox(height: 16),
-                      Text('email'.tr()),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
+                      _buildTextField(
+                        label: 'email'.tr(),
+                        hint: 'enter_email'.tr(),
+                        icon: Icons.email_outlined,
+                        validatorMsg: 'email_required'.tr(),
                         onChanged: (val) => bloc.add(EmailChanged(val)),
-                        decoration: InputDecoration(
-                          hintText: 'enter_email'.tr(),
-                          prefixIcon: const Icon(Icons.email_outlined),
-                        ),
-                        validator: (val) {
-                          if (val == null || val.isEmpty) {
-                            return 'email_required'.tr();
-                          }
-                          final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                          return regex.hasMatch(val) ? null : 'invalid_email'.tr();
-                        },
+                        keyboardType: TextInputType.emailAddress,
                       ),
-                      const SizedBox(height: 16),
-                      Text('phone'.tr()),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        keyboardType: TextInputType.phone,
+                      _buildTextField(
+                        label: 'phone'.tr(),
+                        hint: 'enter_phone'.tr(),
+                        icon: Icons.phone_android,
+                        validatorMsg: 'phone_required'.tr(),
                         onChanged: (val) => bloc.add(PhoneChanged(val)),
-                        decoration: InputDecoration(
-                          hintText: 'enter_phone'.tr(),
-                          prefixIcon: const Icon(Icons.phone_android),
-                        ),
-                        validator: (val) {
-                          if (val == null || val.isEmpty) {
-                            return 'phone_required'.tr();
-                          }
-                          return val.length < 11 ? 'invalid_phone'.tr() : null;
-                        },
+                        keyboardType: TextInputType.phone,
                       ),
-                      const SizedBox(height: 16),
-                      Text('password'.tr()),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        obscureText: _obscurePassword,
+                      _buildPasswordField(
+                        label: 'password'.tr(),
+                        hint: 'enter_password'.tr(),
+                        obscure: _obscurePassword,
+                        toggle: () => setState(
+                            () => _obscurePassword = !_obscurePassword),
                         onChanged: (val) => bloc.add(PasswordChanged(val)),
-                        decoration: InputDecoration(
-                          hintText: 'enter_password'.tr(),
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                          ),
-                        ),
-                        validator: (val) =>
-                            val != null && val.length < 6 ? 'password_too_short'.tr() : null,
+                        validator: (val) => val != null && val.length < 6
+                            ? 'password_too_short'.tr()
+                            : null,
                       ),
-                      const SizedBox(height: 16),
-                      Text('confirm_password'.tr()),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        obscureText: _obscureConfirmPassword,
-                        onChanged: (val) => bloc.add(ConfirmPasswordChanged(val)),
-                        decoration: InputDecoration(
-                          hintText: 'reenter_password'.tr(),
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscureConfirmPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            onPressed: () {
-                              setState(() {
-                                _obscureConfirmPassword = !_obscureConfirmPassword;
-                              });
-                            },
-                          ),
-                        ),
-                        validator: (val) =>
-                            val != state.password ? 'password_mismatch'.tr() : null,
+                      _buildPasswordField(
+                        label: 'confirm_password'.tr(),
+                        hint: 'reenter_password'.tr(),
+                        obscure: _obscureConfirmPassword,
+                        toggle: () => setState(() =>
+                            _obscureConfirmPassword = !_obscureConfirmPassword),
+                        onChanged: (val) =>
+                            bloc.add(ConfirmPasswordChanged(val)),
+                        validator: (val) => val != state.password
+                            ? 'password_mismatch'.tr()
+                            : null,
                       ),
                       const SizedBox(height: 24),
                       Row(
@@ -263,38 +190,18 @@ class _RegisterFormState extends State<RegisterForm> {
                           Checkbox(
                             value: state.acceptTerms,
                             onChanged: (val) =>
-                                bloc.add(AcceptTermsChanged(val ?? false)),
+                                bloc.add(AcceptTermsChanged(val!)),
                           ),
                           Expanded(
-                            child: Text.rich(
-                              TextSpan(
-                                text: 'terms_accept'.tr(),
-                                children: [
-                                  TextSpan(
-                                    text: 'terms'.tr(),
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  TextSpan(text: 'and'.tr()),
-                                  TextSpan(
-                                    text: 'privacy'.tr(),
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            child: Text('terms_accept'.tr(),
+                                style: const TextStyle(fontSize: 14)),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 12),
                       SizedBox(
                         width: double.infinity,
-                        height: 55,
+                        height: 50,
                         child: ElevatedButton(
                           onPressed: state.acceptTerms
                               ? () {
@@ -305,29 +212,25 @@ class _RegisterFormState extends State<RegisterForm> {
                               : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: state.acceptTerms
-                                ? Theme.of(context).primaryColor
+                                ? const Color(0xFF006272)
                                 : Colors.grey.shade300,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                           ),
                           child: state.isLoading
-                              ? const CircularProgressIndicator(color: Colors.white)
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
                               : Text('register'.tr(),
-                                  style: const TextStyle(
-                                      fontSize: 18, fontWeight: FontWeight.bold)),
+                                  style: const TextStyle(fontSize: 16)),
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('already_have_account'.tr()),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('login'.tr(),
-                                style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
                       const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('already_have_account'.tr(),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                      ),
                     ],
                   ),
                 );
@@ -335,6 +238,132 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required String hint,
+    required IconData icon,
+    required String validatorMsg,
+    required Function(String) onChanged,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        TextFormField(
+          keyboardType: keyboardType,
+          onChanged: onChanged,
+          validator: (val) => val == null || val.isEmpty ? validatorMsg : null,
+          decoration: _inputDecoration(hint, icon),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildPasswordField({
+    required String label,
+    required String hint,
+    required bool obscure,
+    required VoidCallback toggle,
+    required Function(String) onChanged,
+    required String? Function(String?) validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        TextFormField(
+          obscureText: obscure,
+          onChanged: onChanged,
+          validator: validator,
+          decoration: _inputDecoration(hint, Icons.lock_outline).copyWith(
+            suffixIcon: IconButton(
+              icon: Icon(obscure ? Icons.visibility_off : Icons.visibility),
+              onPressed: toggle,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildDropdown({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required List<String> itemLabels,
+    required IconData icon,
+    required void Function(String?) onChanged,
+    required String validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        DropdownButtonFormField<String>(
+          value: value,
+          decoration: _inputDecoration(label, icon),
+          items: List.generate(
+            items.length,
+            (index) => DropdownMenuItem(
+              value: items[index],
+              child: Text(itemLabels[index]),
+            ),
+          ),
+          onChanged: onChanged,
+          validator: (val) => val == null || val.isEmpty ? validator : null,
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildDatePickerField(BuildContext context, RegisterBloc bloc) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('birthdate'.tr(),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _dateController,
+          readOnly: true,
+          onTap: () async {
+            final pickedDate = await showDatePicker(
+              context: context,
+              initialDate: DateTime(2000, 1, 1),
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+            );
+            if (pickedDate != null) {
+              final formatted =
+                  "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+              setState(() {
+                _selectedDate = formatted;
+                _dateController.text = formatted;
+              });
+              bloc.add(DateOfBirthChanged(formatted));
+            }
+          },
+          validator: (_) =>
+              _selectedDate == null ? 'birthdate_required'.tr() : null,
+          decoration:
+              _inputDecoration('select_birthdate'.tr(), Icons.cake_outlined),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
   }
 }
