@@ -1,6 +1,5 @@
-// lib/features/appointments/presentation/screens/appointment_confirmation_screen.dart
-
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AppointmentConfirmationScreen extends StatelessWidget {
   final String doctorName;
@@ -21,16 +20,16 @@ class AppointmentConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('تأكيد الموعد')),
+      appBar: AppBar(title: Text('confirmation_title'.tr())),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
+            Center(
               child: Text(
-                "!تم بنجاح",
-                style: TextStyle(
+                'success_title'.tr(),
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
@@ -38,30 +37,30 @@ class AppointmentConfirmationScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Center(
+            Center(
               child: Text(
-                'تم حجز موعدك بنجاح.',
-                style: TextStyle(fontSize: 18, color: Colors.black54),
+                'success_message'.tr(),
+                style: const TextStyle(fontSize: 18, color: Colors.black54),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 30),
             const Divider(color: Colors.grey),
             const SizedBox(height: 10),
-            const Text(
-              'التفاصيل:',
-              style: TextStyle(
+            Text(
+              'details'.tr(),
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.blueAccent,
               ),
             ),
             const SizedBox(height: 15),
-            _infoText('الطبيب: $doctorName'),
-            _infoText('التخصص: $specialty'),
-            _infoText('التاريخ: ${date.day}/${date.month}/${date.year}'),
-            _infoText('الوقت: $timeSlot'),
-            _infoText('السبب: $reason'),
+            _infoText('${'doctor'.tr()}: $doctorName'),
+            _infoText('${'specialty'.tr()}: $specialty'),
+            _infoText('${'date'.tr()}: ${date.day}/${date.month}/${date.year}'),
+            _infoText('${'time'.tr()}: $timeSlot'),
+            _infoText('${'reason'.tr()}: $reason'),
             const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,7 +70,7 @@ class AppointmentConfirmationScreen extends StatelessWidget {
                     // Add to calendar logic here
                   },
                   icon: const Icon(Icons.calendar_today),
-                  label: const Text('إضافة إلى التقويم'),
+                  label: Text('add_to_calendar'.tr()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     padding: const EdgeInsets.symmetric(
@@ -85,7 +84,7 @@ class AppointmentConfirmationScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
-                  child: const Text('العودة إلى الصفحة الرئيسية'),
+                  child: Text('back_home'.tr()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,
                     padding: const EdgeInsets.symmetric(

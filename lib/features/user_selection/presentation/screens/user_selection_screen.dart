@@ -1,6 +1,6 @@
 import 'package:doctorapp/features/patient/login/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import '../../../doctor/login_doctor/presentation/screens/login_screen_doctor.dart';
 
 class UserSelectionScreen extends StatefulWidget {
@@ -51,9 +51,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return Scaffold(
         body: SafeArea(
           child: Container(
             decoration: BoxDecoration(
@@ -103,7 +101,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
 
                             // App Title
                             Text(
-                              'صحتي',
+                              'app_name'.tr(),
                               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue.shade800,
@@ -127,7 +125,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
                                 ],
                               ),
                               child: Text(
-                                'رعاية طبية في متناول يديك',
+                                'slogan'.tr(),
                                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: Colors.blue.shade600,
                                   fontWeight: FontWeight.w500,
@@ -139,7 +137,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
 
                             // Prompt Text
                             Text(
-                              'أهلاً بك، يرجى اختيار نوع المستخدم',
+                              'select_user_type'.tr(),
                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.grey.shade800,
@@ -155,7 +153,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
                                 Expanded(
                                   child: _buildUserTypeCard(
                                     context,
-                                    title: 'مريض',
+                                    title: 'patient'.tr(),
                                     icon: Icons.person,
                                     color: Colors.blue,
                                     onTap: () {
@@ -180,7 +178,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
                                 Expanded(
                                   child: _buildUserTypeCard(
                                     context,
-                                    title: 'طبيب',
+                                    title: 'doctor'.tr(),
                                     icon: Icons.medical_services,
                                     color: Colors.green,
                                     onTap: () {
@@ -210,7 +208,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
-                      'يمكنك تغيير نوع المستخدم لاحقًا من الإعدادات',
+                      'user_type_change_later'.tr(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.grey.shade600,
                       ),
@@ -222,17 +220,16 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildUserTypeCard(
-      BuildContext context, {
-        required String title,
-        required IconData icon,
-        required Color color,
-        required VoidCallback onTap,
-      }) {
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -280,7 +277,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen> with SingleTi
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                'اضغط للمتابعة',
+                'tap_to_continue'.tr(),
                 style: TextStyle(
                   color: color,
                   fontWeight: FontWeight.w500,

@@ -1,11 +1,14 @@
+// تم تعديل الكود لدعم easy_localization بالكامل
+import 'package:doctorapp/core/localization/bloc/language_bloc.dart';
+import 'package:doctorapp/core/localization/bloc/language_event.dart';
 import 'package:doctorapp/features/patient/login/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../../core/di/dependancy_injection.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
-
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -15,93 +18,104 @@ class ProfileScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<ProfileBloc>()..add(LoadUserProfile()),
       child: Scaffold(
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, state) {
-              if (state is ProfileLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is ProfileLoaded) {
-                final user = state.user;
-                return ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    _buildProfilePhoto(context, user.name, user.email),
-                    const SizedBox(height: 24),
-                    _buildSection(
-                      context,
-                      title: 'المعلومات الشخصية',
-                      items: [
-                        _buildInfoTile('الاسم', user.name, Icons.person_outline),
-                        _buildInfoTile('رقم الهاتف', user.phone, Icons.phone_outlined),
-                        _buildInfoTile('البريد الإلكتروني', user.email, Icons.email_outlined),
-                        _buildInfoTile('تاريخ الميلاد', user.birthDate, Icons.calendar_today_outlined),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSection(
-                      context,
-                      title: 'ملخص المعلومات الطبية',
-                      items: [
-                        _buildInfoTile('فصيلة الدم', user.bloodType, Icons.bloodtype_outlined),
-                        _buildInfoTile('الطول', user.height, Icons.height_outlined),
-                        _buildInfoTile('الوزن', user.weight, Icons.monitor_weight_outlined),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSection(
-                      context,
-                      title: 'معلومات التأمين',
-                      items: [
-                        _buildInfoTile('شركة التأمين', user.insuranceCompany, Icons.business_outlined),
-                        _buildInfoTile('رقم الوثيقة', user.insuranceNumber, Icons.confirmation_number_outlined),
-                        _buildInfoTile('تاريخ الانتهاء', user.insuranceExpiry, Icons.date_range_outlined),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSection(
-                      context,
-                      title: 'الإعدادات',
-                      items: [
-                        _buildActionTile(
-                          context,
-                          title: 'تعديل الملف الشخصي',
-                          icon: Icons.edit_outlined,
-                          onTap: () {},
-                        ),
-                        _buildActionTile(
-                          context,
-                          title: 'تسجيل الخروج',
-                          icon: Icons.logout,
-                          iconColor: Colors.red,
-                          textColor: Colors.red,
-                          onTap: () => _showLogoutConfirmationDialog(context),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              } else if (state is ProfileError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(state.message),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<ProfileBloc>().add(LoadUserProfile());
+        body: BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is ProfileLoaded) {
+              final user = state.user;
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  _buildProfilePhoto(context, user.name, user.email),
+                  const SizedBox(height: 24),
+                  _buildSection(
+                    context,
+                    title: 'personal_info'.tr(),
+                    items: [
+                      _buildInfoTile('name'.tr(), user.name, Icons.person_outline),
+                      _buildInfoTile('phone'.tr(), user.phone, Icons.phone_outlined),
+                      _buildInfoTile('email'.tr(), user.email, Icons.email_outlined),
+                      _buildInfoTile('birthdate'.tr(), user.birthDate, Icons.calendar_today_outlined),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSection(
+                    context,
+                    title: 'medical_summary'.tr(),
+                    items: [
+                      _buildInfoTile('blood_type'.tr(), user.bloodType, Icons.bloodtype_outlined),
+                      _buildInfoTile('height'.tr(), user.height, Icons.height_outlined),
+                      _buildInfoTile('weight'.tr(), user.weight, Icons.monitor_weight_outlined),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSection(
+                    context,
+                    title: 'insurance_info'.tr(),
+                    items: [
+                      _buildInfoTile('insurance_company'.tr(), user.insuranceCompany, Icons.business_outlined),
+                      _buildInfoTile('insurance_number'.tr(), user.insuranceNumber, Icons.confirmation_number_outlined),
+                      _buildInfoTile('insurance_expiry'.tr(), user.insuranceExpiry, Icons.date_range_outlined),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSection(
+                    context,
+                    title: 'settings'.tr(),
+                    items: [
+                      _buildActionTile(
+                        context,
+                        title: 'edit_profile'.tr(),
+                        icon: Icons.edit_outlined,
+                        onTap: () {},
+                      ),
+                      _buildActionTile(
+                        context,
+                        title: 'logout'.tr(),
+                        icon: Icons.logout,
+                        iconColor: Colors.red,
+                        textColor: Colors.red,
+                        onTap: () => _showLogoutConfirmationDialog(context),
+                      ),
+                      _buildActionTile(
+                        context,
+                        title: context.locale.languageCode == 'ar'
+                            ? 'language_switch'.tr()
+                            : 'العربية'.tr(),
+                        icon: Icons.language,
+                        onTap: () {
+                          final newLocale = context.locale.languageCode == 'ar'
+                              ? const Locale('en')
+                              : const Locale('ar');
+                          context.read<LanguageBloc>().add(ChangeLanguage(newLocale));
+                          context.setLocale(newLocale);
                         },
-                        child: const Text('إعادة المحاولة'),
                       ),
                     ],
                   ),
-                );
-              } else {
-                return const Center(child: Text('حدث خطأ غير متوقع'));
-              }
-            },
-          ),
+                ],
+              );
+            } else if (state is ProfileError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(state.message),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<ProfileBloc>().add(LoadUserProfile());
+                      },
+                      child: Text('retry'.tr()),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Center(child: Text('unexpected_error'.tr()));
+            }
+          },
         ),
       ),
     );
@@ -163,8 +177,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionTile(BuildContext context,
-      {required String title, required IconData icon, required VoidCallback onTap, Color? iconColor, Color? textColor}) {
+  Widget _buildActionTile(BuildContext context, {required String title, required IconData icon, required VoidCallback onTap, Color? iconColor, Color? textColor}) {
     return ListTile(
       onTap: onTap,
       leading: Icon(icon, color: iconColor ?? Colors.grey.shade600),
@@ -173,31 +186,39 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showLogoutConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('تسجيل الخروج'),
-        content: const Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('إلغاء')),
-          TextButton(
-            onPressed: () {
-              // Add logout event to the bloc
-              context.read<ProfileBloc>().add(LogoutUser());
+ void _showLogoutConfirmationDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('logout'.tr()),
+      content: Text('confirm_logout'.tr()),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('cancel'.tr()),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); // اغلق الديالوج أولاً
 
-              Navigator.pop(context);
+            // بعد الخروج من الديالوج، نفذ عملية التنقل بشكل آمن
+            Future.microtask(() {
+              // لو فعلاً محتاج تبعت LogoutUser:
+              // sl<ProfileBloc>().add(LogoutUser());
+
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
-                    (route) => false,
+                (route) => false,
               );
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('تسجيل الخروج'),
-          ),
-        ],
-      ),
-    );
-  }
+            });
+          },
+          style: TextButton.styleFrom(foregroundColor: Colors.red),
+          child: Text('logout'.tr()),
+        ),
+      ],
+    ),
+  );
+}
+
 }

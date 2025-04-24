@@ -1,10 +1,10 @@
 import 'package:doctorapp/features/patient/appointments_booking/presentation/screens/appointment_confirmation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../bloc/appointment_booking_bloc.dart';
 import '../bloc/appointment_booking_event.dart';
 import '../bloc/appointment_booking_state.dart';
-
 
 class AppointmentBookingScreen extends StatelessWidget {
   final String doctorName;
@@ -22,7 +22,7 @@ class AppointmentBookingScreen extends StatelessWidget {
     final List<String> reasons = ['استشارة', 'متابعة', 'حالة طارئة'];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('حجز موعد')),
+      appBar: AppBar(title: Text('book_appointment'.tr())),
       body: BlocProvider(
         create: (_) => AppointmentBookingBloc(),
         child: Padding(
@@ -35,12 +35,14 @@ class AppointmentBookingScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('الطبيب: $doctorName', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+                    Text('${'doctor'.tr()}: $doctorName',
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 10),
-                    Text('التخصص: $specialty', style: const TextStyle(fontSize: 20, color: Colors.grey)),
+                    Text('${'specialty'.tr()}: $specialty',
+                        style: const TextStyle(fontSize: 20, color: Colors.grey)),
                     const Divider(height: 30),
 
-                    const Text('اختر التاريخ:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                    Text('choose_date'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 10),
                     Center(
                       child: ElevatedButton(
@@ -57,14 +59,14 @@ class AppointmentBookingScreen extends StatelessWidget {
                         },
                         child: Text(
                           state.selectedDate == null
-                              ? 'اختر التاريخ'
+                              ? 'select_date'.tr()
                               : '${state.selectedDate!.day}/${state.selectedDate!.month}/${state.selectedDate!.year}',
                         ),
                       ),
                     ),
 
                     const Divider(height: 30),
-                    const Text('اختر الوقت:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                    Text('choose_time'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 10,
@@ -79,11 +81,11 @@ class AppointmentBookingScreen extends StatelessWidget {
                     ),
 
                     const Divider(height: 30),
-                    const Text('سبب الزيارة:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                    Text('visit_reason'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 10),
                     DropdownButton<String>(
                       value: state.selectedReason,
-                      hint: const Text('اختر السبب'),
+                      hint: Text('select_reason'.tr()),
                       isExpanded: true,
                       items: reasons.map((reason) {
                         return DropdownMenuItem(
@@ -116,12 +118,13 @@ class AppointmentBookingScreen extends StatelessWidget {
                               }
                             : () => showDialog(
                                   context: context,
-                                  builder: (_) => const AlertDialog(
-                                    title: Text('خطأ'),
-                                    content: Text('يرجى اختيار التاريخ، الوقت، والسبب قبل تأكيد الحجز.'),
+                                  builder: (_) => AlertDialog(
+                                    title: Text('booking_error'.tr()),
+                                    content: Text('booking_error_msg'.tr()),
                                   ),
                                 ),
-                        child: const Text('تأكيد الحجز', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                        child: Text('confirm_booking'.tr(),
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                       ),
                     ),
                   ],

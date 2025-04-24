@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DoctorCard extends StatelessWidget {
   final String name;
@@ -72,7 +73,7 @@ class DoctorCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'الموعد التالي: $nextAppointment',
+                      '${'next_appointment'.tr()}: $nextAppointment',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -91,9 +92,9 @@ class DoctorCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
-                child: const Text(
-                  'احجز الآن',
-                  style: TextStyle(fontSize: 14),
+                child: Text(
+                  'book_now'.tr(),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ),
             ],

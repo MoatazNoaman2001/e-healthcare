@@ -5,6 +5,7 @@ import 'package:doctorapp/features/patient/registerpatient/presentation/screens/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../bloc/login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -32,7 +33,6 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // Animation controller
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -75,9 +75,7 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return Scaffold(
         body: SafeArea(
           child: Container(
             decoration: BoxDecoration(
@@ -93,11 +91,9 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
             child: BlocConsumer<LoginBloc, LoginState>(
               listener: (context, state) async {
                 if (state.isSuccess && state.token != null) {
-                  // حفظ التوكن ومعلومات المستخدم
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setString('auth_token', state.token!);
 
-                  // يمكن أيضاً حفظ معلومات المستخدم إذا كنت بحاجة إليها
                   if (state.user != null) {
                     await prefs.setInt('user_id', state.user!.id);
                     await prefs.setString('user_email', state.user!.email);
@@ -105,10 +101,7 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                   }
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('تم تسجيل الدخول بنجاح'),
-                      backgroundColor: Colors.green,
-                    ),
+                    SnackBar(content: Text('login_success'.tr()), backgroundColor: Colors.green),
                   );
 
                   Navigator.pushReplacement(
@@ -124,10 +117,7 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                   );
                 } else if (state.error != null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.error!),
-                      backgroundColor: Colors.red,
-                    ),
+                    SnackBar(content: Text(state.error!), backgroundColor: Colors.red),
                   );
                 }
               },
@@ -144,8 +134,6 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                         child: Column(
                           children: [
                             const SizedBox(height: 40),
-
-                            // App Logo
                             Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
@@ -159,28 +147,11 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                   ),
                                 ],
                               ),
-                              child: const Icon(
-                                Icons.medical_services_rounded,
-                                size: 60,
-                                color: Colors.blue,
-                              ),
+                              child: const Icon(Icons.medical_services_rounded, size: 60, color: Colors.blue),
                             ),
-
                             const SizedBox(height: 16),
-
-                            // App Title
-                            Text(
-                              'صحتي',
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue.shade800,
-                              ),
-                            ),
-
+                            Text('app_name'.tr(), style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
                             const SizedBox(height: 8),
-
-                            // App Slogan
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
@@ -194,19 +165,9 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                   ),
                                 ],
                               ),
-                              child: Text(
-                                'رعاية طبية في متناول يديك',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.blue.shade600,
-                                ),
-                              ),
+                              child: Text('slogan'.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blue.shade600)),
                             ),
-
                             const SizedBox(height: 40),
-
-                            // Login Form Card
                             Container(
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
@@ -223,47 +184,22 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Form Title
-                                  Center(
-                                    child: Text(
-                                      'تسجيل الدخول',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue.shade800,
-                                      ),
-                                    ),
-                                  ),
-
+                                  Center(child: Text('login'.tr(), style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue.shade800))),
                                   const SizedBox(height: 24),
-
-                                  // Email Field
-                                  const Text(
-                                    'البريد الإلكتروني',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-
+                                  Text('email'.tr(), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                                   const SizedBox(height: 8),
-
                                   TextFormField(
                                     controller: _emailController,
                                     onChanged: (value) => bloc.add(LoginEmailChanged(value)),
                                     keyboardType: TextInputType.emailAddress,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'الرجاء إدخال البريد الإلكتروني';
-                                      }
-                                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                        return 'الرجاء إدخال بريد إلكتروني صحيح';
-                                      }
+                                      if (value == null || value.isEmpty) return 'email_required'.tr();
+                                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}\$').hasMatch(value)) return 'email_invalid'.tr();
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       prefixIcon: const Icon(Icons.email, color: Colors.blue),
-                                      hintText: 'أدخل بريدك الإلكتروني',
+                                      hintText: 'email_hint'.tr(),
                                       filled: true,
                                       fillColor: Colors.blue.shade50,
                                       border: OutlineInputBorder(
@@ -273,47 +209,25 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                       contentPadding: const EdgeInsets.symmetric(vertical: 15),
                                     ),
                                   ),
-
                                   const SizedBox(height: 20),
-
-                                  // Password Field
-                                  const Text(
-                                    'كلمة المرور',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-
+                                  Text('password'.tr(), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                                   const SizedBox(height: 8),
-
                                   TextFormField(
                                     controller: _passwordController,
                                     onChanged: (value) => bloc.add(LoginPasswordChanged(value)),
                                     obscureText: _obscurePassword,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'الرجاء إدخال كلمة المرور';
-                                      }
-                                      if (value.length < 6) {
-                                        return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-                                      }
+                                      if (value == null || value.isEmpty) return 'password_required'.tr();
+                                      if (value.length < 6) return 'password_short'.tr();
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       prefixIcon: const Icon(Icons.lock, color: Colors.blue),
                                       suffixIcon: IconButton(
-                                        icon: Icon(
-                                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                                          color: Colors.blue,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            _obscurePassword = !_obscurePassword;
-                                          });
-                                        },
+                                        icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Colors.blue),
+                                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                                       ),
-                                      hintText: 'أدخل كلمة المرور',
+                                      hintText: 'password_hint'.tr(),
                                       filled: true,
                                       fillColor: Colors.blue.shade50,
                                       border: OutlineInputBorder(
@@ -323,7 +237,6 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                       contentPadding: const EdgeInsets.symmetric(vertical: 15),
                                     ),
                                   ),
-
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: TextButton(
@@ -331,70 +244,39 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                         Navigator.push(
                                           context,
                                           PageRouteBuilder(
-                                            pageBuilder: (_, animation, __) {
-                                              return FadeTransition(
-                                                opacity: animation,
-                                                child: const ForgotPasswordScreen(),
-                                              );
-                                            },
+                                            pageBuilder: (_, animation, __) => FadeTransition(opacity: animation, child: const ForgotPasswordScreen()),
                                           ),
                                         );
                                       },
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.blue.shade700,
-                                      ),
-                                      child: const Text('نسيت كلمة المرور؟'),
+                                      style: TextButton.styleFrom(foregroundColor: Colors.blue.shade700),
+                                      child: Text('forgot_password'.tr()),
                                     ),
                                   ),
-
                                   const SizedBox(height: 20),
-
-                                  // Login Button
                                   SizedBox(
                                     width: double.infinity,
                                     height: 55,
                                     child: ElevatedButton(
-                                      onPressed: state.isLoading
-                                          ? null
-                                          : () {
-                                        if (_formKey.currentState!.validate()) {
-                                          bloc.add(LoginSubmitted());
-                                        }
+                                      onPressed: state.isLoading ? null : () {
+                                        if (_formKey.currentState!.validate()) bloc.add(LoginSubmitted());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.blue.shade700,
                                         foregroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(15),
-                                        ),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                         elevation: 3,
                                       ),
                                       child: state.isLoading
                                           ? const CircularProgressIndicator(color: Colors.white)
-                                          : const Text(
-                                        'تسجيل الدخول',
-                                        style: TextStyle(fontSize: 18),
-                                      ),
+                                          : Text('login'.tr(), style: const TextStyle(fontSize: 18)),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-
                             const SizedBox(height: 20),
-
-                            // Social Login Section
-                            const Text(
-                              'أو التسجيل باستخدام',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-
+                            Text('or_login_with'.tr(), style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
                             const SizedBox(height: 15),
-
-                            // Google Login Button
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -412,18 +294,11 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                 borderRadius: BorderRadius.circular(50),
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
-                                  child: Image.asset(
-                                    'assets/imges/google (2).png',
-                                    width: 30,
-                                    height: 30,
-                                  ),
+                                  child: Image.asset('assets/imges/google (2).png', width: 30, height: 30),
                                 ),
                               ),
                             ),
-
                             const SizedBox(height: 20),
-
-                            // Registration Prompt
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                               decoration: BoxDecoration(
@@ -441,21 +316,13 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text(
-                                    'ليس لديك حساب؟',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
+                                  Text('no_account'.tr(), style: const TextStyle(color: Colors.grey)),
                                   TextButton(
                                     onPressed: () {
                                       Navigator.push(
                                         context,
                                         PageRouteBuilder(
-                                          pageBuilder: (_, animation, __) {
-                                            return FadeTransition(
-                                              opacity: animation,
-                                              child: const RegisterScreen(),
-                                            );
-                                          },
+                                          pageBuilder: (_, animation, __) => FadeTransition(opacity: animation, child: const RegisterScreen()),
                                         ),
                                       );
                                     },
@@ -465,12 +332,11 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
                                       minimumSize: Size.zero,
                                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                     ),
-                                    child: const Text('إنشاء حساب'),
+                                    child: Text('register'.tr()),
                                   ),
                                 ],
                               ),
                             ),
-
                             const SizedBox(height: 20),
                           ],
                         ),
@@ -482,7 +348,7 @@ class _LoginViewState extends State<_LoginView> with SingleTickerProviderStateMi
             ),
           ),
         ),
-      ),
-    );
+      );
+    
   }
 }

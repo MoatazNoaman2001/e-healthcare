@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:doctorapp/features/patient/registerpatient/data/auth_repository.dart';
 import '../bloc/register_bloc.dart';
 import '../bloc/register_event.dart';
@@ -28,11 +29,9 @@ class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-
   late TextEditingController _dateController;
   String? _selectedDate;
 
-  // List of blood types for dropdown
   final List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   @override
@@ -49,11 +48,9 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
-          title: const Text('إنشاء حساب'),
+          title: Text('register_title'.tr()),
           centerTitle: true,
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -69,60 +66,47 @@ class _RegisterFormState extends State<RegisterForm> {
               listener: (context, state) {
                 if (state.isSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('تم إنشاء الحساب بنجاح!')),
+                    SnackBar(content: Text('register_success'.tr())),
                   );
                   Navigator.pop(context);
                 } else if (state.error != null) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.error!)));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.error!)),
+                  );
                 }
               },
               builder: (context, state) {
                 final bloc = context.read<RegisterBloc>();
-
                 return Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       const SizedBox(height: 16),
-
-                      // الاسم الأول
-                      const Text('الاسم الأول'),
+                      Text('first_name'.tr()),
                       const SizedBox(height: 8),
                       TextFormField(
                         onChanged: (val) => bloc.add(FirstNameChanged(val)),
-                        decoration: const InputDecoration(
-                          hintText: 'أدخل الاسم الأول',
-                          prefixIcon: Icon(Icons.person),
+                        decoration: InputDecoration(
+                          hintText: 'enter_first_name'.tr(),
+                          prefixIcon: const Icon(Icons.person),
                         ),
-                        validator:
-                            (val) =>
-                        val == null || val.isEmpty
-                            ? 'يرجى إدخال الاسم الأول'
-                            : null,
+                        validator: (val) =>
+                            val == null || val.isEmpty ? 'first_name_required'.tr() : null,
                       ),
                       const SizedBox(height: 16),
-
-                      // الاسم الأخير
-                      const Text('الاسم الأخير'),
+                      Text('last_name'.tr()),
                       const SizedBox(height: 8),
                       TextFormField(
                         onChanged: (val) => bloc.add(LastNameChanged(val)),
-                        decoration: const InputDecoration(
-                          hintText: 'أدخل الاسم الأخير',
-                          prefixIcon: Icon(Icons.person_outline),
+                        decoration: InputDecoration(
+                          hintText: 'enter_last_name'.tr(),
+                          prefixIcon: const Icon(Icons.person_outline),
                         ),
-                        validator:
-                            (val) =>
-                        val == null || val.isEmpty
-                            ? 'يرجى إدخال الاسم الأخير'
-                            : null,
+                        validator: (val) =>
+                            val == null || val.isEmpty ? 'last_name_required'.tr() : null,
                       ),
                       const SizedBox(height: 16),
-
-                      // تاريخ الميلاد
-                      const Text('تاريخ الميلاد'),
+                      Text('birthdate'.tr()),
                       const SizedBox(height: 8),
                       TextFormField(
                         readOnly: true,
@@ -133,69 +117,51 @@ class _RegisterFormState extends State<RegisterForm> {
                             initialDate: DateTime(2000, 1, 1),
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
-                            helpText: 'اختر تاريخ الميلاد',
-                            // locale: const Locale('ar'),
+                            helpText: 'select_birthdate'.tr(),
                           );
-
                           if (pickedDate != null) {
                             final formatted =
                                 "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-
                             setState(() {
                               _selectedDate = formatted;
                               _dateController.text = formatted;
                             });
-
-                            context.read<RegisterBloc>().add(
-                              DateOfBirthChanged(formatted),
-                            );
+                            bloc.add(DateOfBirthChanged(formatted));
                           }
                         },
-                        decoration: const InputDecoration(
-                          hintText: 'اختر تاريخ الميلاد',
-                          prefixIcon: Icon(Icons.cake_outlined),
+                        decoration: InputDecoration(
+                          hintText: 'select_birthdate'.tr(),
+                          prefixIcon: const Icon(Icons.cake_outlined),
                         ),
-                        validator:
-                            (_) =>
-                        _selectedDate == null
-                            ? 'يرجى اختيار تاريخ الميلاد'
-                            : null,
+                        validator: (_) =>
+                            _selectedDate == null ? 'birthdate_required'.tr() : null,
                       ),
                       const SizedBox(height: 16),
-
-                      // الجنس
-                      const Text('الجنس'),
+                      Text('gender'.tr()),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: state.gender,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           border: OutlineInputBorder(),
                         ),
                         items: [
-                          DropdownMenuItem(value: 'male', child: Text('ذكر')),
-                          DropdownMenuItem(value: 'female', child: Text('أنثى')),
+                          DropdownMenuItem(value: 'male', child: Text('male'.tr())),
+                          DropdownMenuItem(value: 'female', child: Text('female'.tr())),
                         ],
                         onChanged: (value) {
-                          if (value != null) {
-                            bloc.add(GenderChanged(value));
-                          }
+                          if (value != null) bloc.add(GenderChanged(value));
                         },
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'يرجى اختيار الجنس'
-                            : null,
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'gender_required'.tr() : null,
                       ),
                       const SizedBox(height: 16),
-
-                      // فصيلة الدم
-                      const Text('فصيلة الدم'),
+                      Text('blood_type'.tr()),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: state.bloodType,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.bloodtype),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           border: OutlineInputBorder(),
                         ),
                         items: _bloodTypes.map((String bloodType) {
@@ -205,72 +171,59 @@ class _RegisterFormState extends State<RegisterForm> {
                           );
                         }).toList(),
                         onChanged: (value) {
-                          if (value != null) {
-                            bloc.add(BloodTypeChanged(value));
-                          }
+                          if (value != null) bloc.add(BloodTypeChanged(value));
                         },
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'يرجى اختيار فصيلة الدم'
-                            : null,
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'blood_required'.tr() : null,
                       ),
                       const SizedBox(height: 16),
-
-                      // البريد الإلكتروني
-                      const Text('البريد الإلكتروني'),
+                      Text('email'.tr()),
                       const SizedBox(height: 8),
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         onChanged: (val) => bloc.add(EmailChanged(val)),
-                        decoration: const InputDecoration(
-                          hintText: 'أدخل بريدك الإلكتروني',
-                          prefixIcon: Icon(Icons.email_outlined),
+                        decoration: InputDecoration(
+                          hintText: 'enter_email'.tr(),
+                          prefixIcon: const Icon(Icons.email_outlined),
                         ),
                         validator: (val) {
                           if (val == null || val.isEmpty) {
-                            return 'يرجى إدخال البريد';
+                            return 'email_required'.tr();
                           }
-                          final regex = RegExp(
-                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                          );
-                          return regex.hasMatch(val) ? null : 'بريد غير صحيح';
+                          final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                          return regex.hasMatch(val) ? null : 'invalid_email'.tr();
                         },
                       ),
                       const SizedBox(height: 16),
-
-                      // رقم الهاتف
-                      const Text('رقم الهاتف'),
+                      Text('phone'.tr()),
                       const SizedBox(height: 8),
                       TextFormField(
                         keyboardType: TextInputType.phone,
                         onChanged: (val) => bloc.add(PhoneChanged(val)),
-                        decoration: const InputDecoration(
-                          hintText: 'أدخل رقم هاتفك',
-                          prefixIcon: Icon(Icons.phone_android),
+                        decoration: InputDecoration(
+                          hintText: 'enter_phone'.tr(),
+                          prefixIcon: const Icon(Icons.phone_android),
                         ),
                         validator: (val) {
                           if (val == null || val.isEmpty) {
-                            return 'يرجى إدخال الهاتف';
+                            return 'phone_required'.tr();
                           }
-                          return val.length < 11 ? 'رقم غير صحيح' : null;
+                          return val.length < 11 ? 'invalid_phone'.tr() : null;
                         },
                       ),
                       const SizedBox(height: 16),
-
-                      // كلمة المرور
-                      const Text('كلمة المرور'),
+                      Text('password'.tr()),
                       const SizedBox(height: 8),
                       TextFormField(
                         obscureText: _obscurePassword,
                         onChanged: (val) => bloc.add(PasswordChanged(val)),
                         decoration: InputDecoration(
-                          hintText: 'أدخل كلمة المرور',
+                          hintText: 'enter_password'.tr(),
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
+                            icon: Icon(_obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility),
                             onPressed: () {
                               setState(() {
                                 _obscurePassword = !_obscurePassword;
@@ -278,70 +231,55 @@ class _RegisterFormState extends State<RegisterForm> {
                             },
                           ),
                         ),
-                        validator:
-                            (val) =>
-                        val != null && val.length < 6
-                            ? 'يجب 6 أحرف على الأقل'
-                            : null,
+                        validator: (val) =>
+                            val != null && val.length < 6 ? 'password_too_short'.tr() : null,
                       ),
                       const SizedBox(height: 16),
-
-                      // تأكيد كلمة المرور
-                      const Text('تأكيد كلمة المرور'),
+                      Text('confirm_password'.tr()),
                       const SizedBox(height: 8),
                       TextFormField(
                         obscureText: _obscureConfirmPassword,
-                        onChanged:
-                            (val) => bloc.add(ConfirmPasswordChanged(val)),
+                        onChanged: (val) => bloc.add(ConfirmPasswordChanged(val)),
                         decoration: InputDecoration(
-                          hintText: 'أعد إدخال كلمة المرور',
+                          hintText: 'reenter_password'.tr(),
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureConfirmPassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
+                            icon: Icon(_obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility),
                             onPressed: () {
                               setState(() {
-                                _obscureConfirmPassword =
-                                !_obscureConfirmPassword;
+                                _obscureConfirmPassword = !_obscureConfirmPassword;
                               });
                             },
                           ),
                         ),
-                        validator:
-                            (val) =>
-                        val != state.password
-                            ? 'كلمة المرور غير متطابقة'
-                            : null,
+                        validator: (val) =>
+                            val != state.password ? 'password_mismatch'.tr() : null,
                       ),
                       const SizedBox(height: 24),
-
-                      // الموافقة على الشروط
                       Row(
                         children: [
                           Checkbox(
                             value: state.acceptTerms,
-                            onChanged:
-                                (val) =>
+                            onChanged: (val) =>
                                 bloc.add(AcceptTermsChanged(val ?? false)),
                           ),
                           Expanded(
                             child: Text.rich(
                               TextSpan(
-                                text: 'أوافق على ',
+                                text: 'terms_accept'.tr(),
                                 children: [
                                   TextSpan(
-                                    text: 'الشروط والأحكام',
+                                    text: 'terms'.tr(),
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const TextSpan(text: ' و'),
+                                  TextSpan(text: 'and'.tr()),
                                   TextSpan(
-                                    text: 'سياسة الخصوصية',
+                                    text: 'privacy'.tr(),
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.bold,
@@ -354,53 +292,38 @@ class _RegisterFormState extends State<RegisterForm> {
                         ],
                       ),
                       const SizedBox(height: 24),
-
-                      // زر التسجيل
                       SizedBox(
                         width: double.infinity,
                         height: 55,
                         child: ElevatedButton(
-                          onPressed:
-                          state.acceptTerms
+                          onPressed: state.acceptTerms
                               ? () {
-                            if (_formKey.currentState!.validate()) {
-                              bloc.add(RegisterSubmitted());
-                            }
-                          }
+                                  if (_formKey.currentState!.validate()) {
+                                    bloc.add(RegisterSubmitted());
+                                  }
+                                }
                               : null,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                            state.acceptTerms
+                            backgroundColor: state.acceptTerms
                                 ? Theme.of(context).primaryColor
                                 : Colors.grey.shade300,
                           ),
-                          child:
-                          state.isLoading
-                              ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
-                              : const Text(
-                            'إنشاء حساب',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: state.isLoading
+                              ? const CircularProgressIndicator(color: Colors.white)
+                              : Text('register'.tr(),
+                                  style: const TextStyle(
+                                      fontSize: 18, fontWeight: FontWeight.bold)),
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // تسجيل الدخول
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('لديك حساب بالفعل؟'),
+                          Text('already_have_account'.tr()),
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text(
-                              'تسجيل الدخول',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                            child: Text('login'.tr(),
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -412,7 +335,6 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

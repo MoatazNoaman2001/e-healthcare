@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SearchInputField extends StatelessWidget {
   const SearchInputField({super.key});
@@ -7,7 +8,7 @@ class SearchInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        hintText: 'ابحث عن طبيب، تخصص، أو مرض...',
+        hintText: 'search_hint'.tr(),
         prefixIcon: const Icon(Icons.search),
         filled: true,
         fillColor: Colors.grey.shade100,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../bloc/search_doctor_bloc.dart';
 import '../widgets/doctor_card.dart';
 import 'package:doctorapp/core/di/dependancy_injection.dart' as di;
@@ -19,10 +20,8 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
   @override
   void initState() {
     super.initState();
-    // Trigger initial search to load popular doctors
     Future.microtask(() {
       context.read<DoctorSearchBloc>().add(const SearchDoctorsEvent());
-      // Load specialties for filters
       context.read<DoctorSearchBloc>().add(const LoadSpecialtiesEvent());
     });
   }
@@ -64,10 +63,10 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
     return TextFormField(
       controller: _searchController,
       focusNode: _searchFocusNode,
-      textDirection: TextDirection.rtl,
+      // textDirection: TextDirection.rtl,
       decoration: InputDecoration(
-        hintText: 'ابحث عن طبيب، تخصص، أو مرض...',
-        hintTextDirection: TextDirection.rtl,
+        hintText: 'search_hint'.tr(),
+        // hintTextDirection: TextDirection.rtl,
         prefixIcon: const Icon(Icons.search),
         filled: true,
         fillColor: Colors.grey.shade100,
@@ -77,12 +76,12 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
         ),
         suffixIcon: _searchController.text.isNotEmpty
             ? IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            _searchController.clear();
-            context.read<DoctorSearchBloc>().add(const SearchDoctorsEvent());
-          },
-        )
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _searchController.clear();
+                  context.read<DoctorSearchBloc>().add(const SearchDoctorsEvent());
+                },
+              )
             : null,
       ),
       onChanged: (value) {
@@ -125,7 +124,6 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
                   _selectedSpecialty = selected ? specialty.name : null;
                 });
 
-                // Trigger search with specialty filter
                 context.read<DoctorSearchBloc>().add(
                   SearchDoctorsEvent(
                     query: _searchController.text,
@@ -145,9 +143,7 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
 
   Widget _buildDoctorsList(BuildContext context, DoctorSearchState state) {
     if (state.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (state.error != null) {
@@ -157,7 +153,7 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
-            Text('حدث خطأ: ${state.error}'),
+            Text('${'error_occurred'.tr()} ${state.error}'),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
@@ -168,7 +164,7 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
                   ),
                 );
               },
-              child: const Text('إعادة المحاولة'),
+              child: Text('retry'.tr()),
             ),
           ],
         ),
@@ -182,12 +178,10 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
           children: [
             Icon(Icons.search_off, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
-            const Text(
-              'لم يتم العثور على أطباء',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            Text('no_doctors_found'.tr(),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            const Text('حاول تغيير كلمات البحث أو إزالة الفلاتر'),
+            Text('try_another_filter'.tr()),
           ],
         ),
       );
@@ -204,22 +198,8 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
           rating: doctor.rating ?? 0.0,
           experience: '${doctor.experience ?? 0} سنوات',
           nextAppointment: doctor.nextAvailableSlot ?? 'غير متاح',
-          onTap: () {
-            // Navigate to doctor details
-            Navigator.pushNamed(
-              context,
-              '/doctor-details',
-              arguments: doctor,
-            );
-          },
-          onBook: () {
-            // Navigate to booking screen
-            Navigator.pushNamed(
-              context,
-              '/book-appointment',
-              arguments: doctor,
-            );
-          },
+          onTap: () => Navigator.pushNamed(context, '/doctor-details', arguments: doctor),
+          onBook: () => Navigator.pushNamed(context, '/book-appointment', arguments: doctor),
         );
       },
     );

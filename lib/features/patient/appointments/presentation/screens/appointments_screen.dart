@@ -1,8 +1,7 @@
-// lib/features/appointments/presentation/screens/appointments_screen.dart
-
 import 'package:doctorapp/features/patient/appointments/domain/usecases/load_appointments_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../bloc/appointments_bloc.dart';
 import '../bloc/appointments_event.dart';
 import '../bloc/appointments_state.dart';
@@ -54,10 +53,10 @@ class _AppointmentsTabViewState extends State<AppointmentsTabView> with SingleTi
             TabBar(
               controller: _tabController,
               labelColor: Theme.of(context).primaryColor,
-              tabs: const [
-                Tab(text: 'قادمة'),
-                Tab(text: 'منتهية'),
-                Tab(text: 'ملغاة'),
+              tabs: [
+                Tab(text: 'tab_upcoming'.tr()),
+                Tab(text: 'tab_completed'.tr()),
+                Tab(text: 'tab_cancelled'.tr()),
               ],
             ),
             Expanded(
@@ -78,7 +77,7 @@ class _AppointmentsTabViewState extends State<AppointmentsTabView> with SingleTi
 
   Widget _buildList(List appointments) {
     if (appointments.isEmpty) {
-      return const Center(child: Text('لا توجد مواعيد'));
+      return Center(child: Text('no_appointments'.tr()));
     }
     return ListView.builder(
       itemCount: appointments.length,

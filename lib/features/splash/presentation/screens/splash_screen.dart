@@ -11,6 +11,7 @@ import '../bloc/splash_bloc.dart';
 import '../bloc/splash_event.dart';
 import '../bloc/splash_state.dart';
 import 'package:doctorapp/core/di/dependancy_injection.dart' as di;
+import 'package:easy_localization/easy_localization.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -153,23 +154,23 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  Widget _buildTitle() {
-    return Text(
-      'صحتي',
-      style: GoogleFonts.tajawal(
-        fontSize: 40,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-  }
+ Widget _buildTitle() {
+  return Text(
+    'app_name'.tr(),
+    style: GoogleFonts.tajawal(
+      fontSize: 40,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+  );
+}
 
-  Widget _buildSubtitle() {
-    return Text(
-      'رعاية طبية في متناول يديك',
-      style: GoogleFonts.tajawal(fontSize: 18, color: Colors.white),
-    );
-  }
+ Widget _buildSubtitle() {
+  return Text(
+    'app_slogan'.tr(),
+    style: GoogleFonts.tajawal(fontSize: 18, color: Colors.white),
+  );
+}
 }
 
 // TODO: Create this screen or replace with your actual doctor home page

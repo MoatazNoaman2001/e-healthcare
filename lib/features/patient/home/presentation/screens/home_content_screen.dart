@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' show StringTranslateExtension, tr;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,7 +73,7 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
           const SizedBox(height: 16),
 
           if (!_isSearching) ...[
-            const Text('التخصصات', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+             Text('specialties'.tr(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             const SpecialtyChips(),
             const SizedBox(height: 16),
@@ -92,7 +93,7 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
       controller: _searchController,
       textDirection: TextDirection.rtl,
       decoration: InputDecoration(
-        hintText: 'ابحث عن طبيب، تخصص',
+        hintText: 'search_hint'.tr(),
         hintTextDirection: TextDirection.rtl,
         prefixIcon: const Icon(Icons.search),
         filled: true,

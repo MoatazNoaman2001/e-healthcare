@@ -46,10 +46,14 @@ dependencies:
   get_it: ^8.0.3
   event_bus: ^2.0.1
   flutter_launcher_icons: ^0.14.3
+  easy_localization: ^3.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  easy_localization_generator: ^0.3.3
+  build_runner: ^2.4.6
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -70,15 +74,19 @@ flutter_launcher_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/imges/
+    - assets/translations/
+
+
+
+easy_localization:
+  generate: true
+  output_dir: lib/generated
+  output_file: locale_keys.g.dart
+  assets_path: assets/translations
+
 
 
     
