@@ -34,31 +34,27 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        create: (context) => di.sl<DoctorSearchBloc>(),
-        child: BlocBuilder<DoctorSearchBloc, DoctorSearchState>(
-          builder: (context, state) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: _buildSearchBar(context),
-                ),
-                if (state.specialties.isNotEmpty)
-                  _buildSpecialtyFilter(context, state),
-                Expanded(
-                  child: _buildDoctorsList(context, state),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: BlocBuilder<DoctorSearchBloc, DoctorSearchState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildSearchBar(context),
+            ),
+            if (state.specialties.isNotEmpty)
+              _buildSpecialtyFilter(context, state),
+            Expanded(
+              child: _buildDoctorsList(context, state),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+}
   Widget _buildSearchBar(BuildContext context) {
     return TextFormField(
       controller: _searchController,
@@ -79,7 +75,9 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
                 icon: const Icon(Icons.clear),
                 onPressed: () {
                   _searchController.clear();
-                  context.read<DoctorSearchBloc>().add(const SearchDoctorsEvent());
+                  context
+                      .read<DoctorSearchBloc>()
+                      .add(const SearchDoctorsEvent());
                 },
               )
             : null,
@@ -87,17 +85,17 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
       onChanged: (value) {
         if (value.length > 2) {
           context.read<DoctorSearchBloc>().add(
-            SearchDoctorsEvent(
-              query: value,
-              specialty: _selectedSpecialty,
-            ),
-          );
+                SearchDoctorsEvent(
+                  query: value,
+                  specialty: _selectedSpecialty,
+                ),
+              );
         } else if (value.isEmpty) {
           context.read<DoctorSearchBloc>().add(
-            SearchDoctorsEvent(
-              specialty: _selectedSpecialty,
-            ),
-          );
+                SearchDoctorsEvent(
+                  specialty: _selectedSpecialty,
+                ),
+              );
         }
       },
     );
@@ -125,11 +123,11 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
                 });
 
                 context.read<DoctorSearchBloc>().add(
-                  SearchDoctorsEvent(
-                    query: _searchController.text,
-                    specialty: selected ? specialty.name : null,
-                  ),
-                );
+                      SearchDoctorsEvent(
+                        query: _searchController.text,
+                        specialty: selected ? specialty.name : null,
+                      ),
+                    );
               },
               backgroundColor: Colors.grey.shade200,
               selectedColor: Colors.blue.shade100,
@@ -158,11 +156,11 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
             ElevatedButton(
               onPressed: () {
                 context.read<DoctorSearchBloc>().add(
-                  SearchDoctorsEvent(
-                    query: _searchController.text,
-                    specialty: _selectedSpecialty,
-                  ),
-                );
+                      SearchDoctorsEvent(
+                        query: _searchController.text,
+                        specialty: _selectedSpecialty,
+                      ),
+                    );
               },
               child: Text('retry'.tr()),
             ),
@@ -179,7 +177,8 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
             Icon(Icons.search_off, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
             Text('no_doctors_found'.tr(),
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text('try_another_filter'.tr()),
           ],
@@ -198,8 +197,10 @@ class _SearchDoctorsScreenState extends State<SearchDoctorsScreen> {
           rating: doctor.rating ?? 0.0,
           experience: '${doctor.experience ?? 0} سنوات',
           nextAppointment: doctor.nextAvailableSlot ?? 'غير متاح',
-          onTap: () => Navigator.pushNamed(context, '/doctor-details', arguments: doctor),
-          onBook: () => Navigator.pushNamed(context, '/book-appointment', arguments: doctor),
+          onTap: () => Navigator.pushNamed(context, '/doctor-details',
+              arguments: doctor),
+          onBook: () => Navigator.pushNamed(context, '/book-appointment',
+              arguments: doctor),
         );
       },
     );

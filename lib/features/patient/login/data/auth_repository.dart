@@ -9,36 +9,48 @@ class AuthRepository {
 
   AuthRepository({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
 
-  Future<Either<String, AuthResponseModel>> login({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final response = await _apiClient.post(
-        '/users/login/',
-        data: {
-          'email': email,
-          'password': password,
-        },
-      );
+ Future<Either<String, AuthResponseModel>> login({
+  required String email,
+  required String password,
+}) async {
+  try {
+    final response = await _apiClient.post(
+      '/users/login/',
+      data: {
+        'email': email,
+        'password': password,
+      },
+    );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final authResponse = AuthResponseModel.fromJson(response.data);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final authResponse = AuthResponseModel.fromJson(response.data);
 
-        // التحقق من أن المستخدم من نوع مريض
-        if (authResponse.user.userType != 'patient') {
-          return left('عذراً، هذا الحساب ليس مخصصاً للمرضى');
-        }
-
-        return right(authResponse);
-      } else {
-        final errorMessage = _handleErrorResponse(response);
-        return left(errorMessage);
+      if (authResponse.user.userType != 'patient') {
+        return left('عذراً، هذا الحساب ليس مخصصاً للمرضى');
       }
-    } catch (e) {
-      return left('حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى');
+
+      return right(authResponse);
+    } else {
+      // هنا نطبع الرد اللي جاي من السيرفر
+      print('فشل تسجيل الدخول - Response status: ${response.statusCode}');
+      print('Response data: ${response.data}');
+
+      final errorMessage = _handleErrorResponse(response);
+      return left(errorMessage);
     }
+  } catch (e) {
+    if (e is DioError) {
+      print('حدث خطأ من نوع DioError: ${e.message}');
+      if (e.response != null) {
+        print('Data: ${e.response?.data}');
+        print('Status Code: ${e.response?.statusCode}');
+      }
+    } else {
+      print('حدث خطأ غير متوقع: $e');
+    }
+    return left('حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى');
   }
+}
 
   String _handleErrorResponse(Response response) {
     if (response.statusCode == 400) {
