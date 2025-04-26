@@ -22,7 +22,10 @@ class AppointmentBookingScreen extends StatelessWidget {
     final List<String> reasons = ['استشارة', 'متابعة', 'حالة طارئة'];
 
     return Scaffold(
-      appBar: AppBar(title: Text('book_appointment'.tr())),
+      appBar: AppBar(
+        title: Text('book_appointment'.tr()),
+        centerTitle: true,
+      ),
       body: BlocProvider(
         create: (_) => AppointmentBookingBloc(),
         child: Padding(
@@ -35,17 +38,21 @@ class AppointmentBookingScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${'doctor'.tr()}: $doctorName',
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 10),
-                    Text('${'specialty'.tr()}: $specialty',
-                        style: const TextStyle(fontSize: 20, color: Colors.grey)),
-                    const Divider(height: 30),
+                    _sectionTitle('${'doctor'.tr()}: $doctorName', size: 22),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${'specialty'.tr()}: $specialty',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const Divider(height: 32, thickness: 1.2),
 
-                    Text('choose_date'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                    _sectionTitle('choose_date'.tr()),
                     const SizedBox(height: 10),
                     Center(
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                         onPressed: () async {
                           final pickedDate = await showDatePicker(
                             context: context,
@@ -57,16 +64,25 @@ class AppointmentBookingScreen extends StatelessWidget {
                             bloc.add(SelectDate(pickedDate));
                           }
                         },
-                        child: Text(
+                        icon: const Icon(Icons.date_range),
+                        label: Text(
                           state.selectedDate == null
                               ? 'select_date'.tr()
                               : '${state.selectedDate!.day}/${state.selectedDate!.month}/${state.selectedDate!.year}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                          backgroundColor: Colors.teal.shade700,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ),
 
-                    const Divider(height: 30),
-                    Text('choose_time'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                    const Divider(height: 32, thickness: 1.2),
+                    _sectionTitle('choose_time'.tr()),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 10,
@@ -76,55 +92,84 @@ class AppointmentBookingScreen extends StatelessWidget {
                           label: Text(slot),
                           selected: state.selectedTimeSlot == slot,
                           onSelected: (_) => bloc.add(SelectTimeSlot(slot)),
+                          selectedColor: Colors.teal.shade300,
+                          backgroundColor: Colors.grey.shade200,
+                          labelStyle: TextStyle(
+                            color: state.selectedTimeSlot == slot ? Colors.white : Colors.black,
+                          ),
                         );
                       }).toList(),
                     ),
 
-                    const Divider(height: 30),
-                    Text('visit_reason'.tr(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                    const Divider(height: 32, thickness: 1.2),
+                    _sectionTitle('visit_reason'.tr()),
                     const SizedBox(height: 10),
-                    DropdownButton<String>(
-                      value: state.selectedReason,
-                      hint: Text('select_reason'.tr()),
-                      isExpanded: true,
-                      items: reasons.map((reason) {
-                        return DropdownMenuItem(
-                          value: reason,
-                          child: Text(reason),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        if (value != null) bloc.add(SelectReason(value));
-                      },
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.grey.shade100,
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: DropdownButton<String>(
+                        value: state.selectedReason,
+                        hint: Text('select_reason'.tr()),
+                        isExpanded: true,
+                        underline: const SizedBox(),
+                        items: reasons.map((reason) {
+                          return DropdownMenuItem(
+                            value: reason,
+                            child: Text(reason),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) bloc.add(SelectReason(value));
+                        },
+                      ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     Center(
-                      child: ElevatedButton(
-                        onPressed: state.isValid
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => AppointmentConfirmationScreen(
-                                      doctorName: doctorName,
-                                      specialty: specialty,
-                                      date: state.selectedDate!,
-                                      timeSlot: state.selectedTimeSlot!,
-                                      reason: state.selectedReason!,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: state.isValid
+                              ? () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AppointmentConfirmationScreen(
+                                        doctorName: doctorName,
+                                        specialty: specialty,
+                                        date: state.selectedDate!,
+                                        timeSlot: state.selectedTimeSlot!,
+                                        reason: state.selectedReason!,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              : () => showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text('booking_error'.tr()),
+                                      content: Text('booking_error_msg'.tr()),
                                     ),
                                   ),
-                                );
-                              }
-                            : () => showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                    title: Text('booking_error'.tr()),
-                                    content: Text('booking_error_msg'.tr()),
-                                  ),
-                                ),
-                        child: Text('confirm_booking'.tr(),
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: Colors.teal.shade700,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'confirm_booking'.tr(),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -133,6 +178,16 @@ class AppointmentBookingScreen extends StatelessWidget {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String title, {double size = 20}) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: size,
+        fontWeight: FontWeight.w600,
       ),
     );
   }

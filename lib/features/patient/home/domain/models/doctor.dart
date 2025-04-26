@@ -8,6 +8,10 @@ class Doctor extends Equatable {
   final String title;
   final String specialization;
   final String? imageUrl;
+  final double? rating;
+  final int? experience;
+  final String? nextAvailableSlot;
+  final bool isAvailable;
 
   const Doctor({
     required this.doctorId,
@@ -17,9 +21,13 @@ class Doctor extends Equatable {
     required this.title,
     required this.specialization,
     this.imageUrl,
+    this.rating,
+    this.experience,
+    this.nextAvailableSlot,
+    this.isAvailable = true,
   });
 
-  String get fullName => '$firstName $lastName';
+  String get fullName => '$title. $firstName $lastName';
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
     final doctorIdValue = json['doctor_id'];
@@ -33,9 +41,25 @@ class Doctor extends Equatable {
       title: json['title']?.toString() ?? '',
       specialization: json['specialization']?.toString() ?? '',
       imageUrl: json['image_url']?.toString(),
+      rating: (json['rating'] as num?)?.toDouble(),
+      experience: (json['experience'] as num?)?.toInt(),
+      nextAvailableSlot: json['next_available_slot']?.toString(),
+      isAvailable: json['is_available'] == true,
     );
   }
 
   @override
-  List<Object?> get props => [doctorId, userId, firstName, lastName, title, specialization, imageUrl];
+  List<Object?> get props => [
+    doctorId,
+    userId,
+    firstName,
+    lastName,
+    title,
+    specialization,
+    imageUrl,
+    rating,
+    experience,
+    nextAvailableSlot,
+    isAvailable,
+  ];
 }

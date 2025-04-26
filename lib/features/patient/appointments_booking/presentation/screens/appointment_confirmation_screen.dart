@@ -20,33 +20,43 @@ class AppointmentConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('confirmation_title'.tr())),
+      appBar: AppBar(
+        title: Text('confirmation_title'.tr()),
+        centerTitle: true,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
+              child: Icon(Icons.check_circle, color: Colors.green, size: 80),
+            ),
+            const SizedBox(height: 16),
+            Center(
               child: Text(
                 'success_title'.tr(),
                 style: const TextStyle(
-                  fontSize: 28,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             Center(
               child: Text(
                 'success_message'.tr(),
-                style: const TextStyle(fontSize: 18, color: Colors.black54),
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 30),
-            const Divider(color: Colors.grey),
-            const SizedBox(height: 10),
+            Divider(color: Colors.grey.shade400, thickness: 1.5),
+            const SizedBox(height: 16),
             Text(
               'details'.tr(),
               style: const TextStyle(
@@ -55,43 +65,54 @@ class AppointmentConfirmationScreen extends StatelessWidget {
                 color: Colors.blueAccent,
               ),
             ),
-            const SizedBox(height: 15),
-            _infoText('${'doctor'.tr()}: $doctorName'),
-            _infoText('${'specialty'.tr()}: $specialty'),
-            _infoText('${'date'.tr()}: ${date.day}/${date.month}/${date.year}'),
-            _infoText('${'time'.tr()}: $timeSlot'),
-            _infoText('${'reason'.tr()}: $reason'),
+            const SizedBox(height: 16),
+            _infoTile('doctor'.tr(), doctorName),
+            _infoTile('specialty'.tr(), specialty),
+            _infoTile('date'.tr(), '${date.day}/${date.month}/${date.year}'),
+            _infoTile('time'.tr(), timeSlot),
+            _infoTile('reason'.tr(), reason),
             const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Add to calendar logic here
-                  },
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text('add_to_calendar'.tr()),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 20,
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // Add to calendar logic here
+                    },
+                    icon: const Icon(Icons.calendar_today),
+                    label: Text('add_to_calendar'.tr()),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal.shade600,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    textStyle: const TextStyle(fontSize: 16),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  },
-                  child: Text('back_home'.tr()),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 20,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    textStyle: const TextStyle(fontSize: 16),
+                    child: Text('back_home'.tr()),
                   ),
                 ),
               ],
@@ -103,10 +124,30 @@ class AppointmentConfirmationScreen extends StatelessWidget {
     );
   }
 
-  Widget _infoText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(fontSize: 18),
+  Widget _infoTile(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Text(
+            '$title: ',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

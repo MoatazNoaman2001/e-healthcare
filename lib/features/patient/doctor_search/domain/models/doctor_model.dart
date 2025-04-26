@@ -25,22 +25,21 @@ class DoctorModel {
     this.isAvailable = true,
   });
 
-factory DoctorModel.fromJson(Map<String, dynamic> json) {
-  return DoctorModel(
-    doctorId: json['doctor_id'] ?? 0,
-    userId: json['user_id'] ?? 0,
-    firstName: json['first_name'] ?? '',
-    lastName: json['last_name'] ?? '',
-    title: json['title'] ?? '',
-    specialization: json['specialization'] ?? '',
-    imageUrl: json['image_url'],
-    rating: (json['rating'] as num?)?.toDouble(),
-    experience: (json['experience'] as num?)?.toInt(),
-    nextAvailableSlot: json['next_available_slot'],
-    isAvailable: json['is_available'] ?? true,
-  );
-}
-
+  factory DoctorModel.fromJson(Map<String, dynamic> json) {
+    return DoctorModel(
+      doctorId: json['doctor_id'] ?? 0,
+      userId: json['user_id'] ?? 0,
+      firstName: json['first_name'] ?? '',
+      lastName: json['last_name'] ?? '',
+      title: json['title'] ?? '',
+      specialization: json['specialization'] ?? '',
+      imageUrl: json['image_url'],
+      rating: (json['rating'] as num?)?.toDouble(),
+      experience: (json['experience'] as num?)?.toInt(),
+      nextAvailableSlot: json['next_available_slot'],
+      isAvailable: json['is_available'] == true,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -58,5 +57,7 @@ factory DoctorModel.fromJson(Map<String, dynamic> json) {
     };
   }
 
-  String get fullName => '$firstName $lastName';
+  String get fullName => '$title. $firstName $lastName';
+
+  String get availableSlot => nextAvailableSlot ?? 'غير متاح';
 }

@@ -1,76 +1,38 @@
+import 'package:doctorapp/features/doctor/doctor_profile/domain/models/doctor_model.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
+
 
 class DoctorInfoHeader extends StatelessWidget {
-  const DoctorInfoHeader({super.key});
+  final Doctor doctor;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: _boxDecoration(),
-      child: Column(
-        children: [
-          const CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage('assets/images/doctor.png'),
-            backgroundColor: Colors.teal,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'doctor_name'.tr(),
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'specialist'.tr(),
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              _InfoItem(icon: Icons.star, value: '4.9', labelKey: 'rating'),
-              _InfoItem(icon: Icons.medical_services, value: '10', labelKey: 'experience_years'),
-              _InfoItem(icon: Icons.people, value: '1200+', labelKey: 'patients'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  BoxDecoration _boxDecoration() {
-    return BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.3),
-          spreadRadius: 2,
-          blurRadius: 7,
-          offset: const Offset(0, 3),
-        ),
-      ],
-    );
-  }
-}
-
-class _InfoItem extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String labelKey;
-
-  const _InfoItem({required this.icon, required this.value, required this.labelKey});
+  const DoctorInfoHeader({super.key, required this.doctor});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: Colors.teal, size: 28),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(labelKey.tr(), style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: doctor.imageUrl != null
+              ? NetworkImage(doctor.imageUrl!)
+              : const AssetImage('assets/doctor_placeholder.png') as ImageProvider,
+        ),
+        const SizedBox(height: 12),
+        Text(
+          '${doctor.firstName} ${doctor.lastName}',
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          doctor.specialization,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+          ),
+        ),
       ],
     );
   }

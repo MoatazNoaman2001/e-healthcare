@@ -1,8 +1,9 @@
+import 'package:doctorapp/features/doctor/doctor_profile/domain/models/doctor_model.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ContactInfoCard extends StatelessWidget {
-  const ContactInfoCard({super.key});
+  const ContactInfoCard({super.key, required Doctor doctor});
 
   @override
   Widget build(BuildContext context) {
