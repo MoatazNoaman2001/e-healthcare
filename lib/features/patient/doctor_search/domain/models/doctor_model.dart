@@ -25,21 +25,22 @@ class DoctorModel {
     this.isAvailable = true,
   });
 
-  factory DoctorModel.fromJson(Map<String, dynamic> json) {
-    return DoctorModel(
-      doctorId: json['doctor_id'],
-      userId: json['user_id'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      title: json['title'],
-      specialization: json['specialization'],
-      imageUrl: json['image_url'],
-      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
-      experience: json['experience'],
-      nextAvailableSlot: json['next_available_slot'],
-      isAvailable: json['is_available'] ?? true,
-    );
-  }
+factory DoctorModel.fromJson(Map<String, dynamic> json) {
+  return DoctorModel(
+    doctorId: json['doctor_id'] ?? 0,
+    userId: json['user_id'] ?? 0,
+    firstName: json['first_name'] ?? '',
+    lastName: json['last_name'] ?? '',
+    title: json['title'] ?? '',
+    specialization: json['specialization'] ?? '',
+    imageUrl: json['image_url'],
+    rating: (json['rating'] as num?)?.toDouble(),
+    experience: (json['experience'] as num?)?.toInt(),
+    nextAvailableSlot: json['next_available_slot'],
+    isAvailable: json['is_available'] ?? true,
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {

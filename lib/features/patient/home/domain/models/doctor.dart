@@ -22,14 +22,17 @@ class Doctor extends Equatable {
   String get fullName => '$firstName $lastName';
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
+    final doctorIdValue = json['doctor_id'];
+    final userIdValue = json['user_id'];
+
     return Doctor(
-      doctorId: json['doctor_id'],
-      userId: json['user_id'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      title: json['title'],
-      specialization: json['specialization'],
-      imageUrl: json['image_url'],
+      doctorId: doctorIdValue is int ? doctorIdValue : int.tryParse(doctorIdValue?.toString() ?? '0') ?? 0,
+      userId: userIdValue is int ? userIdValue : int.tryParse(userIdValue?.toString() ?? '0') ?? 0,
+      firstName: json['first_name']?.toString() ?? '',
+      lastName: json['last_name']?.toString() ?? '',
+      title: json['title']?.toString() ?? '',
+      specialization: json['specialization']?.toString() ?? '',
+      imageUrl: json['image_url']?.toString(),
     );
   }
 

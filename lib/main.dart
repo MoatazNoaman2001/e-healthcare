@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:doctorapp/core/localization/bloc/language_bloc.dart';
 import 'package:doctorapp/features/doctor/homedoctor/presentation/screens/home_screen.dart';
+import 'package:doctorapp/features/patient/appointments/presentation/screens/appointments_screen.dart';
+import 'package:doctorapp/features/patient/appointments_booking/presentation/screens/appointment_booking_screen.dart';
 import 'package:doctorapp/features/patient/doctors/presentation/screens/doctor_profile_screen.dart';
 import 'package:doctorapp/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:doctorapp/features/splash/presentation/screens/splash_screen.dart';
@@ -123,12 +125,11 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
       routes: {
         '/doctor_profile_screen': (context) => const DoctorProfileScreen(
-              doctorName: 'نورا',
-              rating: 5,
-              specialty: 'gbgg',
-              experience: '',
+              
             ),
         '/HomeScreen': (context) => const HomeScreen(),
+         '/book-appointment': (context) => const DoctorProfileScreen(),
+  // '/doctor-details': (context) => const DoctorDetailsScreen()
       },
     );
   }

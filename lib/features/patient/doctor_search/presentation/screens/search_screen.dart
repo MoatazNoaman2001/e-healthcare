@@ -197,7 +197,7 @@ Widget build(BuildContext context) {
           rating: doctor.rating ?? 0.0,
           experience: '${doctor.experience ?? 0} سنوات',
           nextAppointment: doctor.nextAvailableSlot ?? 'غير متاح',
-          onTap: () => Navigator.pushNamed(context, '/doctor-details',
+          onTap: () => Navigator.pushNamed(context, '/book-appointment',
               arguments: doctor),
           onBook: () => Navigator.pushNamed(context, '/book-appointment',
               arguments: doctor),

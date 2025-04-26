@@ -43,7 +43,6 @@ class DoctorLoginBloc extends Bloc<DoctorLoginEvent, DoctorLoginState> {
   }
 
   Future<void> _onSubmitted(DoctorLoginSubmitted event, Emitter<DoctorLoginState> emit) async {
-    // التحقق من صحة البيانات المدخلة
     if (!state.canSubmit) {
       emit(state.copyWith(
         error: 'يرجى التحقق من البريد الإلكتروني وكلمة المرور',
@@ -63,36 +62,41 @@ class DoctorLoginBloc extends Bloc<DoctorLoginEvent, DoctorLoginState> {
         password: state.password,
       );
 
-      result.fold(
-            (error) => emit(DoctorLoginState(error: error)),
-            (authResponse) async {
-          // Use AuthService to handle login and token management
-          await _authService.login(
-            token: authResponse.token,
-            user: authResponse.user,
-            doctorId: authResponse.user.userType == 'doctor' ? authResponse.user.id : null,
-          );
+      if (result.isLeft()) {
+        final error = result.fold((l) => l, (r) => null);
+        if (!emit.isDone) {
+          emit(state.copyWith(
+            isLoading: false,
+            isSuccess: false,
+            error: error,
+          ));
+        }
+      } else {
+        final authResponse = result.fold((l) => null, (r) => r);
 
-          // Only save token separately if remember me is checked
-          // (though the AuthService is already saving it)
-          if (state.rememberMe) {
-            // Remember Me logic can be added here if needed
-          }
+        await _authService.login(
+          token: authResponse!.token,
+          user: authResponse.user,
+          doctorId: authResponse.user.userType == 'doctor' ? authResponse.user.id : null,
+        );
 
+        if (!emit.isDone) {
           emit(state.copyWith(
             isLoading: false,
             isSuccess: true,
             token: authResponse.token,
             error: null,
           ));
-        },
-      );
+        }
+      }
     } catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-        isSuccess: false,
-        error: e.toString(),
-      ));
+      if (!emit.isDone) {
+        emit(state.copyWith(
+          isLoading: false,
+          isSuccess: false,
+          error: e.toString(),
+        ));
+      }
     }
   }
 }
