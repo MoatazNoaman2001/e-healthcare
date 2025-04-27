@@ -9,19 +9,43 @@ abstract class EditProfileEvent extends Equatable {
 
 class UpdateProfile extends EditProfileEvent {
   final int patientId;
-  final String name;
-  final String phone;
+  final String token;
+  final String firstName;
+  final String lastName;
   final String email;
+  final String phone;
   final String birthDate;
+  final String gender;
+  final String bloodType;
+  final String height;
+  final String weight;
 
   const UpdateProfile({
     required this.patientId,
-    required this.name,
-    required this.phone,
+    required this.token,
+    required this.firstName,
+    required this.lastName,
     required this.email,
+    required this.phone,
     required this.birthDate,
+    required this.gender,
+    required this.bloodType,
+    required this.height,
+    required this.weight,
   });
 
   @override
-  List<Object?> get props => [patientId, name, phone, email, birthDate];
+  List<Object?> get props => [
+        patientId,
+        token,
+        firstName,
+        lastName,
+        email,
+        phone,
+        birthDate,
+        gender,
+        bloodType,
+        height,
+        weight,
+      ];
 }

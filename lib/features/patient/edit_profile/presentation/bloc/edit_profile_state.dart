@@ -13,10 +13,10 @@ class EditProfileLoading extends EditProfileState {}
 
 class EditProfileSuccess extends EditProfileState {}
 
-class EditProfileError extends EditProfileState {
+class EditProfileFailure extends EditProfileState {
   final String message;
 
-  const EditProfileError(this.message);
+  const EditProfileFailure(this.message);
 
   @override
   List<Object?> get props => [message];

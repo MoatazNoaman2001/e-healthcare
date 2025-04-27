@@ -220,9 +220,24 @@
   "enter_phone": "Please enter your phone number",
   "register_account": "Register Account",
   "register_title": "Create New Account",
-  "password_hint": "Enter your password"
+  "password_hint": "Enter your password",
+ 
+    "edit_profile": "Edit Profile",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "birthdate": "Birthdate",
+    "save": "Save",
+    "field_required": "This field is required",
+    "profile_updated_successfully": "Profile updated successfully",
+    "error_updating_profile": "An error occurred while updating profile",
+    "error_loading_auth_data": "Error loading authentication data"
+
+  }
+  
 
 
   
 
-}
+
