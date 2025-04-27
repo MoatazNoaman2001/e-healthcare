@@ -1,3 +1,4 @@
+import 'package:doctorapp/features/doctor/doctor_profile/presentation/widgets/doctor_profile_details.dart';
 import 'package:doctorapp/features/doctor/edit_profile/presentation/screens/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import '../widgets/doctor_info_header.dart';
 import '../widgets/contact_info_card.dart';
 import '../widgets/qualification_card.dart';
 import '../widgets/edit_profile_button.dart';
+
 
 class DoctorProfileScreen extends StatelessWidget {
   const DoctorProfileScreen({super.key});
@@ -29,26 +31,23 @@ class DoctorProfileScreen extends StatelessWidget {
             final doctor = state.doctor;
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  DoctorInfoHeader(doctor: doctor),
-                  const SizedBox(height: 20),
-                  ContactInfoCard(doctor: doctor),
-                  const SizedBox(height: 20),
-                  QualificationCard(doctor: doctor),
-                  const SizedBox(height: 20),
-                  EditProfileButton(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const EditProfileScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+            child: Column(
+  children: [
+    DoctorProfileDetails(doctor: doctor),
+    const SizedBox(height: 20),
+    EditProfileButton(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const EditProfileScreen(),
+          ),
+        );
+      },
+    ),
+  ],
+),
+
             );
           } else if (state is DoctorProfileError) {
             return Center(child: Text(state.message));

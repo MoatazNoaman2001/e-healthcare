@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:doctorapp/core/localization/bloc/language_bloc.dart';
+import 'package:doctorapp/features/doctor/doctor_profile/data/services/doctor_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,7 +57,7 @@ sl.registerFactory<LanguageBloc>(() => LanguageBloc());
   ));
 
   sl.registerLazySingleton(() => dio);
-
+sl.registerLazySingleton(() => DoctorService());
   // Register auth event listeners
   eventBus.on<UserLoggedInEvent>().listen((event) {
     // Update the Dio instance with the new token
@@ -94,6 +95,7 @@ sl.registerFactory<LanguageBloc>(() => LanguageBloc());
   sl.registerFactory(() => HomeBloc(repository: sl()));
   sl.registerFactory(() => DoctorSearchBloc(repository: sl()));
   sl.registerFactory(() => ProfileBloc(profileRepository: sl()));
+  
 }
 
 // Define event classes if not already defined

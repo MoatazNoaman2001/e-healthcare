@@ -1,5 +1,10 @@
+import 'package:doctorapp/core/auth/auth_service.dart' show AuthService;
+import 'package:doctorapp/core/di/dependancy_injection.dart' as di;
+import 'package:doctorapp/features/doctor/doctor_profile/presentation/bloc/doctor_profile_bloc.dart';
+import 'package:doctorapp/features/doctor/doctor_profile/presentation/bloc/doctor_profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../calendar/presentation/screens/calendar_screen.dart';
 import '../../../doctor_profile/presentation/screens/doctor_profile_screen.dart';
 import '../../../schedule/presentation/screens/todays_schedule_screen.dart';
@@ -23,12 +28,20 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.teal.shade700,
         actions: [
           IconButton(
+            
             icon: const Icon(Icons.person, color: Colors.white),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const DoctorProfileScreen()),
-              );
+              final token = di.sl<AuthService>().token;
+             Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (_) => BlocProvider(
+      create: (context) => DoctorProfileBloc(di.sl())..add(LoadDoctorProfile(token!)),
+      child: const DoctorProfileScreen(),
+    ),
+  ),
+);
+
             },
           ),
         ],

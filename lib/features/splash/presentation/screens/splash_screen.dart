@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:doctorapp/core/auth/auth_service.dart';
+import 'package:doctorapp/features/doctor/homedoctor/presentation/screens/home_screen.dart';
 import 'package:doctorapp/features/patient/home/presentation/screens/home_page.dart';
 import 'package:doctorapp/features/user_selection/presentation/screens/user_selection_screen.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
         // TODO: Replace with your doctor home page
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const DoctorHomePage()),
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
         );
       } else {
         // Fallback for unknown user type or if user type is not set
@@ -174,18 +175,18 @@ class _SplashScreenState extends State<SplashScreen>
 }
 
 // TODO: Create this screen or replace with your actual doctor home page
-class DoctorHomePage extends StatelessWidget {
-  const DoctorHomePage({Key? key}) : super(key: key);
+// class DoctorHomePage extends StatelessWidget {
+//   const DoctorHomePage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Doctor Dashboard'),
-      ),
-      body: const Center(
-        child: Text('Doctor Home Page'),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Doctor Dashboard'),
+//       ),
+//       body: const Center(
+//         child: Text('Doctor Home Page'),
+//       ),
+//     );
+//   }
+// }

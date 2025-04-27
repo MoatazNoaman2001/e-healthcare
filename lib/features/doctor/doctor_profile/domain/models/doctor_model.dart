@@ -23,15 +23,17 @@ class Doctor {
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
     return Doctor(
-      id: json['id'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      email: json['email'],
-      specialization: json['specialization'],
-      experience: json['experience'],
+      id: json['id'] ?? 0,
+      firstName: json['first_name'] ?? '',
+      lastName: json['last_name'] ?? '',
+      email: json['user'] != null ? json['user']['email'] ?? '' : '',
+      specialization: (json['specializations_list'] != null && json['specializations_list'].isNotEmpty)
+          ? json['specializations_list'][0]
+          : '',
+      experience: json['years_of_experience'] ?? 0,
       bio: json['bio'],
-      phone: json['phone'],
-      imageUrl: json['image_url'],
+      phone: json['user'] != null ? json['user']['phone_number'] : null,
+      imageUrl: json['profile_image'],
     );
   }
 }
