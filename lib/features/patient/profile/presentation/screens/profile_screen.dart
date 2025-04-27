@@ -1,7 +1,10 @@
 // تم تعديل الكود لدعم easy_localization بالكامل
 import 'package:doctorapp/core/localization/bloc/language_bloc.dart';
 import 'package:doctorapp/core/localization/bloc/language_event.dart';
+import 'package:doctorapp/features/patient/edit_profile/presentation/bloc/edit_profile_bloc.dart';
+import 'package:doctorapp/features/patient/edit_profile/presentation/screens/edit_profile_screen.dart';
 import 'package:doctorapp/features/patient/login/presentation/screens/login_screen.dart';
+import 'package:doctorapp/features/patient/profile/data/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -68,7 +71,32 @@ class ProfileScreen extends StatelessWidget {
                         context,
                         title: 'edit_profile'.tr(),
                         icon: Icons.edit_outlined,
-                        onTap: () {},
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider(
+                                create: (context) => sl<EditProfileBloc>(),
+                                child: EditProfileScreen(
+                                  user: User(
+                                    id: 0,
+                                    firstName: user.name.isNotEmpty ? user.name.split(' ').first : '',
+                                    lastName: user.name.isNotEmpty && user.name.split(' ').length > 1
+                                        ? user.name.split(' ').sublist(1).join(' ')
+                                        : '',
+                                    email: user.email,
+                                    phoneNumber: user.phone == 'لا يوجد' ? '' : user.phone,
+                                    dateOfBirth: user.birthDate,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+
+                          if (result == true) {
+                            context.read<ProfileBloc>().add(LoadUserProfile());
+                          }
+                        },
                       ),
                       _buildActionTile(
                         context,
@@ -186,39 +214,33 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
- void _showLogoutConfirmationDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('logout'.tr()),
-      content: Text('confirm_logout'.tr()),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('cancel'.tr()),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); // اغلق الديالوج أولاً
-
-            // بعد الخروج من الديالوج، نفذ عملية التنقل بشكل آمن
-            Future.microtask(() {
-              // لو فعلاً محتاج تبعت LogoutUser:
-              // sl<ProfileBloc>().add(LogoutUser());
-
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (route) => false,
-              );
-            });
-          },
-          style: TextButton.styleFrom(foregroundColor: Colors.red),
-          child: Text('logout'.tr()),
-        ),
-      ],
-    ),
-  );
-}
-
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('logout'.tr()),
+        content: Text('confirm_logout'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Future.microtask(() {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  (route) => false,
+                );
+              });
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text('logout'.tr()),
+          ),
+        ],
+      ),
+    );
+  }
 }
