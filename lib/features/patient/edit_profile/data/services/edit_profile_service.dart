@@ -1,30 +1,22 @@
 import 'package:dio/dio.dart';
+import 'package:doctorapp/core/di/dependancy_injection.dart'; // ضروري عشان sl
 
 class EditProfileService {
-  final Dio _dio;
-
-  EditProfileService(this._dio);
+  final Dio _dio = sl<Dio>();
 
   Future<void> updatePatientProfile({
     required int patientId,
-    required String token,
     required Map<String, dynamic> updatedData,
   }) async {
-    final url = '/patients/$patientId/';
+    final url = '/patients/$patientId/'; // Endpoint الصح
 
-    final response = await _dio.patch(
+    final response = await _dio.put(
       url,
       data: updatedData,
-      options: Options(
-        headers: {
-          'Authorization': 'Token $token', // لو السيرفر بيستخدم Token مش Bearer
-          'Content-Type': 'application/json',
-        },
-      ),
     );
 
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception('Failed to update profile');
+    if (response.statusCode != 200) {
+      throw Exception('فشل في تحديث الملف الشخصي');
     }
   }
 }

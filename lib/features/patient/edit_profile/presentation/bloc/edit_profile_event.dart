@@ -9,7 +9,6 @@ abstract class EditProfileEvent extends Equatable {
 
 class UpdateProfile extends EditProfileEvent {
   final int patientId;
-  final String token;
   final String firstName;
   final String lastName;
   final String email;
@@ -19,10 +18,18 @@ class UpdateProfile extends EditProfileEvent {
   final String bloodType;
   final String height;
   final String weight;
+  final String? allergies;
+  final String? emergencyContactName;
+  final String? emergencyContactPhone;
+  final String? emergencyContactRelationship;
+  final bool isInsured;
+  final String? insuranceProvider;
+  final String? insurancePolicyNumber;
+  final String? insuranceExpiryDate;
+  final String? notes;
 
   const UpdateProfile({
     required this.patientId,
-    required this.token,
     required this.firstName,
     required this.lastName,
     required this.email,
@@ -32,12 +39,20 @@ class UpdateProfile extends EditProfileEvent {
     required this.bloodType,
     required this.height,
     required this.weight,
+    this.allergies,
+    this.emergencyContactName,
+    this.emergencyContactPhone,
+    this.emergencyContactRelationship,
+    this.isInsured = true,
+    this.insuranceProvider,
+    this.insurancePolicyNumber,
+    this.insuranceExpiryDate,
+    this.notes,
   });
 
   @override
   List<Object?> get props => [
         patientId,
-        token,
         firstName,
         lastName,
         email,
@@ -47,5 +62,14 @@ class UpdateProfile extends EditProfileEvent {
         bloodType,
         height,
         weight,
+        allergies,
+        emergencyContactName,
+        emergencyContactPhone,
+        emergencyContactRelationship,
+        isInsured,
+        insuranceProvider,
+        insurancePolicyNumber,
+        insuranceExpiryDate,
+        notes,
       ];
 }

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/edit_profile_bloc.dart';
 import '../bloc/edit_profile_event.dart';
 import '../bloc/edit_profile_state.dart';
-import '../../../profile/data/models/user_model.dart';
+import '../../../profile/data/models/user_model.dart'; // لو عندك موديل User
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
@@ -27,11 +27,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _heightController;
   late TextEditingController _weightController;
 
-  String? _selectedGender;
-  String? _selectedBloodType;
-
-  final List<String> _genders = ['male', 'female'];
-  final List<String> _bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+  String _selectedGender = 'male';
+  String _selectedBloodType = 'A+';
 
   @override
   void initState() {
@@ -41,8 +38,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailController = TextEditingController(text: widget.user.email);
     _phoneController = TextEditingController(text: widget.user.phoneNumber);
     _birthDateController = TextEditingController(text: widget.user.dateOfBirth);
-    _heightController = TextEditingController(); 
-    _weightController = TextEditingController();
+    _heightController = TextEditingController(text: '170');
+    _weightController = TextEditingController(text: '70');
   }
 
   @override
@@ -92,19 +89,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 16),
                 _buildTextField(_birthDateController, 'birthdate'.tr(), readOnly: true, onTap: _selectBirthDate),
                 const SizedBox(height: 16),
-                _buildDropdownField(
-                  label: 'gender'.tr(),
-                  value: _selectedGender,
-                  items: _genders,
-                  onChanged: (val) => setState(() => _selectedGender = val),
-                ),
+                _buildDropdownGender(),
                 const SizedBox(height: 16),
-                _buildDropdownField(
-                  label: 'blood_type'.tr(),
-                  value: _selectedBloodType,
-                  items: _bloodTypes,
-                  onChanged: (val) => setState(() => _selectedBloodType = val),
-                ),
+                _buildDropdownBloodType(),
                 const SizedBox(height: 16),
                 _buildTextField(_heightController, 'height'.tr(), keyboardType: TextInputType.number),
                 const SizedBox(height: 16),
@@ -147,61 +134,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildDropdownField({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
-  }) {
+  Widget _buildDropdownGender() {
     return DropdownButtonFormField<String>(
-      value: value,
-      items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
-      onChanged: onChanged,
+      value: _selectedGender,
+      items: ['male', 'female'].map((gender) {
+        return DropdownMenuItem(
+          value: gender,
+          child: Text(gender.tr()),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedGender = value ?? 'male';
+        });
+      },
       decoration: InputDecoration(
-        labelText: label,
+        labelText: 'gender'.tr(),
         border: const OutlineInputBorder(),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'field_required'.tr();
-        }
-        return null;
-      },
     );
   }
 
-  Future<void> _onSavePressed() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        final token = prefs.getString('auth_token');
-        final patientId = prefs.getInt('user_id');
-
-        if (token == null || patientId == null) {
-          throw Exception('بيانات تسجيل الدخول غير موجودة');
-        }
-
-        context.read<EditProfileBloc>().add(
-          UpdateProfile(
-            patientId: patientId,
-            token: token,
-            firstName: _firstNameController.text.trim(),
-            lastName: _lastNameController.text.trim(),
-            email: _emailController.text.trim(),
-            phone: _phoneController.text.trim(),
-            birthDate: _birthDateController.text.trim(),
-            gender: _selectedGender ?? 'male',
-            bloodType: _selectedBloodType ?? 'A+',
-            height: _heightController.text.isNotEmpty ? _heightController.text : '170',
-            weight: _weightController.text.isNotEmpty ? _weightController.text : '70',
-          ),
+  Widget _buildDropdownBloodType() {
+    final bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+    return DropdownButtonFormField<String>(
+      value: _selectedBloodType,
+      items: bloodTypes.map((blood) {
+        return DropdownMenuItem(
+          value: blood,
+          child: Text(blood),
         );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('error_loading_auth_data'.tr())),
-        );
-      }
-    }
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedBloodType = value ?? 'A+';
+        });
+      },
+      decoration: InputDecoration(
+        labelText: 'blood_type'.tr(),
+        border: const OutlineInputBorder(),
+      ),
+    );
   }
 
   Future<void> _selectBirthDate() async {
@@ -214,6 +187,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
     if (pickedDate != null) {
       _birthDateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+    }
+  }
+
+  Future<void> _onSavePressed() async {
+    if (_formKey.currentState!.validate()) {
+      final prefs = await SharedPreferences.getInstance();
+      final patientId = prefs.getInt('user_id'); // أو حسب مكان تخزين id
+
+      if (patientId != null) {
+        context.read<EditProfileBloc>().add(
+          UpdateProfile(
+            patientId: patientId,
+            firstName: _firstNameController.text.trim(),
+            lastName: _lastNameController.text.trim(),
+            email: _emailController.text.trim(),
+            phone: _phoneController.text.trim(),
+            birthDate: _birthDateController.text.trim(),
+            gender: _selectedGender,
+            bloodType: _selectedBloodType,
+            height: _heightController.text.trim(),
+            weight: _weightController.text.trim(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('error_loading_auth_data'.tr())),
+        );
+      }
     }
   }
 }
