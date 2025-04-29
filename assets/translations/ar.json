@@ -219,9 +219,23 @@
   "enter_phone": "الرجاء إدخال رقم الهاتف",
   "register_account": "تسجيل الحساب",
   "register_title": "إنشاء حساب  جديد",
-  "password_hint": "ادخل كلمة المرور"
+  "password_hint": "ادخل كلمة المرور",
+ 
+    "edit_profile": "تعديل الملف الشخصي",
+    "first_name": "الاسم الأول",
+    "last_name": "الاسم الأخير",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "birthdate": "تاريخ الميلاد",
+    "save": "حفظ",
+    "field_required": "هذا الحقل مطلوب",
+    "profile_updated_successfully": "تم تحديث الملف الشخصي بنجاح",
+    "error_updating_profile": "حدث خطأ أثناء تحديث الملف الشخصي",
+    "error_loading_auth_data": "حدث خطأ أثناء تحميل بيانات تسجيل الدخول"
+
+  }
+  
 
   
 
 
-}

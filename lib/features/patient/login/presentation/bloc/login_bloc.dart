@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../core/models/user_model.dart';
 import '../../../../../core/auth/auth_service.dart';
@@ -39,7 +41,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _onSubmitted(LoginSubmitted event, Emitter<LoginState> emit) async {
-    // التحقق من صحة البيانات المدخلة
     if (!state.canSubmit) {
       emit(state.copyWith(
         error: 'يرجى التحقق من البريد الإلكتروني وكلمة المرور',
@@ -47,7 +48,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       return;
     }
 
-    // بدء عملية تسجيل الدخول
     emit(state.copyWith(
       isLoading: true,
       error: null,
@@ -59,11 +59,35 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       password: state.password,
     );
 
-    result.fold((error) => emit(state.copyWith(
-        isLoading: false,
-        error: error,
-        isSuccess: false,
-      )), (authResponse) async {
+    await result.fold(
+      (error) async {
+        emit(state.copyWith(
+          isLoading: false,
+          error: error,
+          isSuccess: false,
+        ));
+      },
+      (authResponse) async {
+        final prefs = di.sl<SharedPreferences>();
+        await prefs.setString('auth_token', authResponse.token);
+
+        if (authResponse.user != null) {
+          await prefs.setInt('user_id', authResponse.user!.id);
+          await prefs.setString('user_email', authResponse.user!.email);
+          await prefs.setString('user_type', authResponse.user!.userType);
+        }
+
+        // ✅ هنا نطلب /patients/me/ ونخزن الـ patientId
+        try {
+          final dio = di.sl<Dio>();
+          final response = await dio.get('/patients/me/');
+          final patientId = response.data['id'];
+
+          await prefs.setInt('patient_id', patientId);
+        } catch (e) {
+          print('❌ Error fetching patient ID: $e');
+        }
+
         emit(state.copyWith(
           isLoading: false,
           isSuccess: true,
@@ -76,8 +100,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _onLoginWithGoogle(LoginWithGoogle event, Emitter<LoginState> emit) async {
-    // هنا يمكن إضافة منطق تسجيل الدخول بواسطة Google
-    // لم نقم بتنفيذه حالياً لأنه خارج نطاق المتطلبات الحالية
     emit(state.copyWith(
       error: 'تسجيل الدخول بواسطة Google غير متاح حالياً',
     ));
