@@ -1,0 +1,77 @@
+part of 'schedule_bloc.dart';
+
+abstract class ScheduleState extends Equatable {
+  const ScheduleState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class ScheduleInitial extends ScheduleState {}
+
+class ScheduleLoading extends ScheduleState {}
+
+class SchedulesLoaded extends ScheduleState {
+  final List<Schedule> schedules;
+
+  const SchedulesLoaded({required this.schedules});
+
+  @override
+  List<Object?> get props => [schedules];
+}
+
+class SchedulesByClinicLoaded extends ScheduleState {
+  final List<Schedule> schedules;
+
+  const SchedulesByClinicLoaded({required this.schedules});
+
+  @override
+  List<Object?> get props => [schedules];
+}
+
+class SchedulesByDoctorLoaded extends ScheduleState {
+  final List<Schedule> schedules;
+
+  const SchedulesByDoctorLoaded({required this.schedules});
+
+  @override
+  List<Object?> get props => [schedules];
+}
+
+class ScheduleDetailsLoaded extends ScheduleState {
+  final Schedule schedule;
+
+  const ScheduleDetailsLoaded({required this.schedule});
+
+  @override
+  List<Object?> get props => [schedule];
+}
+
+class ScheduleCreated extends ScheduleState {
+  final Schedule schedule;
+
+  const ScheduleCreated({required this.schedule});
+
+  @override
+  List<Object?> get props => [schedule];
+}
+
+class ScheduleUpdated extends ScheduleState {
+  final Schedule schedule;
+
+  const ScheduleUpdated({required this.schedule});
+
+  @override
+  List<Object?> get props => [schedule];
+}
+
+class ScheduleDeleted extends ScheduleState {}
+
+class ScheduleError extends ScheduleState {
+  final Failure failure;
+
+  const ScheduleError({required this.failure});
+
+  @override
+  List<Object?> get props => [failure];
+}

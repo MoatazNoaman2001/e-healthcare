@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:doctorapp/core/auth/auth_service.dart';
-import 'package:doctorapp/features/doctor/homedoctor/presentation/screens/home_screen.dart';
+import 'package:doctorapp/features/doctor/presentation/screens/doctor_dashboard_page.dart';
 import 'package:doctorapp/features/patient/home/presentation/screens/home_page.dart';
 import 'package:doctorapp/features/user_selection/presentation/screens/user_selection_screen.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
         // TODO: Replace with your doctor home page
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => DoctorDashboardPage()),
         );
       } else {
         // Fallback for unknown user type or if user type is not set

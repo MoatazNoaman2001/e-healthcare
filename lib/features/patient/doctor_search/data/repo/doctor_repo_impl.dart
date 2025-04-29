@@ -23,9 +23,9 @@ class DoctorRepositoryImpl implements DoctorRepository {
       return right(doctors);
     } on Exception catch (e) {
       if (e.toString().contains('No Internet')) {
-        return left(const NetworkFailure('تأكد من اتصالك بالإنترنت'));
+        return left(const NetworkFailure(message: 'تأكد من اتصالك بالإنترنت'));
       }
-      return left(ServerFailure(e.toString()));
+      return left(ServerFailure(message: e.toString()));
     }
   }
 
@@ -36,9 +36,9 @@ class DoctorRepositoryImpl implements DoctorRepository {
       return right(specialties);
     } on Exception catch (e) {
       if (e.toString().contains('No Internet')) {
-        return left(const NetworkFailure('تأكد من اتصالك بالإنترنت'));
+        return left(const NetworkFailure(message: 'تأكد من اتصالك بالإنترنت'));
       }
-      return left(ServerFailure(e.toString()));
+      return left(ServerFailure(message: e.toString()));
     }
   }
 }

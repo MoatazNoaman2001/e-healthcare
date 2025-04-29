@@ -1,17 +1,28 @@
 abstract class Failure {
   final String message;
 
-  const Failure(this.message);
+  const Failure({required this.message});
+
+  @override
+  String toString() => message;
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure(String message) : super(message);
-}
-
-class CacheFailure extends Failure {
-  const CacheFailure(String message) : super(message);
+  const ServerFailure({required super.message});
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure(String message) : super(message);
+  const NetworkFailure({required super.message});
+}
+
+class UnexpectedFailure extends Failure {
+  const UnexpectedFailure({required super.message});
+}
+
+class CacheFailure extends Failure {
+  const CacheFailure({required super.message});
+}
+
+class AuthFailure extends Failure {
+  const AuthFailure({required super.message});
 }
