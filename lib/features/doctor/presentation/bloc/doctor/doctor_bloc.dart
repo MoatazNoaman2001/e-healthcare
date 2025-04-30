@@ -18,6 +18,8 @@ class DoctorBloc extends Bloc<DoctorEvent, DoctorState> {
   final UpdateDoctorProfile _updateDoctorProfile;
   final RegisterDoctor _registerDoctor;
 
+  Doctor? doctor = null;
+
   DoctorBloc({
     required GetMyProfile getMyProfile,
     required GetDoctorProfile getDoctorProfile,
@@ -43,8 +45,13 @@ class DoctorBloc extends Bloc<DoctorEvent, DoctorState> {
     final result = await _getMyProfile();
 
     result.fold(
-          (failure) => emit(DoctorError(failure: failure)),
-          (doctor) => emit(MyProfileLoaded(doctor: doctor)),
+          (failure){
+            emit(DoctorError(failure: failure));
+          },
+          (doctor) {
+            this.doctor = doctor;
+            emit(MyProfileLoaded(doctor: doctor));
+          },
     );
   }
 

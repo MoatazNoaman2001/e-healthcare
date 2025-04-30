@@ -52,7 +52,10 @@ class DoctorRemoteDataSourceImpl implements DoctorRemoteDataSource {
     return await _apiClient.request<Doctor>(
       endpoint: ApiEndpoints.me,
       method: RequestMethod.get,
-      fromJson: (json) => DoctorModel.fromJson(json),
+      fromJson: (json) {
+        log('doctor body: ${json}');
+        return DoctorModel.fromJson(json);
+      },
     );
   }
 
@@ -92,11 +95,14 @@ class DoctorRemoteDataSourceImpl implements DoctorRemoteDataSource {
 
   @override
   ResultFuture<List<Appointment>> getAppointments(String doctorId) async {
+
     return await _apiClient.request<List<Appointment>>(
       endpoint: ApiEndpoints.appointments(doctorId),
       method: RequestMethod.get,
       fromJson: (json) {
-        final List<dynamic> appointmentList = json;
+
+        log('response from getappointments: ${json}');
+        final List<dynamic> appointmentList = json['results'];
         return appointmentList
             .map((appointment) => AppointmentModel.fromJson(appointment))
             .toList();

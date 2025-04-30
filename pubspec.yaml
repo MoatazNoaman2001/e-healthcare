@@ -49,6 +49,8 @@ dependencies:
   easy_localization: ^3.0.1
   skeletonizer: ^1.4.3
   shimmer: ^3.0.0
+  share_plus: ^11.0.0
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

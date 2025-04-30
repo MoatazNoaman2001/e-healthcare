@@ -1,7 +1,13 @@
+import 'dart:developer';
+
+import 'package:doctorapp/features/doctor/data/models/doctor_model.dart';
+import 'package:doctorapp/features/doctor/presentation/bloc/doctor/get_me_doctor_bloc.dart';
 import 'package:doctorapp/features/patient/profile/presentation/bloc/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/auth/auth_service.dart';
 import '../../../../core/di/dependancy_injection.dart';
@@ -46,23 +52,23 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
     final authService = sl<AuthService>();
 
     // Load profile data
-    context.read<DoctorBloc>().add(GetMyProfileEvent());
+    context.read<GetMeDoctorBloc>().add(GetMyProfileEvent());
 
     // Load today's appointments
-    final doctorId = authService.currentUserId.toString(); // Get from authentication service
+    final doctorId =
+        authService.currentUserId.toString(); // Get from authentication service
+    // context
+    //     .read<AppointmentBloc>()
+    //     .add(GetTodayAppointmentsEvent(doctorId: doctorId));
+    //
+    // // Load past appointments for history tab
+    // context
+    //     .read<AppointmentBloc>()
+    //     .add(GetPastAppointmentsEvent(doctorId: doctorId));
+    // Load appointments for history tab
     context
         .read<AppointmentBloc>()
-        .add(GetTodayAppointmentsEvent(doctorId: doctorId));
-
-    // Load upcoming appointments
-    context
-        .read<AppointmentBloc>()
-        .add(GetUpcomingAppointmentsEvent(doctorId: doctorId));
-
-    // Load past appointments for history tab
-    context
-        .read<AppointmentBloc>()
-        .add(GetPastAppointmentsEvent(doctorId: doctorId));
+        .add(GetAppointmentsEvent(doctorId: doctorId));
 
     // Load schedule
     context.read<ScheduleBloc>().add(GetSchedulesEvent(doctorId: doctorId));
@@ -90,10 +96,45 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
                               color: Colors.white70,
                             ),
                       ),
-                      BlocBuilder<DoctorBloc, DoctorState>(
+                      BlocConsumer<GetMeDoctorBloc, DoctorState>(
+                        listener: (context, state) {
+                          log('current GetMeDoctorBloc State: ${state}');
+                        },
                         builder: (context, state) {
+                          if (state is DoctorLoading ||
+                              state is DoctorInitial) {
+                            return Shimmer.fromColors(
+                                child: Container(
+                                  height: 24,
+                                  width: 62,
+                                ),
+                                baseColor: Colors.transparent,
+                                highlightColor: Colors.black12);
+                          }
+                          if (state is MyProfileLoaded)
+                            return Text(
+                              'Dr. ${state.doctor.fullName}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            );
+                          if (state is DoctorError)
+                            return Text(
+                              'Dr. ${state.failure}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            );
                           return Text(
-                            'Dr. ${state == MyProfileLoaded? (state as MyProfileLoaded).doctor.firstName: "Smith"}',
+                            'Dr. ${"kjdfsh"}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineMedium
@@ -112,10 +153,28 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
                           color: Colors.white),
                       onPressed: () {},
                     ),
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.white,
-                      child: Text('JS', style: TextStyle(color: Colors.blue)),
+                    BlocBuilder<GetMeDoctorBloc, DoctorState>(
+                      builder: (context, state) {
+                        if (state is DoctorLoading || state is DoctorInitial)
+                        return Shimmer.fromColors(
+                          child: Container(width: 12, height: 12,),
+                          baseColor: Colors.transparent,
+                          highlightColor: Colors.black12,
+                        );
+                        else if (state is MyProfileLoaded)
+                          return CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.white,
+                            child:
+                            Text(state.doctor.fullName.split(' ').map((e) => e[0].toString(),).join(), style: TextStyle(color: Colors.blue)),
+                          );
+                        return CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Colors.white,
+                          child:
+                          Text("??", style: TextStyle(color: Colors.blue)),
+                        );
+                      },
                     ),
                   ],
                   expandedHeight: 200,
@@ -299,42 +358,42 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            QuickActionButton(
-                              icon: Icons.calendar_month,
-                              label: 'Schedule',
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF1A6FEE), Color(0xFF6BA5F7)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, '/today_schedule');
-                              },
-                            ),
-                            QuickActionButton(
-                              icon: Icons.people,
-                              label: 'Patients',
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF42C3A7), Color(0xFF8EE9D4)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, '/patient_list');
-                              },
-                            ),
-                            QuickActionButton(
-                              icon: Icons.calendar_today,
-                              label: 'Calendar',
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFFFFA800), Color(0xFFFFD980)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, '/calendar');
-                              },
-                            ),
+                            // QuickActionButton(
+                            //   icon: Icons.calendar_month,
+                            //   label: 'Schedule',
+                            //   gradient: const LinearGradient(
+                            //     colors: [Color(0xFF1A6FEE), Color(0xFF6BA5F7)],
+                            //     begin: Alignment.topLeft,
+                            //     end: Alignment.bottomRight,
+                            //   ),
+                            //   onTap: () {
+                            //     Navigator.pushNamed(context, '/today_schedule');
+                            //   },
+                            // ),
+                            // QuickActionButton(
+                            //   icon: Icons.people,
+                            //   label: 'Patients',
+                            //   gradient: const LinearGradient(
+                            //     colors: [Color(0xFF42C3A7), Color(0xFF8EE9D4)],
+                            //     begin: Alignment.topLeft,
+                            //     end: Alignment.bottomRight,
+                            //   ),
+                            //   onTap: () {
+                            //     Navigator.pushNamed(context, '/patient_list');
+                            //   },
+                            // ),
+                            // QuickActionButton(
+                            //   icon: Icons.calendar_today,
+                            //   label: 'Calendar',
+                            //   gradient: const LinearGradient(
+                            //     colors: [Color(0xFFFFA800), Color(0xFFFFD980)],
+                            //     begin: Alignment.topLeft,
+                            //     end: Alignment.bottomRight,
+                            //   ),
+                            //   onTap: () {
+                            //     Navigator.pushNamed(context, '/calendar');
+                            //   },
+                            // ),
                             QuickActionButton(
                               icon: Icons.person,
                               label: 'Profile',
@@ -344,7 +403,14 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
                                 end: Alignment.bottomRight,
                               ),
                               onTap: () {
-                                Navigator.pushNamed(context, '/doctor_profile');
+                                Navigator.pushNamed(
+                                    context, '/doctor_profile_screen',
+                                    arguments: DoctorModel(
+                                        id: "1",
+                                        firstName: "Moataz",
+                                        lastName: "Noaman",
+                                        email: "Moataz.Noaman12@gmail.com",
+                                        phoneNumber: "+201098518194"));
                               },
                             ),
                           ],
@@ -408,16 +474,16 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
             activeIcon: Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            activeIcon: Icon(Icons.calendar_today),
-            label: 'Schedule',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline),
-            activeIcon: Icon(Icons.people),
-            label: 'Patients',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.calendar_today_outlined),
+          //   activeIcon: Icon(Icons.calendar_today),
+          //   label: 'Schedule',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.people_outline),
+          //   activeIcon: Icon(Icons.people),
+          //   label: 'Patients',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
@@ -426,14 +492,20 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
         ],
         onTap: (index) {
           switch (index) {
-            case 1:
+            case 3:
               Navigator.pushNamed(context, '/today_schedule');
               break;
             case 2:
               Navigator.pushNamed(context, '/patient_list');
               break;
-            case 3:
-              Navigator.pushNamed(context, '/doctor_profile');
+            case 1:
+              Navigator.pushNamed(context, '/doctor_profile_screen',
+                  arguments: DoctorModel(
+                      id: "1",
+                      firstName: "Moataz",
+                      lastName: "Noaman",
+                      email: "Moataz.Noaman12@gmail.com",
+                      phoneNumber: "+201098518194"));
               break;
           }
         },
@@ -444,16 +516,18 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
   Widget _buildTodayAppointments() {
     return BlocBuilder<AppointmentBloc, AppointmentState>(
       builder: (context, state) {
-        if (state is TodayAppointmentsLoaded) {
+        if (state is AppointmentsLoaded) {
           if (state.appointments.isEmpty) {
             return _buildEmptyState('No appointments for today');
           }
-
+          List<Appointment> todayAppiontements= state.appointments.filter(
+            (t) => t.isToday,
+          ).toList();
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: state.appointments.length,
+            itemCount: todayAppiontements.length,
             itemBuilder: (context, index) {
-              final appointment = state.appointments[index];
+              final appointment = todayAppiontements[index];
               return AppointmentCard(
                 appointment: appointment,
                 onTap: () {
@@ -484,16 +558,20 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
   Widget _buildUpcomingAppointments() {
     return BlocBuilder<AppointmentBloc, AppointmentState>(
       builder: (context, state) {
-        if (state is UpcomingAppointmentsLoaded) {
+        if (state is AppointmentsLoaded) {
           if (state.appointments.isEmpty) {
             return _buildEmptyState('No upcoming appointments');
           }
 
+          List<Appointment> upcomingAppiontements= state.appointments.filter(
+                (t) => !t.isToday && !t.isPast,
+          ).toList();
+
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: state.appointments.length,
+            itemCount: upcomingAppiontements.length,
             itemBuilder: (context, index) {
-              final appointment = state.appointments[index];
+              final appointment = upcomingAppiontements[index];
               return AppointmentCard(
                 appointment: appointment,
                 onTap: () {
@@ -524,16 +602,19 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
   Widget _buildAppointmentHistory() {
     return BlocBuilder<AppointmentBloc, AppointmentState>(
       builder: (context, state) {
-        if (state is PastAppointmentsLoaded) {
+        if (state is AppointmentsLoaded) {
           if (state.appointments.isEmpty) {
             return _buildEmptyState('No appointment history');
           }
+          List<Appointment> pastAppiontements= state.appointments.filter(
+                (t) => t.isPast,
+          ).toList();
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: state.appointments.length,
+            itemCount: pastAppiontements.length,
             itemBuilder: (context, index) {
-              final appointment = state.appointments[index];
+              final appointment = pastAppiontements[index];
               return AppointmentCard(
                 appointment: appointment,
                 onTap: () {

@@ -1,6 +1,7 @@
 import 'package:doctorapp/core/theme/theme.dart';
 import 'package:doctorapp/features/doctor/presentation/bloc/appointment/appointments_bloc.dart';
 import 'package:doctorapp/features/doctor/presentation/bloc/doctor/doctor_bloc.dart';
+import 'package:doctorapp/features/doctor/presentation/bloc/doctor/get_me_doctor_bloc.dart';
 import 'package:doctorapp/features/doctor/presentation/bloc/schedule/schedule_bloc.dart';
 import 'package:doctorapp/features/doctor/presentation/screens/doctor_dashboard_page.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'dart:io';
 import 'package:doctorapp/core/localization/bloc/language_bloc.dart';
 import 'package:doctorapp/features/patient/appointments/presentation/screens/appointments_screen.dart';
 import 'package:doctorapp/features/patient/appointments_booking/presentation/screens/appointment_booking_screen.dart';
-import 'package:doctorapp/features/patient/doctors/presentation/screens/doctor_profile_screen.dart';
+import 'package:doctorapp/features/patient/doctors/presentation/screens/doctor_profile_screen.dart' as pdp;
 import 'package:doctorapp/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:doctorapp/features/splash/presentation/screens/splash_screen.dart';
 import 'package:doctorapp/features/user_selection/presentation/screens/user_selection_screen.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'core/di/dependancy_injection.dart' as di;
+import 'features/doctor/presentation/screens/doctor_profile.dart';
 import 'features/patient/home/presentation/bloc/home_bloc.dart';
 
 Future<void> main() async {
@@ -45,6 +47,7 @@ Future<void> main() async {
           BlocProvider(create: (context) => di.sl<HomeBloc>()),
           BlocProvider(create: (context) => di.sl<LanguageBloc>()),
           BlocProvider(create: (context) => di.sl<DoctorBloc>()),
+          BlocProvider(create: (context) => di.sl<GetMeDoctorBloc>()),
           BlocProvider(create: (context) => di.sl<AppointmentBloc>()),
           BlocProvider(create: (context) => di.sl<ScheduleBloc>()),
         ],
@@ -141,7 +144,7 @@ class MyApp extends StatelessWidget {
 
         ),
         '/HomeScreen': (context) => const DoctorDashboardPage(),
-        '/book-appointment': (context) => const DoctorProfileScreen(),
+        '/book-appointment': (context) => const pdp.DoctorProfileScreen(),
         // '/doctor-details': (context) => const DoctorDetailsScreen()
       },
     );

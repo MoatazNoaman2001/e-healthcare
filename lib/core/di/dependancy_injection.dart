@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:doctorapp/core/localization/bloc/language_bloc.dart';
+import 'package:doctorapp/features/doctor/presentation/bloc/doctor/get_me_doctor_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -200,6 +201,7 @@ Future<void> init() async {
   // Appointment BLoC
   sl.registerFactory(
         () => AppointmentBloc(
+          getAppointments: sl(),
       cancelAppointment: sl(),
       completeAppointment: sl(),
       confirmAppointment: sl(),
@@ -226,6 +228,10 @@ Future<void> init() async {
       getSchedulesByDoctor: sl(),
       updateSchedule: sl(),
     ),
+  );
+
+  sl.registerFactory(
+    () => GetMeDoctorBloc(getMyProfile: sl())
   );
 }
 

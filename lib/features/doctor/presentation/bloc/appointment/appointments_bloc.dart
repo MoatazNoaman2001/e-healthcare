@@ -14,6 +14,7 @@ import '../../../domain/usecases/appointments/confirm_appointment.dart';
 import '../../../domain/usecases/appointments/create_appointment.dart';
 import '../../../domain/usecases/appointments/delete_appointment.dart';
 import '../../../domain/usecases/appointments/get_appointment.dart';
+import '../../../domain/usecases/appointments/get_appointments.dart';
 import '../../../domain/usecases/appointments/get_past_appointment.dart';
 import '../../../domain/usecases/appointments/get_today_appointments.dart';
 import '../../../domain/usecases/appointments/get_upcoming_appointments.dart';
@@ -31,6 +32,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   final CreateAppointment _createAppointment;
   final DeleteAppointment _deleteAppointment;
   final GetAppointment _getAppointment;
+  final GetAppointments _getAppointments;
   final GetPastAppointments _getPastAppointments;
   final GetTodayAppointments _getTodayAppointments;
   final GetUpcomingAppointments _getUpcomingAppointments;
@@ -45,6 +47,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     required CreateAppointment createAppointment,
     required DeleteAppointment deleteAppointment,
     required GetAppointment getAppointment,
+    required GetAppointments getAppointments,
     required GetPastAppointments getPastAppointments,
     required GetTodayAppointments getTodayAppointments,
     required GetUpcomingAppointments getUpcomingAppointments,
@@ -57,6 +60,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         _createAppointment = createAppointment,
         _deleteAppointment = deleteAppointment,
         _getAppointment = getAppointment,
+        _getAppointments = getAppointments,
         _getPastAppointments = getPastAppointments,
         _getTodayAppointments = getTodayAppointments,
         _getUpcomingAppointments = getUpcomingAppointments,
@@ -68,6 +72,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<GetUpcomingAppointmentsEvent>(_onGetUpcomingAppointments);
     on<GetPastAppointmentsEvent>(_onGetPastAppointments);
     on<GetAppointmentDetailsEvent>(_onGetAppointmentDetails);
+    on<GetAppointmentsEvent>(_onGetAppointments);
     on<CreateAppointmentEvent>(_onCreateAppointment);
     on<UpdateAppointmentEvent>(_onUpdateAppointment);
     on<DeleteAppointmentEvent>(_onDeleteAppointment);
@@ -89,6 +94,20 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     result.fold(
           (failure) => emit(AppointmentError(failure: failure)),
           (appointments) => emit(TodayAppointmentsLoaded(appointments: appointments)),
+    );
+  }
+
+  Future<void> _onGetAppointments(
+      GetAppointmentsEvent event,
+      Emitter<AppointmentState> emit,
+      ) async {
+    emit(AppointmentLoading());
+
+    final result = await _getAppointments(doctorId: event.doctorId);
+
+    result.fold(
+          (failure) => emit(AppointmentError(failure: failure)),
+          (appointments) => emit(AppointmentsLoaded(appointments: appointments)),
     );
   }
 

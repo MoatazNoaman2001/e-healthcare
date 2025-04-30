@@ -1,7 +1,12 @@
+import 'dart:ffi';
+
+import 'package:doctorapp/features/doctor/presentation/screens/doctor_profile.dart';
 import 'package:doctorapp/features/patient/appointments_booking/presentation/screens/appointment_booking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../../doctor_search/domain/models/doctor_model.dart';
+import 'package:fpdart/fpdart.dart';
+
+import '../../../../doctor/data/models/doctor_model.dart';
 
 class DoctorProfileScreen extends StatelessWidget {
   const DoctorProfileScreen({super.key});
@@ -22,9 +27,9 @@ class DoctorProfileScreen extends StatelessWidget {
           children: [
             _buildDoctorHeader(doctor),
             const SizedBox(height: 24),
-            _buildRatingRow(doctor.rating),
+            _buildRatingRow(double.tryParse(doctor.rating??"0")),
             const SizedBox(height: 16),
-            _buildExperienceRow(doctor.experience),
+            _buildExperienceRow(doctor.yearsOfExperience),
             const SizedBox(height: 24),
             Text(
               'available_appointments'.tr(),
@@ -42,15 +47,15 @@ class DoctorProfileScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => AppointmentBookingScreen(
                         doctorName: doctor.fullName,
-                        specialty: doctor.specialization,
+                        specialty: doctor.specialization??"",
                       ),
                     ),
                   );
                 },
-                icon: const Icon(Icons.calendar_today),
+                icon: const Icon(Icons.calendar_today,color: Colors.white,),
                 label: Text('book_appointment'.tr()),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal.shade700,
+                  backgroundColor: Colors.blue,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -75,9 +80,11 @@ class DoctorProfileScreen extends StatelessWidget {
           child: CircleAvatar(
             radius: 50,
             backgroundColor: Colors.blue.shade100,
-            backgroundImage: doctor.imageUrl != null
-                ? NetworkImage(doctor.imageUrl!)
-                : const AssetImage('assets/doctor_placeholder.png') as ImageProvider,
+            backgroundImage:
+            doctor.profilePicture != null
+                ? NetworkImage(doctor.profilePicture!)
+                :
+            const AssetImage('assets/doctor_placeholder.png') as ImageProvider,
           ),
         ),
         const SizedBox(height: 16),
@@ -90,7 +97,7 @@ class DoctorProfileScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Center(
           child: Text(
-            doctor.specialization,
+            doctor.specialization?? "",
             style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ),

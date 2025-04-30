@@ -17,15 +17,15 @@ class DoctorModel extends Doctor {
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
       id: json['id'].toString(),
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      email: json['email'],
-      phoneNumber: json['phone_number'],
-      specialization: json['specialization'],
-      licenseNumber: json['license_number'],
-      profilePicture: json['profile_picture'],
-      bio: json['bio'],
-      clinicAddress: json['clinic_address'],
+      firstName: json['first_name'] ?? "",
+      lastName: json['last_name'] ?? "",
+      email: json['email']?? "",
+      phoneNumber: json['phone_number']?? "",
+      specialization: json['specialization'] ?? "",
+      licenseNumber: json['license_number']?? "",
+      profilePicture: json['profile_picture'] ?? "",
+      bio: json['bio']?? "",
+      clinicAddress: json['clinic_address']?? "",
     );
   }
 
