@@ -24,6 +24,7 @@ class ProfileScreen extends StatelessWidget {
         body: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
             if (state is ProfileLoading) {
+
               return const Center(child: CircularProgressIndicator());
             } else if (state is ProfileLoaded) {
               final user = state.user;
@@ -68,12 +69,70 @@ class ProfileScreen extends StatelessWidget {
                     title: 'settings'.tr(),
                     items: [
                       _buildActionTile(
+
+              return const Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF006272)),
+                ),
+              );
+            } else if (state is ProfileLoaded) {
+              final user = state.user;
+              return CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    expandedHeight: 200,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          // image: DecorationImage(
+                          //   image: AssetImage("assets/images/profile_background.png"), // صورة خلفية اختيارية
+                          //   fit: BoxFit.cover,
+                          // ),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildProfilePhoto(context, user.name),
+                              const SizedBox(height: 8),
+                              Text(
+                                user.name,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                user.email,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    backgroundColor:
+                        Colors.white, // لون خلفية AppBar عند التقلص
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      const SizedBox(height: 16),
+                      _buildSection(
+
                         context,
                         title: 'edit_profile'.tr(),
                         icon: Icons.edit_outlined,
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
+
                             MaterialPageRoute(
                               builder: (_) => BlocProvider(
                                 create: (context) => sl<EditProfileBloc>(),
@@ -87,6 +146,36 @@ class ProfileScreen extends StatelessWidget {
                                     email: user.email,
                                     phoneNumber: user.phone == 'لا يوجد' ? '' : user.phone,
                                     dateOfBirth: user.birthDate,
+
+                            title: 'edit_profile'.tr(),
+                            icon: Icons.edit_outlined,
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (_) => sl<EditProfileBloc>(),
+                                    child: EditProfileScreen(
+                                      user: User(
+                                        id: 0,
+                                        firstName: user.name.isNotEmpty
+                                            ? user.name.split(' ').first
+                                            : '',
+                                        lastName: user.name.isNotEmpty &&
+                                                user.name.split(' ').length > 1
+                                            ? user.name
+                                                .split(' ')
+                                                .sublist(1)
+                                                .join(' ')
+                                            : '',
+                                        email: user.email,
+                                        phoneNumber: user.phone == 'لا يوجد'
+                                            ? ''
+                                            : user.phone,
+                                        dateOfBirth: user.birthDate,
+                                      ),
+                                    ),
+
                                   ),
                                 ),
                               ),

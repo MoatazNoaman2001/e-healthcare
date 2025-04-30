@@ -56,6 +56,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('Bloc: ${context.read<EditProfileBloc>()}');
+
     return Scaffold(
       appBar: AppBar(
         title: Text('edit_profile'.tr()),

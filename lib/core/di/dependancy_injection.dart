@@ -51,6 +51,7 @@ import '../../features/patient/registerpatient/data/repo/profile_repo_impl.dart'
 import '../../features/patient/registerpatient/domain/repo/profile_repo.dart';
 import '../api/api_client.dart';
 import '../auth/auth_service.dart';
+import '../../features/patient/edit_profile/presentation/bloc/edit_profile_bloc.dart';
 
 final sl = GetIt.instance;
 final eventBus = EventBus();
@@ -186,7 +187,7 @@ Future<void> init() async {
   sl.registerFactory(() => HomeBloc(repository: sl()));
   sl.registerFactory(() => DoctorSearchBloc(repository: sl()));
   sl.registerFactory(() => ProfileBloc(profileRepository: sl()));
-
+sl.registerFactory(() => EditProfileBloc());
   // Doctor BLoC
   sl.registerFactory(
         () => DoctorBloc(
