@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:doctorapp/features/doctor/data/models/doctor_model.dart';
 import 'package:doctorapp/features/doctor/presentation/bloc/doctor/get_me_doctor_bloc.dart';
 import 'package:doctorapp/features/patient/profile/presentation/bloc/profile_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart' as fp;
@@ -11,6 +12,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/auth/auth_service.dart';
 import '../../../../core/di/dependancy_injection.dart';
+import '../../../patient/login/presentation/screens/login_screen.dart';
 import '../../domain/entities/appointment.dart';
 import '../../domain/entities/doctor.dart';
 import '../bloc/appointment/appointments_bloc.dart';
@@ -145,9 +147,17 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
                           );
                         },
                       ),
+
+
                     ],
                   ),
                   actions: [
+                    Container(
+                      width: MediaQuery.sizeOf(context).width * 0.69,
+                      alignment: Alignment.bottomRight,
+                      child: IconButton(onPressed: () => logout(context)
+                          , icon: Icon(Icons.logout_rounded , color: Colors.white,)),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.notifications_outlined,
                           color: Colors.white),
@@ -176,6 +186,8 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
                         );
                       },
                     ),
+
+
                   ],
                   expandedHeight: 200,
                   collapsedHeight: 80,
@@ -868,6 +880,27 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
         ),
       ),
     );
+  }
+
+  Future<void> logout(BuildContext context) async {
+    try {
+      final authService = sl<AuthService>();
+      await authService.logout();
+      Navigator.pop(context); // Close dialog
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('logout_error'.tr(args: [e.toString()])),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
   }
 }
 

@@ -17,11 +17,11 @@ class Clinic extends Equatable {
 
   factory Clinic.fromJson(Map<String, dynamic> json) {
     return Clinic(
-      clinicId: json['clinic_id'],
-      name: json['name'],
-      address: json['address'],
-      city: json['city'],
-      phoneNumber: json['phone_number'],
+      clinicId: json['clinic_id'] ?? 0,
+      name: json['name']?? "",
+      address: json['address'] ?? "",
+      city: json['city']?? "",
+      phoneNumber: json['phone_number']?? "",
     );
   }
 

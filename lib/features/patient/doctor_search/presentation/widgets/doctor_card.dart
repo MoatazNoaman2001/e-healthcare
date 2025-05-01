@@ -1,12 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as ui;
 import 'package:google_fonts/google_fonts.dart';
 
 class DoctorCard extends StatefulWidget {
   final String? name;
   final String? specialty;
   final double? rating;
-  final String? experience;
+  final int? experience;
   final String? nextAppointment;
   final VoidCallback onTap;
   final VoidCallback onBook;
@@ -129,7 +130,8 @@ class _DoctorCardState extends State<DoctorCard> with SingleTickerProviderStateM
                             Icon(Icons.work, color: _primaryColor.withOpacity(0.7), size: 16),
                             const SizedBox(width: 4),
                             Text(
-                              '${widget.experience ?? '0'} ${'years_of_experience'.tr()}',
+                              textDirection: ui.TextDirection.rtl,
+                              ' سنوات: ${widget.experience ?? '0'} ',
                               style: GoogleFonts.openSans(
                                 fontSize: 14,
                                 color: _primaryColor,

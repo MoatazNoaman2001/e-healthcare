@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class PatientProfile {
   final int id;
   final UserData user;
@@ -56,6 +58,7 @@ class PatientProfile {
   });
 
   factory PatientProfile.fromJson(Map<String, dynamic> json) {
+    log('height: ${json['height']}');
     return PatientProfile(
       id: json['id'],
       user: UserData.fromJson(json['user']),
@@ -64,8 +67,8 @@ class PatientProfile {
       dateOfBirth: json['date_of_birth'] ?? '',
       gender: json['gender'] ?? '',
       bloodType: json['blood_type'] ?? '',
-      height: json['height']?.toDouble(),
-      weight: json['weight']?.toDouble(),
+      height: double.tryParse(json['height']),
+      weight: double.tryParse(json['weight']),
       allergies: json['allergies'],
       emergencyContactName: json['emergency_contact_name'],
       emergencyContactPhone: json['emergency_contact_phone'],

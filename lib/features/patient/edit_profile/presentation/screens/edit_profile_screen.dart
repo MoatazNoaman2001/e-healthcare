@@ -444,6 +444,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 lastName: _lastNameController.text.trim(),
                 email: _emailController.text.trim(),
                 phone: _phoneController.text.trim(),
+                emergencyContactPhone: _phoneController.text.trim(),
                 birthDate: _birthDateController.text.trim(),
                 gender: _selectedGender,
                 bloodType: _selectedBloodType,

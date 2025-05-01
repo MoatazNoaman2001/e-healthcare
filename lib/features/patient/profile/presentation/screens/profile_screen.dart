@@ -225,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             Icon(Icons.error_outline, size: 48, color: Colors.red.shade700),
             const SizedBox(height: 16),
             Text(
-              'profile_error'.tr(args: [state.message]),
+              state.message,
               style: GoogleFonts.openSans(fontSize: 16, color: _primaryColor),
               textAlign: TextAlign.center,
             ),

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
@@ -165,6 +166,9 @@ class _HomeContentScreenState extends State<HomeContentScreen> with SingleTicker
                     state.isUpcomingAppointmentsLoading ||
                     state.isPastAppointmentsLoading ||
                     state.isClinicsLoading;
+
+
+                log('values: ${state.isDoctorsLoading} ${state.isSpecializationsLoading} ${state.isUpcomingAppointmentsLoading } ${state.isPastAppointmentsLoading} ${state.isClinicsLoading}');
 
                 return CustomScrollView(
                   slivers: [
