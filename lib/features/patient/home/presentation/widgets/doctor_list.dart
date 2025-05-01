@@ -124,7 +124,7 @@ class DoctorsList extends StatelessWidget {
                         // Navigate to doctor appointment booking
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: const Color.fromARGB(255, 10, 33, 51),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

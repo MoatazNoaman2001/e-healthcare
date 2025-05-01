@@ -20,15 +20,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/di/dependancy_injection.dart' as di;
 import 'features/doctor/presentation/screens/doctor_profile.dart';
 import 'features/patient/home/presentation/bloc/home_bloc.dart';
-
+late SharedPreferences prefs;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await di.init();
-
+  prefs = await SharedPreferences.getInstance();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -41,6 +42,7 @@ Future<void> main() async {
       supportedLocales: [Locale('en'), Locale('ar')],
       path: 'assets/translations',
       fallbackLocale: Locale('ar'),
+      useOnlyLangCode: true,
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => SplashBloc()),

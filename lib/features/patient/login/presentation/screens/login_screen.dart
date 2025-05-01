@@ -5,6 +5,7 @@ import 'package:doctorapp/features/patient/registerpatient/presentation/screens/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../bloc/login_bloc.dart';
 
@@ -37,29 +38,37 @@ class _LoginViewState extends State<_LoginView>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Curves.easeIn,
+        curve: Curves.easeInOutCubic,
       ),
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.1),
+      begin: const Offset(0, 0.2),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Curves.easeOut,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
       ),
     );
 
@@ -76,6 +85,11 @@ class _LoginViewState extends State<_LoginView>
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryColor = Color.fromARGB(255, 19, 165, 184); // Deep blue
+    const Color secondaryColor = Color.fromARGB(255, 35, 107, 216); // Cyan
+    const Color textDarkColor = Color(0xFF212121);
+    const Color textLightColor = Color(0xFF757575);
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -84,9 +98,11 @@ class _LoginViewState extends State<_LoginView>
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                const Color.fromARGB(255, 246, 251, 255),
-                const Color.fromARGB(255, 117, 197, 209),
+                primaryColor.withOpacity(0.1),
+                secondaryColor.withOpacity(0.2),
+                Colors.white,
               ],
+              stops: [0.0, 0.5, 1.0],
             ),
           ),
           child: BlocConsumer<LoginBloc, LoginState>(
@@ -103,8 +119,13 @@ class _LoginViewState extends State<_LoginView>
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      content: Text('login_success'.tr()),
-                      backgroundColor: Colors.green),
+                    content: Text('login_success'.tr()),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 );
 
                 Navigator.pushReplacement(
@@ -116,19 +137,27 @@ class _LoginViewState extends State<_LoginView>
                         child: const HomePage(),
                       );
                     },
+                    transitionDuration: const Duration(milliseconds: 600),
                   ),
                 );
               } else if (state.error != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      content: Text(state.error!), backgroundColor: Colors.red),
+                    content: Text(state.error!),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 );
               }
             },
             builder: (context, state) {
               final bloc = context.read<LoginBloc>();
               return SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
                 child: FadeTransition(
                   opacity: _fadeAnimation,
                   child: SlideTransition(
@@ -137,67 +166,98 @@ class _LoginViewState extends State<_LoginView>
                       key: _formKey,
                       child: Column(
                         children: [
-                          const SizedBox(height: 30),
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(255, 54, 124, 150)
-                                      .withOpacity(0.2),
-                                  blurRadius: 15,
-                                  spreadRadius: 3,
-                                ),
-                              ],
+                          // Logo
+                          // ScaleTransition(
+                          //   scale: _scaleAnimation,
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(20),
+                          //     decoration: BoxDecoration(
+                          //       shape: BoxShape.circle,
+                          //       gradient: LinearGradient(
+                          //         begin: Alignment.topLeft,
+                          //         end: Alignment.bottomRight,
+                          //         colors: [primaryColor, secondaryColor],
+                          //       ),
+                          //       boxShadow: [
+                          //         BoxShadow(
+                          //           color: primaryColor.withOpacity(0.15),
+                          //           blurRadius: 25,
+                          //           spreadRadius: 3,
+                          //           offset: const Offset(0, 5),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //     child: const Icon(
+                          //       Icons.medical_services_rounded,
+                          //       size: 70,
+                          //       color: Colors.white,
+                          //     ),
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 32),
+
+                          // App Name "صحتي"
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [primaryColor, secondaryColor],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ).createShader(bounds),
+                            child: Text(
+                              'صحتي',
+                              style: GoogleFonts.cairo(
+                                fontSize: 44,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
+                                letterSpacing: 2.0,
+                                shadows: [
+                                  Shadow(
+                                    color: primaryColor.withOpacity(0.3),
+                                    blurRadius: 15,
+                                    offset: const Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            child: const Icon(Icons.medical_services_rounded,
-                                size: 60,
-                                color: Color.fromARGB(255, 17, 86, 103)),
                           ),
                           const SizedBox(height: 16),
-                          Text('app_name'.tr(),
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF006272),
-                              )),
-                          const SizedBox(height: 8),
+
+                          // Slogan
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(255, 18, 131, 144)
-                                      .withOpacity(0.1),
-                                  blurRadius: 8,
-                                  spreadRadius: 1,
-                                ),
-                              ],
+                            margin: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              'slogan'.tr(),
+                              style: GoogleFonts.openSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: textLightColor,
+                                height: 1.5,
+                                letterSpacing: 0.4,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            child: Text('slogan'.tr(),
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: const Color.fromARGB(
-                                        255, 21, 111, 118))),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 40),
+
+                          // Form Container
                           Container(
-                            padding: const EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color.fromARGB(255, 19, 104, 121)
-                                      .withOpacity(0.1),
+                                  color: primaryColor.withOpacity(0.1),
                                   blurRadius: 20,
-                                  spreadRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 5),
+                                ),
+                                BoxShadow(
+                                  color: secondaryColor.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  spreadRadius: -1,
+                                  offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
@@ -205,93 +265,130 @@ class _LoginViewState extends State<_LoginView>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Center(
-                                    child: Text('login'.tr(),
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: const Color.fromARGB(
-                                                255, 13, 108, 111)))),
-                                const SizedBox(height: 24),
-                                Text('email'.tr(),
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14)),
-                                const SizedBox(height: 8),
+                                  child: Text(
+                                    'login'.tr(),
+                                    style: GoogleFonts.inter(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                      color: textDarkColor,
+                                      letterSpacing: 0.8,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 28),
+
+                                // Email Field
+                                Text(
+                                  'email'.tr(),
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    color: textDarkColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
                                 TextFormField(
                                   controller: _emailController,
                                   onChanged: (value) =>
                                       bloc.add(LoginEmailChanged(value)),
                                   keyboardType: TextInputType.emailAddress,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty)
+                                    if (value == null || value.isEmpty) {
                                       return 'email_required'.tr();
+                                    }
                                     if (!RegExp(
                                             r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                        .hasMatch(value))
+                                        .hasMatch(value)) {
                                       return 'email_invalid'.tr();
-
+                                    }
                                     return null;
                                   },
                                   decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.email,
-                                        color:
-                                            Color.fromARGB(255, 12, 98, 120)),
+                                    prefixIcon: Icon(
+                                      Icons.email,
+                                      color: primaryColor,
+                                      size: 22,
+                                    ),
                                     hintText: 'email_hint'.tr(),
+                                    hintStyle: TextStyle(
+                                      color: textLightColor.withOpacity(0.7),
+                                      fontFamily: 'OpenSans',
+                                    ),
                                     filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 213, 241, 244),
+                                    fillColor: Colors.grey[100],
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(16),
                                       borderSide: BorderSide.none,
                                     ),
                                     contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 15),
+                                      vertical: 18,
+                                      horizontal: 16,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 15),
-                                Text('password'.tr(),
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14)),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 20),
+
+                                // Password Field
+                                Text(
+                                  'password'.tr(),
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    color: textDarkColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
                                 TextFormField(
                                   controller: _passwordController,
                                   onChanged: (value) =>
                                       bloc.add(LoginPasswordChanged(value)),
                                   obscureText: _obscurePassword,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty)
+                                    if (value == null || value.isEmpty) {
                                       return 'password_required'.tr();
-                                    if (value.length < 6)
+                                    }
+                                    if (value.length < 6) {
                                       return 'password_short'.tr();
+                                    }
                                     return null;
                                   },
                                   decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.lock,
-                                        color:
-                                            Color.fromARGB(255, 12, 98, 120)),
+                                    prefixIcon: Icon(
+                                      Icons.lock,
+                                      color: primaryColor,
+                                      size: 22,
+                                    ),
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                          _obscurePassword
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                          color: const Color.fromARGB(
-                                              255, 12, 98, 120)),
+                                        _obscurePassword
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: primaryColor,
+                                        size: 22,
+                                      ),
                                       onPressed: () => setState(() =>
                                           _obscurePassword = !_obscurePassword),
                                     ),
                                     hintText: 'password_hint'.tr(),
+                                    hintStyle: TextStyle(
+                                      color: textLightColor.withOpacity(0.7),
+                                      fontFamily: 'OpenSans',
+                                    ),
                                     filled: true,
-                                    fillColor: const Color.fromARGB(
-                                        255, 213, 241, 244),
+                                    fillColor: Colors.grey[100],
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(16),
                                       borderSide: BorderSide.none,
                                     ),
                                     contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 15),
+                                      vertical: 18,
+                                      horizontal: 16,
+                                    ),
                                   ),
                                 ),
+                                const SizedBox(height: 16),
+
+                                // Forgot Password
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: TextButton(
@@ -301,92 +398,171 @@ class _LoginViewState extends State<_LoginView>
                                         PageRouteBuilder(
                                           pageBuilder: (_, animation, __) =>
                                               FadeTransition(
-                                                  opacity: animation,
-                                                  child:
-                                                      const ForgotPasswordScreen()),
+                                            opacity: animation,
+                                            child: const ForgotPasswordScreen(),
+                                          ),
+                                          transitionDuration:
+                                              const Duration(milliseconds: 600),
                                         ),
                                       );
                                     },
                                     style: TextButton.styleFrom(
-                                        foregroundColor: const Color.fromARGB(
-                                            255, 86, 88, 91)),
-                                    child: Text('forgot_password'.tr()),
-                                  ),
-                                ),
-                                const SizedBox(height: 15),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 55,
-                                  child: ElevatedButton(
-                                    onPressed: state.isLoading
-                                        ? null
-                                        : () {
-                                            if (_formKey.currentState!
-                                                .validate())
-                                              bloc.add(LoginSubmitted());
-                                          },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 12, 98, 120),
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      elevation: 3,
+                                      foregroundColor: secondaryColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
                                     ),
-                                    child: state.isLoading
-                                        ? const CircularProgressIndicator(
-                                            color: Colors.white)
-                                        : Text('login'.tr(),
-                                            style:
-                                                const TextStyle(fontSize: 18)),
+                                    child: Text(
+                                      'forgot_password'.tr(),
+                                      style: GoogleFonts.openSans(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Text('or_login_with'.tr(),
-                              style: const TextStyle(
-                                  color: Color.fromARGB(255, 80, 76, 76),
-                                  fontWeight: FontWeight.w500)),
-                          const SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(50),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
+                                const SizedBox(height: 20),
+
+                                // Login Button
+                                AnimatedBuilder(
+                                  animation: _animationController,
+                                  builder: (context, child) {
+                                    return Transform.scale(
+                                      scale: state.isLoading ? 0.95 : 1.0,
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 56,
+                                        child: ElevatedButton(
+                                          onPressed: state.isLoading
+                                              ? null
+                                              : () {
+                                                  if (_formKey.currentState!
+                                                      .validate()) {
+                                                    bloc.add(LoginSubmitted());
+                                                  }
+                                                },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: primaryColor,
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            elevation: 5,
+                                            shadowColor:
+                                                primaryColor.withOpacity(0.3),
+                                          ),
+                                          child: state.isLoading
+                                              ? const SizedBox(
+                                                  width: 24,
+                                                  height: 24,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                    strokeWidth: 3,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  'login'.tr(),
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
-                            child: InkWell(
-                              onTap: () => bloc.add(LoginWithGoogle()),
-                              borderRadius: BorderRadius.circular(50),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Image.asset(
-                                    'assets/imges/google (2).png',
-                                    width: 30,
-                                    height: 30),
-                              ),
-                            ),
                           ),
-                          const SizedBox(height: 15),
+                          const SizedBox(height: 24),
+
+                          // Or Divider
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: textLightColor.withOpacity(0.5),
+                                  thickness: 1,
+                                  indent: 20,
+                                  endIndent: 10,
+                                ),
+                              ),
+                              Text(
+                                'or_login_with'.tr(),
+                                style: GoogleFonts.openSans(
+                                  color: textLightColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  color: textLightColor.withOpacity(0.5),
+                                  thickness: 1,
+                                  indent: 10,
+                                  endIndent: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Google Sign-In
+                          AnimatedBuilder(
+                            animation: _animationController,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: state.isLoading ? 0.95 : 1.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(50),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: secondaryColor.withOpacity(0.1),
+                                        blurRadius: 15,
+                                        spreadRadius: 2,
+                                      ),
+                                    ],
+                                  ),
+                                  child: InkWell(
+                                    onTap: state.isLoading
+                                        ? null
+                                        : () => bloc.add(LoginWithGoogle()),
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Image.asset(
+                                        'assets/imges/google (2).png',
+                                        width: 32,
+                                        height: 32,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Register Prompt
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 20),
+                              vertical: 14,
+                              horizontal: 24,
+                            ),
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(50),
+                              color: Colors.white.withOpacity(0.95),
+                              borderRadius: BorderRadius.circular(32),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.blue.withOpacity(0.1),
-                                  blurRadius: 10,
+                                  color: primaryColor.withOpacity(0.05),
+                                  blurRadius: 15,
                                   spreadRadius: 1,
+                                  offset: const Offset(0, 4),
                                 ),
                               ],
                             ),
@@ -394,8 +570,14 @@ class _LoginViewState extends State<_LoginView>
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('no_account'.tr(),
-                                    style: const TextStyle(color: Colors.grey)),
+                                Text(
+                                  'no_account'.tr(),
+                                  style: GoogleFonts.openSans(
+                                    color: textLightColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                                ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(
@@ -403,26 +585,34 @@ class _LoginViewState extends State<_LoginView>
                                       PageRouteBuilder(
                                         pageBuilder: (_, animation, __) =>
                                             FadeTransition(
-                                                opacity: animation,
-                                                child: const RegisterScreen()),
+                                          opacity: animation,
+                                          child: const RegisterScreen(),
+                                        ),
+                                        transitionDuration:
+                                            const Duration(milliseconds: 600),
                                       ),
                                     );
                                   },
                                   style: TextButton.styleFrom(
-                                    foregroundColor:
-                                        const Color.fromARGB(255, 20, 199, 226),
+                                    foregroundColor: secondaryColor,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8),
                                     minimumSize: Size.zero,
                                     tapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
                                   ),
-                                  child: Text('register'.tr()),
+                                  child: Text(
+                                    'register'.tr(),
+                                    style: GoogleFonts.openSans(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 32),
                         ],
                       ),
                     ),
