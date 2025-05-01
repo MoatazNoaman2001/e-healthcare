@@ -171,7 +171,29 @@
   "error_loading_auth_data": "Error loading authentication data",
   "search_hint": "Search for a doctor",
   "specialties": "Specialties",
-  "next_appointment": "Next Appointment",
+ 
   "recent_doctors": "Recent Doctors",
-  "search_results": "Search Results"
+  "search_results": "Search Results",
+  
+    "next_appointment": "Your Next Appointment",
+    "no_upcoming_appointments": "No Upcoming Appointments",
+    "book_new_appointment": "You can book a new appointment",
+    "upcoming_appointments_error": "Error fetching appointments: %s",
+    "unknown_doctor": "Unknown Doctor",
+    "unknown_specialization": "Unknown Specialization",
+    "unknown_time": "Unknown Time",
+    
+    "appointment_details_not_implemented": "Appointment details not available yet",
+    "book_appointment_not_implemented": "Booking a new appointment not available yet",
+    "recent_doctors_title": "Doctors you visited recently",
+  "error": "Error",
+  "no_recent_doctors": "You haven't visited any doctor yet",
+  "default_doctor": "Doctor",
+  "default_specialization": "Specialization",
+  "recent_doctors_title": "Recently Visited Doctors",
+  "recent_doctors_empty": "You haven't visited any doctors yet",
+  "doctor_default": "Doctor",
+  "specialization_default": "Specialization",
+  "error_message": "Error: {0}"
+  
 }

@@ -25,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -38,9 +39,20 @@ class _SplashScreenState extends State<SplashScreen>
   void _initializeAnimation() {
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 1800), // Elegant and smooth
     );
-    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOutCubic, // Refined fade
+      ),
+    );
+    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutCubic, // Gentle scale
+      ),
+    );
     _controller.forward();
   }
 
@@ -59,8 +71,6 @@ class _SplashScreenState extends State<SplashScreen>
           MaterialPageRoute(builder: (_) => const HomePage()),
         );
       } else if (authService.currentUserType == 'doctor') {
-        // Navigate to doctor's home page
-        // TODO: Replace with your doctor home page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => DoctorDashboardPage()),
@@ -98,17 +108,25 @@ class _SplashScreenState extends State<SplashScreen>
       },
       child: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFF006272), Color(0xFF004D4D)],
+              colors: [
+                const Color(0xFF3949AB).withOpacity(0.9), // Primary blue
+                const Color(0xFF00BCD4).withOpacity(0.8), // Secondary cyan
+                const Color(0xFFE1F5FE),
+              ],
+              stops: [0.0, 0.5, 1.0],
             ),
           ),
           child: Center(
             child: FadeTransition(
               opacity: _fadeAnimation,
-              child: _buildSplashContent(context),
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: _buildSplashContent(context),
+              ),
             ),
           ),
         ),
@@ -121,72 +139,120 @@ class _SplashScreenState extends State<SplashScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildLogo(context),
-        const SizedBox(height: 24),
-        _buildTitle(),
-        const SizedBox(height: 8),
+        const SizedBox(height: 32),
+        _buildTitle(context),
+        const SizedBox(height: 16),
         _buildSubtitle(),
-        const SizedBox(height: 50),
-        const CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
+        const SizedBox(height: 48),
+        _buildProgressIndicator(),
       ],
     );
   }
 
   Widget _buildLogo(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
         shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF3949AB).withOpacity(0.9),
+            const Color(0xFF00BCD4),
+          ],
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
+            color: const Color(0xFF3949AB).withOpacity(0.2),
+            blurRadius: 30,
             spreadRadius: 5,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: const Color(0xFF00BCD4).withOpacity(0.1),
+            blurRadius: 15,
+            spreadRadius: -2,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Icon(
+      child: const Icon(
         Icons.medical_services_rounded,
-        size: 80,
-        color: Theme.of(context).primaryColor,
+        size: 90,
+        color: Colors.white,
       ),
     );
   }
 
- Widget _buildTitle() {
-  return Text(
-    'app_name'.tr(),
-    style: GoogleFonts.tajawal(
-      fontSize: 40,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
-  );
-}
+  Widget _buildTitle(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (bounds) => LinearGradient(
+        colors: [
+          const Color(0xFF3949AB),
+          const Color(0xFF00BCD4),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ).createShader(bounds),
+      child: Text(
+        'صحتي',
+        style: GoogleFonts.cairo(
+          fontSize: 48,
+          fontWeight: FontWeight.w900,
+          color: Colors.white,
+          letterSpacing: 2.5,
+          shadows: [
+            Shadow(
+              color: const Color(0xFF3949AB).withOpacity(0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 
- Widget _buildSubtitle() {
-  return Text(
-    'app_slogan'.tr(),
-    style: GoogleFonts.tajawal(fontSize: 18, color: Colors.white),
-  );
-}
-}
+  Widget _buildSubtitle() {
+    return Text(
+      'app_slogan'.tr(),
+      style: GoogleFonts.cairo(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: Colors.white.withOpacity(0.9),
+        letterSpacing: 0.5,
+        height: 1.4,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
 
-// TODO: Create this screen or replace with your actual doctor home page
-// class DoctorHomePage extends StatelessWidget {
-//   const DoctorHomePage({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Doctor Dashboard'),
-//       ),
-//       body: const Center(
-//         child: Text('Doctor Home Page'),
-//       ),
-//     );
-//   }
-// }
+  Widget _buildProgressIndicator() {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white.withOpacity(0.2),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF00BCD4).withOpacity(0.3),
+                blurRadius: 15,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00BCD4)),
+            strokeWidth: 5,
+          ),
+        );
+      },
+    );
+  }
+}
