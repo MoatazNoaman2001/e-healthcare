@@ -1,4 +1,6 @@
-import 'package:easy_localization/easy_localization.dart' show StringTranslateExtension, tr;
+import 'dart:ui' as ui;
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +23,9 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
   int? _patientId;
   bool _isSearching = false;
 
+  final Color _primaryColor = const Color(0xFF006272);
+  final Color _accentColor = const Color(0xFFE0F7FA);
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +36,7 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _userId = prefs.getInt('user_id');
-      _patientId = prefs.getInt('patient_id') ?? _userId; // Fallback to user_id if patient_id isn't set
+      _patientId = prefs.getInt('patient_id') ?? _userId;
     });
 
     if (_userId != null && _patientId != null) {
@@ -40,19 +45,12 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
   }
 
   void _fetchInitialData() {
-    // Load specializations
     context.read<HomeBloc>().add(const FetchSpecializationsEvent());
-
-    // Load appointments for the patient
     if (_patientId != null) {
       context.read<HomeBloc>().add(FetchUpcomingAppointmentsEvent(patientId: _patientId!));
       context.read<HomeBloc>().add(FetchPastAppointmentsEvent(patientId: _patientId!));
     }
-
-    // Load clinics
     context.read<HomeBloc>().add(const FetchClinicsEvent());
-
-    // Load popular doctors (no search query)
     context.read<HomeBloc>().add(const FetchDoctorsEvent());
   }
 
@@ -64,70 +62,185 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSearchField(context),
-          const SizedBox(height: 16),
-
-          if (!_isSearching) ...[
-             Text('specialties'.tr(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            const SpecialtyChips(),
-            const SizedBox(height: 16),
-            const NextAppointmentCard(),
-            const SizedBox(height: 16),
-            const RecentDoctors(),
-          ] else ...[
-            const DoctorsList(),
-          ],
-        ],
+    final isRtl = context.locale.languageCode == 'ar';
+    
+    return Directionality(
+      textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                _accentColor.withOpacity(0.6),
+                _primaryColor.withOpacity(0.1),
+                Colors.white,
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: _buildHomeContent(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildSearchField(BuildContext context) {
-    return TextFormField(
-      controller: _searchController,
-      textDirection: TextDirection.rtl,
-      decoration: InputDecoration(
-        hintText: 'search_hint'.tr(),
-        hintTextDirection: TextDirection.rtl,
-        prefixIcon: const Icon(Icons.search),
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
-        suffixIcon: _searchController.text.isNotEmpty
-            ? IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            _searchController.clear();
-            setState(() {
-              _isSearching = false;
-            });
-            context.read<HomeBloc>().add(const FetchDoctorsEvent());
-          },
-        )
-            : null,
+  Widget _buildHomeContent(BuildContext context) {
+    final isRtl = context.locale.languageCode == 'ar';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildSearchField(context, isRtl),
+        const SizedBox(height: 24),
+        if (!_isSearching) ...[
+          _buildSection(
+            context,
+            title: 'specialties'.tr(),
+            icon: Icons.medical_services_outlined,
+            child: const SpecialtyChips(),
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            context,
+            title: 'next_appointment'.tr(),
+            icon: Icons.calendar_today_outlined,
+            child: const NextAppointmentCard(),
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            context,
+            title: 'recent_doctors'.tr(),
+            icon: Icons.people_outline,
+            child: const RecentDoctors(),
+          ),
+        ] else ...[
+          _buildSection(
+            context,
+            title: 'search_results'.tr(),
+            icon: Icons.search_outlined,
+            child: const DoctorsList(),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildSearchField(BuildContext context, bool isRtl) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white.withOpacity(0.2),
+        border: Border.all(color: _primaryColor.withOpacity(0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: _primaryColor.withOpacity(0.15),
+            blurRadius: 12,
+            spreadRadius: 3,
+          ),
+        ],
       ),
-      onChanged: (value) {
-        if (value.length > 2) {
+      child: TextFormField(
+        controller: _searchController,
+        textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
+        textAlign: isRtl ? TextAlign.right : TextAlign.left,
+        decoration: InputDecoration(
+          hintText: 'search_hint'.tr(),
+          hintStyle: TextStyle(color: _primaryColor.withOpacity(0.5)),
+          prefixIcon: Icon(Icons.search, color: _primaryColor, size: 24),
+          suffixIcon: _searchController.text.isNotEmpty
+              ? IconButton(
+                  icon: Icon(Icons.clear, color: _primaryColor, size: 24),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      _isSearching = false;
+                    });
+                    context.read<HomeBloc>().add(const FetchDoctorsEvent());
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        ),
+        style: TextStyle(
+          color: _primaryColor,
+          fontSize: 16,
+        ),
+        onChanged: (value) {
           setState(() {
-            _isSearching = true;
+            _isSearching = value.isNotEmpty;
           });
           context.read<HomeBloc>().add(FetchDoctorsEvent(searchQuery: value));
-        } else if (value.isEmpty) {
-          setState(() {
-            _isSearching = false;
-          });
-          context.read<HomeBloc>().add(const FetchDoctorsEvent());
-        }
-      },
+        },
+      ),
+    );
+  }
+
+  Widget _buildSection(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Widget child,
+  }) {
+    final isRtl = context.locale.languageCode == 'ar';
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white.withOpacity(0.9),
+        boxShadow: [
+          BoxShadow(
+            color: _primaryColor.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+         child: Row(
+  children: [
+    if (!isRtl) Icon(icon, size: 24, color: _primaryColor),
+    if (!isRtl) const SizedBox(width: 8),
+    Expanded(
+      child: Text(
+        title,
+        textAlign: isRtl ? TextAlign.right : TextAlign.left,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: _primaryColor,
+        ),
+      ),
+    ),
+    if (isRtl) const SizedBox(width: 8),
+    if (isRtl) Icon(icon, size: 24, color: _primaryColor),
+  ],
+),
+
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: child,
+          ),
+        ],
+      ),
     );
   }
 }
