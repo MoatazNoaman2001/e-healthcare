@@ -370,18 +370,18 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            // QuickActionButton(
-                            //   icon: Icons.calendar_month,
-                            //   label: 'Schedule',
-                            //   gradient: const LinearGradient(
-                            //     colors: [Color(0xFF1A6FEE), Color(0xFF6BA5F7)],
-                            //     begin: Alignment.topLeft,
-                            //     end: Alignment.bottomRight,
-                            //   ),
-                            //   onTap: () {
-                            //     Navigator.pushNamed(context, '/today_schedule');
-                            //   },
-                            // ),
+                            QuickActionButton(
+                              icon: Icons.calendar_month,
+                              label: 'Schedule',
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF1A6FEE), Color(0xFF6BA5F7)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(context, '/doctor_schedule_screen');
+                              },
+                            ),
                             // QuickActionButton(
                             //   icon: Icons.people,
                             //   label: 'Patients',
@@ -486,11 +486,11 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
             activeIcon: Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.calendar_today_outlined),
-          //   activeIcon: Icon(Icons.calendar_today),
-          //   label: 'Schedule',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today_outlined),
+            activeIcon: Icon(Icons.calendar_today),
+            label: 'Schedule',
+          ),
           // BottomNavigationBarItem(
           //   icon: Icon(Icons.people_outline),
           //   activeIcon: Icon(Icons.people),
@@ -505,7 +505,7 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
         onTap: (index) {
           switch (index) {
             case 3:
-              Navigator.pushNamed(context, '/today_schedule');
+              Navigator.pushNamed(context, '/doctor_schedule_screen');
               break;
             case 2:
               Navigator.pushNamed(context, '/patient_list');

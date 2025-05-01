@@ -23,6 +23,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/di/dependancy_injection.dart' as di;
 import 'features/doctor/presentation/screens/doctor_profile.dart';
+import 'features/doctor/presentation/screens/doctor_schedule_screen.dart';
+import 'features/doctor/presentation/screens/doctor_schedule_setup_screen.dart';
 import 'features/patient/home/presentation/bloc/home_bloc.dart';
 late SharedPreferences prefs;
 Future<void> main() async {
@@ -147,6 +149,8 @@ class MyApp extends StatelessWidget {
         ),
         '/HomeScreen': (context) => const DoctorDashboardPage(),
         '/book-appointment': (context) => const pdp.DoctorProfileScreen(),
+        '/doctor_schedule_screen': (context) => const DoctorScheduleScreen(),
+        '/doctor_schedule_setup_screen': (context) => const DoctorScheduleSetupScreen(),
         // '/doctor-details': (context) => const DoctorDetailsScreen()
       },
     );

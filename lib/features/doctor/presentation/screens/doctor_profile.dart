@@ -166,19 +166,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> with SingleTi
                 // Navigate to edit profile screen
                 Navigator.pushNamed(
                   context,
-                  '/edit_doctor_profile',
+                  '/doctor_schedule_setup_screen',
                   arguments: doctor,
                 ).then((_) => _loadProfileData());
               },
-              tooltip: 'Edit Profile',
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings, color: Colors.white),
-              onPressed: () {
-                // Navigate to settings
-                Navigator.pushNamed(context, '/settings');
-              },
-              tooltip: 'Settings',
+              tooltip: 'schedule setup',
             ),
           ],
         ),
