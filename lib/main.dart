@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       theme: AppTheme.lightTheme(),
-      darkTheme: AppTheme.darkTheme(),
+      // darkTheme: AppTheme.darkTheme(),
 
       // theme: ThemeData(
       //   primaryColor: const Color(0xFF006272),
