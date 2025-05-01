@@ -504,13 +504,13 @@ class _DoctorDashboardPageState extends State<DoctorDashboardPage>
         ],
         onTap: (index) {
           switch (index) {
-            case 3:
+            case 1:
               Navigator.pushNamed(context, '/doctor_schedule_screen');
               break;
-            case 2:
+            case 3:
               Navigator.pushNamed(context, '/patient_list');
               break;
-            case 1:
+            case 2:
               Navigator.pushNamed(context, '/doctor_profile_screen',
                   arguments: DoctorModel(
                       id: "1",
