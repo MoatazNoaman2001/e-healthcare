@@ -194,6 +194,7 @@
   "recent_doctors_empty": "You haven't visited any doctors yet",
   "doctor_default": "Doctor",
   "specialization_default": "Specialization",
-  "error_message": "Error: {0}"
+  "error_message": "Error: {0}",
+  "change_language": "Change Language" 
   
 }

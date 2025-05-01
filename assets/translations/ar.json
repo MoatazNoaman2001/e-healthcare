@@ -192,5 +192,6 @@
   "recent_doctors_empty": "لم تقم بزيارة أي طبيب بعد",
   "doctor_default": "طبيب",
   "specialization_default": "تخصص",
-  "error_message": "خطأ: {0}"
+  "error_message": "خطأ: {0}",
+  "change_language": "تغيير اللغة" 
 }

@@ -167,34 +167,34 @@ class _LoginViewState extends State<_LoginView>
                       child: Column(
                         children: [
                           // Logo
-                          ScaleTransition(
-                            scale: _scaleAnimation,
-                            child: Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [primaryColor, secondaryColor],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: primaryColor.withOpacity(0.15),
-                                    blurRadius: 25,
-                                    spreadRadius: 3,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.medical_services_rounded,
-                                size: 70,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 32),
+                          // ScaleTransition(
+                          //   scale: _scaleAnimation,
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(20),
+                          //     decoration: BoxDecoration(
+                          //       shape: BoxShape.circle,
+                          //       gradient: LinearGradient(
+                          //         begin: Alignment.topLeft,
+                          //         end: Alignment.bottomRight,
+                          //         colors: [primaryColor, secondaryColor],
+                          //       ),
+                          //       boxShadow: [
+                          //         BoxShadow(
+                          //           color: primaryColor.withOpacity(0.15),
+                          //           blurRadius: 25,
+                          //           spreadRadius: 3,
+                          //           offset: const Offset(0, 5),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //     child: const Icon(
+                          //       Icons.medical_services_rounded,
+                          //       size: 70,
+                          //       color: Colors.white,
+                          //     ),
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 32),
 
                           // App Name "صحتي"
                           ShaderMask(

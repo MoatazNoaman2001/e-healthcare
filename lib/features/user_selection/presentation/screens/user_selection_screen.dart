@@ -73,268 +73,270 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
           ),
         ),
         child: SafeArea(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Professional logo
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Container(
-                        width: 140,
-                        height: 140,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [primaryColor, secondaryColor],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: primaryColor.withOpacity(0.15),
-                              blurRadius: 25,
-                              spreadRadius: 3,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.medical_services_rounded,
-                          size: 70,
-                          color: Colors.white,
+          child: Stack(children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    // Professional logo
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Image.asset(
+                          'assets/imges/1 (1).png',
+                          width: 190,
+                          height: 160,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 36),
+                    const SizedBox(height: 1),
 
-                  // App title
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: ShaderMask(
-                        shaderCallback: (bounds) => LinearGradient(
-                          colors: [primaryColor, secondaryColor],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ).createShader(bounds),
+                    // App title
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: ShaderMask(
+                          shaderCallback: (bounds) => LinearGradient(
+                            colors: [primaryColor, secondaryColor],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds),
+                          child: Text(
+                            'صحتي',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall
+                                ?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 2.0,
+                              fontFamily: 'Cairo',
+                              fontSize: 40,
+                              shadows: [
+                                Shadow(
+                                  color: primaryColor.withOpacity(0.3),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Slogan
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
-                          'صحتي',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                                letterSpacing: 2.0,
-                                fontFamily: 'Cairo',
-                                fontSize: 40,
-                                shadows: [
-                                  Shadow(
-                                    color: primaryColor.withOpacity(0.3),
-                                    blurRadius: 15,
-                                    offset: const Offset(0, 5),
+                          'slogan'.tr(),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: textLightColor,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.5,
+                                    fontFamily: 'Open Sans',
+                                    letterSpacing: 0.4,
                                   ),
-                                ],
-                              ),
                           textAlign: TextAlign.center,
                         ),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 60),
 
-                  // Slogan
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 40),
+                    // User type prompt
+                    FadeTransition(
+                      opacity: _fadeAnimation,
                       child: Text(
-                        'slogan'.tr(),
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: textLightColor,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5,
-                              fontFamily: 'Open Sans',
-                              letterSpacing: 0.4,
+                        'select_user_type'.tr(),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: primaryColor,
+                              letterSpacing: 1.0,
+                              fontFamily: 'Inter',
                             ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 60),
+                    const SizedBox(height: 44),
 
-                  // User type prompt
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Text(
-                      'select_user_type'.tr(),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: primaryColor,
-                            letterSpacing: 1.0,
-                            fontFamily: 'Inter',
-                          ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 44),
-
-                  // User type buttons
-                  Row(
-                    children: [
-                      // Patient button
-                      Expanded(
-                        child: AnimatedBuilder(
-                          animation: _animationController,
-                          builder: (context, child) {
-                            final animation =
-                                Tween<double>(begin: 0.0, end: 1.0).animate(
-                              CurvedAnimation(
-                                parent: _animationController,
-                                curve: const Interval(0.2, 0.8,
-                                    curve: Curves.easeOutCubic),
-                              ),
-                            );
-                            return Transform.scale(
-                              scale: _patientCardScale * animation.value,
-                              child: Opacity(
-                                opacity: animation.value,
-                                child: GestureDetector(
-                                  onTapDown: (_) =>
-                                      setState(() => _patientCardScale = 0.93),
-                                  onTapUp: (_) {
-                                    setState(() => _patientCardScale = 1.0);
-                                    Navigator.push(
+                    // User type buttons
+                    Row(
+                      children: [
+                        // Patient button
+                        Expanded(
+                          child: AnimatedBuilder(
+                            animation: _animationController,
+                            builder: (context, child) {
+                              final animation =
+                                  Tween<double>(begin: 0.0, end: 1.0).animate(
+                                CurvedAnimation(
+                                  parent: _animationController,
+                                  curve: const Interval(0.2, 0.8,
+                                      curve: Curves.easeOutCubic),
+                                ),
+                              );
+                              return Transform.scale(
+                                scale: _patientCardScale * animation.value,
+                                child: Opacity(
+                                  opacity: animation.value,
+                                  child: GestureDetector(
+                                    onTapDown: (_) => setState(
+                                        () => _patientCardScale = 0.93),
+                                    onTapUp: (_) {
+                                      setState(() => _patientCardScale = 1.0);
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (_, animation, __) {
+                                            return FadeTransition(
+                                              opacity: animation,
+                                              child: const LoginScreen(),
+                                            );
+                                          },
+                                          transitionDuration:
+                                              const Duration(milliseconds: 600),
+                                        ),
+                                      );
+                                    },
+                                    onTapCancel: () =>
+                                        setState(() => _patientCardScale = 1.0),
+                                    child: _buildUserTypeCard(
                                       context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (_, animation, __) {
-                                          return FadeTransition(
-                                            opacity: animation,
-                                            child: const LoginScreen(),
-                                          );
-                                        },
-                                        transitionDuration:
-                                            const Duration(milliseconds: 600),
-                                      ),
-                                    );
-                                  },
-                                  onTapCancel: () =>
-                                      setState(() => _patientCardScale = 1.0),
-                                  child: _buildUserTypeCard(
-                                    context,
-                                    title: 'patient'.tr(),
-                                    icon: Icons.person_rounded,
-                                    color: secondaryColor,
+                                      title: 'patient'.tr(),
+                                      icon: Icons.person_rounded,
+                                      color: secondaryColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(width: 28),
+                        const SizedBox(width: 28),
 
-                      // Doctor button
-                      Expanded(
-                        child: AnimatedBuilder(
-                          animation: _animationController,
-                          builder: (context, child) {
-                            final animation =
-                                Tween<double>(begin: 0.0, end: 1.0).animate(
-                              CurvedAnimation(
-                                parent: _animationController,
-                                curve: const Interval(0.3, 0.9,
-                                    curve: Curves.easeOutCubic),
-                              ),
-                            );
-                            return Transform.scale(
-                              scale: _doctorCardScale * animation.value,
-                              child: Opacity(
-                                opacity: animation.value,
-                                child: GestureDetector(
-                                  onTapDown: (_) =>
-                                      setState(() => _doctorCardScale = 0.93),
-                                  onTapUp: (_) {
-                                    setState(() => _doctorCardScale = 1.0);
-                                    Navigator.push(
+                        // Doctor button
+                        Expanded(
+                          child: AnimatedBuilder(
+                            animation: _animationController,
+                            builder: (context, child) {
+                              final animation =
+                                  Tween<double>(begin: 0.0, end: 1.0).animate(
+                                CurvedAnimation(
+                                  parent: _animationController,
+                                  curve: const Interval(0.3, 0.9,
+                                      curve: Curves.easeOutCubic),
+                                ),
+                              );
+                              return Transform.scale(
+                                scale: _doctorCardScale * animation.value,
+                                child: Opacity(
+                                  opacity: animation.value,
+                                  child: GestureDetector(
+                                    onTapDown: (_) =>
+                                        setState(() => _doctorCardScale = 0.93),
+                                    onTapUp: (_) {
+                                      setState(() => _doctorCardScale = 1.0);
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (_, animation, __) {
+                                            return FadeTransition(
+                                              opacity: animation,
+                                              child: const LoginScreenDoctor(),
+                                            );
+                                          },
+                                          transitionDuration:
+                                              const Duration(milliseconds: 600),
+                                        ),
+                                      );
+                                    },
+                                    onTapCancel: () =>
+                                        setState(() => _doctorCardScale = 1.0),
+                                    child: _buildUserTypeCard(
                                       context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (_, animation, __) {
-                                          return FadeTransition(
-                                            opacity: animation,
-                                            child: const LoginScreenDoctor(),
-                                          );
-                                        },
-                                        transitionDuration:
-                                            const Duration(milliseconds: 600),
-                                      ),
-                                    );
-                                  },
-                                  onTapCancel: () =>
-                                      setState(() => _doctorCardScale = 1.0),
-                                  child: _buildUserTypeCard(
-                                    context,
-                                    title: 'doctor'.tr(),
-                                    icon: Icons.medical_services_rounded,
-                                    color: primaryColor,
+                                      title: 'doctor'.tr(),
+                                      icon: Icons.medical_services_rounded,
+                                      color: primaryColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 52),
+
+                    // Footer
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.95),
+                          borderRadius: BorderRadius.circular(32),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.04),
+                              blurRadius: 15,
+                              spreadRadius: 1,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          'user_type_change_later'.tr(),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: textLightColor.withOpacity(0.85),
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Open Sans',
+                                    letterSpacing: 0.4,
+                                  ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 52),
-
-                  // Footer
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 28, vertical: 14),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.95),
-                        borderRadius: BorderRadius.circular(32),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 15,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        'user_type_change_later'.tr(),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: textLightColor.withOpacity(0.85),
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Open Sans',
-                              letterSpacing: 0.4,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
+            Align(
+              alignment: AlignmentDirectional.topEnd,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: IconButton(
+                  icon: const Icon(Icons.language, color: Color(0xFF3949AB)),
+                  onPressed: () {
+                    final currentLocale = context.locale.languageCode;
+                    context.setLocale(currentLocale == 'en'
+                        ? const Locale('ar')
+                        : const Locale('en'));
+                  },
+                  tooltip: 'change_language'.tr(),
+                ),
+              ),
+            ),
+          ]),
         ),
       ),
     );
@@ -346,10 +348,8 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
     required IconData icon,
     required Color color,
   }) {
-    final isEnglish = context.locale.languageCode == 'en';
-    
     return Container(
-      height: isEnglish ? 220 : 200, // Adjusted height for English
+      height: 200, // ارتفاع ثابت لكلا اللغتين
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
@@ -401,7 +401,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
                     color: color,
                     letterSpacing: 0.8,
                     fontFamily: 'Inter',
-                    fontSize: isEnglish ? 18 : 20, // Adjusted font size
+                    fontSize: 18, // حجم خط ثابت لكلا اللغتين
                   ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -435,7 +435,7 @@ class _UserSelectionScreenState extends State<UserSelectionScreen>
               style: TextStyle(
                 color: color,
                 fontWeight: FontWeight.w600,
-                fontSize: 15,
+                fontSize: 14, // حجم خط أصغر قليلاً
                 fontFamily: 'Open Sans',
                 letterSpacing: 0.4,
               ),
